@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 24-05-2025 a las 05:09:04
+-- Tiempo de generación: 24-05-2025 a las 17:16:21
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -113,10 +113,8 @@ CREATE TABLE `usuario` (
 --
 
 INSERT INTO `usuario` (`id_usuario`, `nombre`, `apellido`, `fecha_nacimiento`, `sexo`, `correo`, `contrasenia`, `nombre_usuario`, `url_foto_perfil`, `url_qr`, `id_rol`, `id_ciudad`, `id_nivel`, `puntaje_total`, `cuenta_validada`) VALUES
-(4, 'Pepito', 'Pérez', '1990-05-15', NULL, 'test_1748053190@example.com', '$2y$10$afBWSTa8JqLLQ5SXtv1sxe8lf274D7cIIbSkyp1JB5zuJfvLdxFJW', 'test_user_6852', NULL, '/qr/test_user_6852.png', 3, NULL, 1, 0, 0),
-(5, NULL, NULL, NULL, NULL, 'editor@example.com', '$2y$10$sKP0qPGpqCEYRHWeIdOVheDA6eYKSz6OzIkHPaXkPEquyhtY1vkvm', 'editor_user', NULL, '/qr/editor_user.png', 2, NULL, 1, 0, 0),
-(6, NULL, NULL, NULL, NULL, 'admin@example.com', '$2y$10$KJb/i8layo5rr4Xa2Yei6uBB.DWLAMWHhP1QAyWBkm4R8qXd67xwe', 'admin_user', NULL, '/qr/admin_user.png', 1, NULL, 1, 0, 0),
-(7, NULL, NULL, NULL, NULL, 'jugador@example.com', '$2y$10$uTpKLJjehYuGHQP03ShtLe67JqzcoVabk05Z0g5Qog7rXHZK5Ezuq', 'player_user', NULL, '/qr/player_user.png', 3, NULL, 1, 0, 0);
+(9, NULL, NULL, NULL, NULL, 'admin123@gmail.com', '$2y$10$OCA/OjkHJQa2uOoF/aNMKeyoEgqeNh.a9S08XTE4hZl4j.c3A/GOW', 'usuarioAdmin123', NULL, '/qr/usuarioAdmin123.png', 1, NULL, 1, 0, 0),
+(10, NULL, NULL, NULL, NULL, 'editor123@gmail.com', '$2y$10$oX6fGeN2dnaI0En7EWuhAubVO6gFgSJuC0uG9qZY3uJEAM9pQDJsy', 'usuarioEditor123', NULL, '/qr/usuarioEditor123.png', 2, NULL, 1, 0, 0);
 
 --
 -- Índices para tablas volcadas
@@ -191,7 +189,7 @@ ALTER TABLE `rol`
 -- AUTO_INCREMENT de la tabla `usuario`
 --
 ALTER TABLE `usuario`
-  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- Restricciones para tablas volcadas
