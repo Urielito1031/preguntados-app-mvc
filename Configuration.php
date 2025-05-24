@@ -1,43 +1,59 @@
 <?php
 
-use Config\Database;
 
-require_once("core/Database.php");
-require_once("core/FilePresenter.php");
+use Repository\UsuarioRepository;
+use Service\UsuarioService;
+
 require_once("core/MustachePresenter.php");
 require_once("core/Router.php");
 
 require_once("controller/HomeController.php");
-require_once("controller/GroupController.php");
-require_once("controller/SongController.php");
-require_once("controller/TourController.php");
+require_once("controller/UsuarioController.php");
 
-require_once("model/GroupModel.php");
-require_once("model/SongModel.php");
-require_once("model/TourModel.php");
+require_once("Model/Service/UsuarioService.php");
+require_once("Model/Repository/UsuarioRepository.php");
 
 include_once('vendor/mustache/src/Mustache/Autoloader.php');
 
 class Configuration
 {
 
-   private $database ;
+   private PDO $database;
+   private $viewer;
 
-   public function __construct(PDO $database){
+   public function __construct(PDO $database, MustachePresenter $viewer)
+   {
       $this->database = $database;
+      $this->viewer = $viewer;
    }
-
    public function getDatabase(): PDO
    {
       return $this->database;
    }
 
-   public function getLoginController()
+   public function getUsuarioController()
    {
-      return new UsuarioController($this->getViewer());
+      $repository = new UsuarioRepository();
+      $service = new UsuarioService($repository);
+      return new UsuarioController($service, $this->getViewer());
    }
 
 
+
+    public function getHomeController()
+    {
+        return new HomeController($this->getViewer());
+    }
+    public function getRouter()
+    {
+        return new Router("getHomeController", "show", $this);
+    }
+
+    public function getViewer()
+    {
+        //return new FileView();
+        return new MustachePresenter("view");
+    }
 //    public function getSongController()
 //    {
 //        return new SongController(
@@ -54,25 +70,10 @@ class Configuration
 //        );
 //    }
 //
-//    public function getHomeController()
-//    {
-//        return new HomeController($this->getViewer());
-//    }
 //
 //
 //    public function getGroupController()
 //    {
 //        return new GroupController(new GroupModel($this->getDatabase()), $this->getViewer());
 //    }
-
-    public function getRouter()
-    {
-        return new Router("getHomeController", "show", $this);
-    }
-
-    public function getViewer()
-    {
-        //return new FileView();
-        return new MustachePresenter("view");
-    }
 }

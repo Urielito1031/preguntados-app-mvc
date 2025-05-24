@@ -1,7 +1,10 @@
 <?php
 
+namespace Repository;
 use Config\Database;
 use Entity\Usuario;
+use PDO;
+use PDOException;
 
 class UsuarioRepository
 

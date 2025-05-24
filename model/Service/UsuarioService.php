@@ -3,8 +3,9 @@
 namespace Service;
 
 use Entity\Usuario;
+use Repository\UsuarioRepository;
 use Response\DataResponse;
-use UsuarioRepository;
+
 
 class UsuarioService
 {

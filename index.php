@@ -1,10 +1,14 @@
 <?php
+
+use Config\Database;
+
 require_once("Configuration.php");
 require_once("configuration/Database.php");
 
 try {
-   $pdo = Config\Database::connect();
-   $configuration = new Configuration($pdo);
+   $pdo = Database::connect();
+   $viewer = new MustachePresenter("view");
+   $configuration = new Configuration($pdo, $viewer);
    $router = $configuration->getRouter();
 
    $router->go(
