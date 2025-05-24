@@ -45,6 +45,48 @@ class UsuarioRepository
       }
    }
 
+   public function findByEmail(string $email): ?Usuario
+   {
+      $sql = "SELECT * FROM usuario WHERE correo = :email";
+      try{
+         $stmt = $this->conn->prepare($sql);
+         $stmt->bindValue(':email', $email, PDO::PARAM_STR);
+         $stmt->execute();
+         $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+         return $row? new Usuario($row): null;
+
+      }catch(PDOException $e){
+         throw new PDOException("Error al buscar usuario por correo: ".$e->getMessage());
+      }
+   }
+   public function findByUsername(string $username): ?Usuario
+   {
+      $sql = "SELECT * FROM usuario WHERE nombre_usuario = :username";
+      try{
+         $stmt = $this->conn->prepare($sql);
+         $stmt->bindValue(':username', $username, PDO::PARAM_STR);
+         $stmt->execute();
+         $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+         return $row? new Usuario($row): null;
+
+      }catch(PDOException $e){
+         throw new PDOException("Error al buscar usuario por nombre de usuario: ".$e->getMessage());
+      }
+   }
+
+   public function activateAccount(string $email): void{
+      $sql = "UPDATE usuario SET cuenta_validada = 1 WHERE correo = :email";
+      try{
+         $stmt = $this->conn->prepare($sql);
+         $stmt->bindValue(':email', $email, PDO::PARAM_STR);
+         $stmt->execute();
+      }catch(PDOException $e){
+         throw new PDOException("Error al activar cuenta: ".$e->getMessage());
+      }
+
+   }
 
 
 }

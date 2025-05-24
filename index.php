@@ -1,9 +1,17 @@
 <?php
 require_once("Configuration.php");
-$configuration = new Configuration();
-$router = $configuration->getRouter();
+require_once("configuration/Database.php");
 
-$router->go(
-   $_GET["controller"],
-   $_GET["method"]
-);
+try {
+   $pdo = Config\Database::connect();
+   $configuration = new Configuration($pdo);
+   $router = $configuration->getRouter();
+
+   $router->go(
+      $_GET["controller"],
+      $_GET["method"]
+   );
+} catch (PDOException $e) {
+   echo "Error de conexión: " . $e->getMessage();
+   exit;
+}

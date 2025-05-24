@@ -1,4 +1,7 @@
 <?php
+
+use Config\Database;
+
 require_once("core/Database.php");
 require_once("core/FilePresenter.php");
 require_once("core/MustachePresenter.php");
@@ -17,49 +20,50 @@ include_once('vendor/mustache/src/Mustache/Autoloader.php');
 
 class Configuration
 {
-    public function getDatabase()
-    {
-        $config = $this->getIniConfig();
 
-        return new Database(
-            $config["database"]["server"],
-            $config["database"]["user"],
-            $config["database"]["dbname"],
-            $config["database"]["pass"]
-        );
-    }
+   private $database ;
 
-    public function getIniConfig()
-    {
-        return parse_ini_file("configuration/config.ini", true);
-    }
+   public function __construct(PDO $database){
+      $this->database = $database;
+   }
 
-    public function getSongController()
-    {
-        return new SongController(
-            new SongModel($this->getDatabase()),
-            $this->getViewer()
-        );
-    }
+   public function getDatabase(): PDO
+   {
+      return $this->database;
+   }
 
-    public function getTourController()
-    {
-        return new TourController(
-            new TourModel($this->getDatabase()),
-            $this->getViewer()
-        );
-    }
-
-    public function getHomeController()
-    {
-        return new HomeController($this->getViewer());
-    }
+   public function getLoginController()
+   {
+      return new UsuarioController($this->getViewer());
+   }
 
 
-    public function getGroupController()
-    {
-        return new GroupController(new GroupModel($this->getDatabase()), $this->getViewer());
-    }
+//    public function getSongController()
+//    {
+//        return new SongController(
+//            new SongModel($this->getDatabase()),
+//            $this->getViewer()
+//        );
+//    }
+//
+//    public function getTourController()
+//    {
+//        return new TourController(
+//            new TourModel($this->getDatabase()),
+//            $this->getViewer()
+//        );
+//    }
+//
+//    public function getHomeController()
+//    {
+//        return new HomeController($this->getViewer());
+//    }
+//
+//
+//    public function getGroupController()
+//    {
+//        return new GroupController(new GroupModel($this->getDatabase()), $this->getViewer());
+//    }
 
     public function getRouter()
     {
