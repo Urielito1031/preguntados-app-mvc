@@ -9,7 +9,8 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        height: 100%;
+        min-height: 100%; /* Para asegurar que el contenedor ocupe al menos toda la altura */
+        padding: 20px 0;
     }
     .register-form {
         background-color: #ffffff;
@@ -61,7 +62,7 @@
         border-bottom: 1px solid #4a2a75;
         background-color: transparent;
         color: #4a2a75;
-        box-sizing: border-box; /* Asegura que el padding no afecte el ancho */
+        box-sizing: border-box;
     }
     .form-grid input::placeholder {
         color: #4a2a75;
@@ -80,16 +81,12 @@
         border-radius: 5px;
         cursor: pointer;
     }
-    .map-placeholder {
+    #mapa { /* Estilos para el iframe del mapa */
         width: 100%;
-        height: 120px;
-        background-color: #d9c8ff;
+        height: 200px; /* Altura ajustada para el formulario */
+        border: 1px solid #d9c8ff; /* Borde sutil */
         margin-bottom: 20px;
         border-radius: 5px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        color: #4a2a75;
     }
     .action-buttons {
         display: flex;
@@ -130,12 +127,14 @@
     <div class="register-form">
         <h2>REGISTRARSE</h2>
         <div class="profile-icon">
-            <i class="fas fa-user"></i> <div class="plus-sign">+</div>
+            <i class="fas fa-user"></i>
+            <div class="plus-sign">+</div>
         </div>
 
         <form action="/usuario/processRegister" method="POST">
             <div class="form-grid">
-                <input type="text" name="nombre_completo" placeholder="Nombre completo" required>
+                <input type="text" name="nombre" placeholder="Nombre" required>
+                <input type="text" name="apellido" placeholder="Apellido" required>
                 <input type="date" name="fecha_nacimiento" placeholder="Fecha de nacimiento" required>
                 <input type="text" name="nombre_usuario" placeholder="Nombre de usuario" required>
                 <input type="email" name="correo" placeholder="Correo" required>
@@ -148,21 +147,24 @@
                 <button type="button">MASCULINO</button>
                 <button type="button">FEMENINO</button>
                 <button type="button">OTRO</button>
-            </div>
+                </div>
 
             <div class="form-grid">
-                <input type="text" name="pais" placeholder="País">
-                <input type="text" name="ciudad" placeholder="Ciudad">
+                <input type="text" id="pais" name="pais" placeholder="País">
+                <input type="text" id="ciudad" name="ciudad" placeholder="Ciudad">
             </div>
 
-            <div class="map-placeholder">
-                Plaza de Mayo (Mapa)
-            </div>
+            <iframe
+                id="mapa"
+                loading="lazy"
+                allowfullscreen
+                referrerpolicy="no-referrer-when-downgrade"
+                src="https://maps.google.com/maps?q=Plaza%20de%20Mayo%2C%20Buenos%20Aires&output=embed">
+                </iframe>
 
             <div class="action-buttons">
-                <button type="button">Verificar Ubicación</button>
-                <button type="button">Guardar</button>
-            </div>
+                <button type="button" onclick="actualizarMapa()">Verificar Ubicación</button>
+                <button type="button">Guardar</button> </div>
 
             <div class="login-link">
                 <span>Ya tienes una cuenta?</span>
@@ -173,5 +175,38 @@
         </form>
     </div>
 </div>
+
+<script>
+    function actualizarMapa() {
+        var paisInput = document.getElementById("pais");
+        var ciudadInput = document.getElementById("ciudad");
+        var mapaIframe = document.getElementById("mapa");
+
+        var pais = paisInput.value;
+        var ciudad = ciudadInput.value;
+        var direccion = "";
+
+        if (pais && ciudad) {
+            direccion = ciudad + ", " + pais;
+        } else if (ciudad) {
+            direccion = ciudad;
+        } else if (pais) {
+            direccion = pais;
+        }
+
+        if (direccion) {
+            // Nota: La URL de googleusercontent.com que proporcionaste puede no ser la más estándar
+            // para embeber Google Maps. Una URL más común sería del tipo:
+            // var url = "https://maps.google.com/maps?q=" + encodeURIComponent(direccion) + "&output=embed";
+            // Mantendré la estructura que diste, pero considera esto.
+            var url = "https://maps.google.com/maps?q=" + encodeURIComponent(direccion) + "&output=embed";
+            mapaIframe.src = url;
+        } else {
+            // Opcional: Mostrar un mapa por defecto o un mensaje si no hay país/ciudad
+            // mapaIframe.src = "https://maps.google.com/maps?q=World&output=embed";
+             alert("Por favor, ingresa un país y/o ciudad.");
+        }
+    }
+</script>
 
 <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>

@@ -45,5 +45,25 @@ class UsuarioController
       $_SESSION['user_id'] = $usuario->getId();
       $_SESSION['user_email'] = $usuario->getCorreo();
    }
+   public function showRegisterForm()
+   {
+      $this->view->render("register");
+   }
 
+   public function processRegister()
+   {
+      $email = $_POST['correo'] ?? '';
+      $passwordRecibido = $_POST['contrasenia'] ?? '';
+      $contrasenia =password_hash($passwordRecibido, PASSWORD_DEFAULT); //chequeado
+      $nombre = rand(1,1000);
+      $user = new Usuario(['correo' =>$email,'contrasenia' => $contrasenia
+         ,'nombre_usuario' => $nombre
+      ]);
+      $response = $this->usuarioService->save($user);
+
+      //$this->view->render("register", ['message' => 'Fui al controlador y volvi ', 'response' => $response]);
+
+
+      $this->view->render("register", ['message' => 'Fui al controlador y volvi ','correo' => $response->message]);
+   }
 }
