@@ -56,26 +56,5 @@ class Configuration
         //return new FileView();
         return new MustachePresenter("view");
     }
-//    public function getSongController()
-//    {
-//        return new SongController(
-//            new SongModel($this->getDatabase()),
-//            $this->getViewer()
-//        );
-//    }
-//
-//    public function getTourController()
-//    {
-//        return new TourController(
-//            new TourModel($this->getDatabase()),
-//            $this->getViewer()
-//        );
-//    }
-//
-//
-//
-//    public function getGroupController()
-//    {
-//        return new GroupController(new GroupModel($this->getDatabase()), $this->getViewer());
-//    }
+
 }
