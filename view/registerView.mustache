@@ -1,0 +1,177 @@
+<style>
+    body, html {
+        height: 100%;
+        margin: 0;
+        font-family: sans-serif;
+        background-color: #f0eefc;
+    }
+    .register-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+    }
+    .register-form {
+        background-color: #ffffff;
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        width: 100%;
+        max-width: 500px;
+        text-align: center;
+        background-color: #eadaff; /* Color de fondo del formulario */
+    }
+    .register-form h2 {
+        color: #4a2a75;
+        margin-bottom: 20px;
+    }
+    .profile-icon {
+        font-size: 50px;
+        color: #4a2a75;
+        background-color: #d9c8ff;
+        border-radius: 50%;
+        width: 100px;
+        height: 100px;
+        line-height: 100px;
+        margin: 0 auto 20px;
+        position: relative;
+    }
+    .profile-icon .plus-sign {
+        position: absolute;
+        bottom: 5px;
+        right: 5px;
+        background-color: #4a2a75;
+        color: white;
+        border-radius: 50%;
+        width: 25px;
+        height: 25px;
+        line-height: 25px;
+        font-size: 16px;
+    }
+    .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+        margin-bottom: 15px;
+    }
+    .form-grid input {
+        width: 100%;
+        padding: 10px;
+        border: none;
+        border-bottom: 1px solid #4a2a75;
+        background-color: transparent;
+        color: #4a2a75;
+        box-sizing: border-box; /* Asegura que el padding no afecte el ancho */
+    }
+    .form-grid input::placeholder {
+        color: #4a2a75;
+    }
+    .sex-options {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+    .sex-options button {
+        background-color: #9d78e2;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+    .map-placeholder {
+        width: 100%;
+        height: 120px;
+        background-color: #d9c8ff;
+        margin-bottom: 20px;
+        border-radius: 5px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: #4a2a75;
+    }
+    .action-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+    .action-buttons button {
+        background-color: #9d78e2;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        flex-grow: 1;
+    }
+    .login-link {
+        margin-bottom: 20px;
+        color: #4a2a75;
+    }
+    .login-link a {
+        color: #4a2a75;
+        font-weight: bold;
+    }
+    .submit-btn {
+        background-color: #4a2a75;
+        color: white;
+        border: none;
+        padding: 15px;
+        width: 100%;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+    }
+</style>
+
+<div class="register-container">
+    <div class="register-form">
+        <h2>REGISTRARSE</h2>
+        <div class="profile-icon">
+            <i class="fas fa-user"></i> <div class="plus-sign">+</div>
+        </div>
+
+        <form action="/usuario/processRegister" method="POST">
+            <div class="form-grid">
+                <input type="text" name="nombre_completo" placeholder="Nombre completo" required>
+                <input type="date" name="fecha_nacimiento" placeholder="Fecha de nacimiento" required>
+                <input type="text" name="nombre_usuario" placeholder="Nombre de usuario" required>
+                <input type="email" name="correo" placeholder="Correo" required>
+                <input type="password" name="contrasenia" placeholder="Contraseña" required>
+                <input type="password" name="repetir_contrasenia" placeholder="Repetir contraseña" required>
+            </div>
+
+            <label style="color: #4a2a75;">Sexo</label>
+            <div class="sex-options">
+                <button type="button">MASCULINO</button>
+                <button type="button">FEMENINO</button>
+                <button type="button">OTRO</button>
+            </div>
+
+            <div class="form-grid">
+                <input type="text" name="pais" placeholder="País">
+                <input type="text" name="ciudad" placeholder="Ciudad">
+            </div>
+
+            <div class="map-placeholder">
+                Plaza de Mayo (Mapa)
+            </div>
+
+            <div class="action-buttons">
+                <button type="button">Verificar Ubicación</button>
+                <button type="button">Guardar</button>
+            </div>
+
+            <div class="login-link">
+                <span>Ya tienes una cuenta?</span>
+                <a href="/usuario/showLoginForm">Iniciar Sesión</a>
+            </div>
+
+            <button type="submit" class="submit-btn">Registrarse</button>
+        </form>
+    </div>
+</div>
+
+<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
