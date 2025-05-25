@@ -1,5 +1,6 @@
 <?php
 
+use Entity\Usuario;
 use Service\UsuarioService;
 
 class UsuarioController
@@ -17,8 +18,7 @@ class UsuarioController
       $this->view->render("login");
    }
 
-   public function processLogin()
-   {
+   public function processLogin() {
       if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
          $this->showLoginForm();
          return;
@@ -27,16 +27,23 @@ class UsuarioController
       $email = $_POST['correo'] ?? '';
       $password = $_POST['contrasenia'] ?? '';
 
-      if (empty($email) || empty($password)) {
-         $this->view->render("login", ['error' => 'Correo y contraseña son obligatorios.']);
-         return;
-      }
-
+      // Delegar TODA la validación al servicio
       $response = $this->usuarioService->login($email, $password);
+
+
       if ($response->success) {
-         $this->view->render("message", ['message' => 'Login exitoso. Bienvenido al lobby!']);
+
+         $this->handleLoginSuccess($response->data);
+         $nombre =  $response->data->getNombreUsuario();
+         $this->view->render("home", ['usuario' => $nombre]);
       } else {
          $this->view->render("login", ['error' => $response->message]);
       }
    }
+
+   private function handleLoginSuccess(Usuario $usuario) {
+      $_SESSION['user_id'] = $usuario->getId();
+      $_SESSION['user_email'] = $usuario->getCorreo();
+   }
+
 }

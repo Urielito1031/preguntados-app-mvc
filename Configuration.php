@@ -7,6 +7,8 @@ use Service\UsuarioService;
 require_once("core/MustachePresenter.php");
 require_once("core/Router.php");
 
+require_once("model/Entity/Usuario.php");
+
 require_once("controller/HomeController.php");
 require_once("controller/UsuarioController.php");
 

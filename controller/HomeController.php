@@ -9,8 +9,13 @@ class HomeController
         $this->view = $view;
     }
 
-    public function show()
-    {
-        $this->view->render("band");
-    }
+   public function show()
+   {
+      if (!isset($_SESSION['user_id'])) {
+         $this->view->render("login");
+         exit;
+      }
+
+      $this->view->render("home");
+   }
 }

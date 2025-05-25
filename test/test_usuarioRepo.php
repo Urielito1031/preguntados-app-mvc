@@ -1,17 +1,18 @@
 <?php
 
 use Entity\Usuario;
+use Repository\UsuarioRepository;
 
 require_once __DIR__ . '/../configuration/Database.php';
 require_once __DIR__ . '/../model/entity/Usuario.php';
 require_once __DIR__ . '/../model/Repository/UsuarioRepository.php';
 
-// Usuario Admin (Rol 1)
+// Usuario Editor (Rol 2)
 $usuarioEditor = [
-   'correo' => 'admin@example.com',
-   'nombre_usuario' => 'admin_user',
-   'contrasenia' => 'admin1234',
-   'id_rol' => 3
+   'correo' => 'editor123@gmail.com',
+   'nombre_usuario' => 'usuarioEditor123',
+   'contrasenia' => 'editor123',
+   'id_rol' => 2
 ];
 // Crear usuario
 $usuario = new Usuario($usuarioEditor);

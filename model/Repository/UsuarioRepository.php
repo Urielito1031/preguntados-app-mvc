@@ -6,6 +6,7 @@ use Entity\Usuario;
 use PDO;
 use PDOException;
 
+
 class UsuarioRepository
 
 {
@@ -65,7 +66,9 @@ class UsuarioRepository
    }
    public function findByUsername(string $username): ?Usuario
    {
-      $sql = "SELECT * FROM usuario WHERE nombre_usuario = :username";
+      $sql = "SELECT *
+    FROM usuario 
+    WHERE correo = :email";
       try{
          $stmt = $this->conn->prepare($sql);
          $stmt->bindValue(':username', $username, PDO::PARAM_STR);

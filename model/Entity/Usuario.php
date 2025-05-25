@@ -145,6 +145,7 @@ class Usuario
          return $this->idNivel;
       }
 
+
       public function getPuntajeTotal(): int
       {
          return $this->puntajeTotal;

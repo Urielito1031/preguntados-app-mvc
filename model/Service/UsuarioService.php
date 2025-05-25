@@ -2,11 +2,12 @@
 
 namespace Service;
 
+
 use Entity\Usuario;
 use Repository\UsuarioRepository;
 use Response\DataResponse;
 
-
+require_once __DIR__ . '/../Response/DataResponse.php';
 class UsuarioService
 {
    private UsuarioRepository $repository;
@@ -31,10 +32,17 @@ class UsuarioService
       }
    }
 
-   public function login(string $username, string $password): DataResponse
+   public function login(string $email, string $password): DataResponse
    {
+      if(empty(trim($email)) || empty(trim($password))){
+         return new DataResponse(false, "Email y contraseña son obligatorios.");
+      }
+
+      if(!$this->validateEmail($email)){
+         return new DataResponse(false, "El email no es válido.");
+      }
       try {
-         $user = $this->repository->findByUsername($username);
+         $user = $this->repository->findByEmail($email);
          if (!$user) {
             return new DataResponse(false, "Usuario no encontrado.");
          }
@@ -65,6 +73,11 @@ class UsuarioService
       } catch (\Exception $e) {
          return new DataResponse(false, "Error al activar la cuenta: " . $e->getMessage());
       }
+   }
+
+   private function validateEmail(string $email): bool
+   {
+      return filter_var($email, FILTER_VALIDATE_EMAIL) !== false;
    }
 
 

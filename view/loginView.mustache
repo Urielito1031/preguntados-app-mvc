@@ -1,3 +1,4 @@
+
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <style>
   .login-page-container {
@@ -212,17 +213,16 @@
     <div class="profile-icon"></div>
 
     {{#error}}
-      <div class="error-message">{{error}}</div>
+      <div class="alert alert-danger">{{error}}</div>
     {{/error}}
-
-    <form method="POST" action="/index.php?controller=Usuario&method=processLogin">
+    <form method="POST" action="/mvp-2025-1er/usuario/processLogin">
       <div class="form-group">
         <input
-                type="email"
+                type="text"
                 class="form-control"
                 name="correo"
                 placeholder="Correo electrónico"
-                required
+
         >
       </div>
 
@@ -232,7 +232,7 @@
                 class="form-control"
                 name="contrasenia"
                 placeholder="Contraseña"
-                required
+
         >
       </div>
 
