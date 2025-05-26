@@ -46,4 +46,12 @@ class UsuarioController
       $_SESSION['user_email'] = $usuario->getCorreo();
    }
 
+   public function showRegisterForm(){
+        $this->view->render("register");
+   }
+
+   public function processRegister(){
+
+   }
+
 }
