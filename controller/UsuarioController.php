@@ -15,7 +15,8 @@ class UsuarioController
     }
 
     public function showLoginForm(){
-        $this->view->render("login");
+        $viewData = ['logo_url' => '/public/img/LogoQuizCode.png'];
+        $this->view->render("login", $viewData);
     }
 
     public function processLogin() {
@@ -57,7 +58,16 @@ class UsuarioController
 
     public function showRegisterForm()
     {
-        $this->view->render("register"); //
+        $viewData = [
+            'titulo_h1' => "REGISTRARSE",
+            'generos' => [
+                ['valor' => 'Masculino', 'texto' => 'MASCULINO'],
+                ['valor' => 'Femenino', 'texto' => 'FEMENINO'],
+                ['valor' => 'Prefiero no cargarlo', 'texto' => 'OTRO']
+            ]
+        ];
+
+        $this->view->render("register", $viewData);
     }
 
     public function processRegister()
