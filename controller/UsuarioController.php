@@ -67,11 +67,13 @@ class UsuarioController
       $nombre_usuario = $_POST['nombre_usuario'] ?? '';
       $email = $_POST['correo'] ?? '';
       $genero = $_POST['genero'] ?? '';
-      $id_ciudad = $this->ubicacionService->processUbication($_POST['pais'],$_POST['ciudad'])->getId();
-      if(isset($_FILES['imagen'])){
-          $url_foto_perfil = $this->imageService->uploadImage($_FILES['imagen']);
-      } $url_foto_perfil = null;
 
+      $id_ciudad = $this->ubicacionService->processUbication($_POST['pais']??'',$_POST['ciudad'])->getId();
+      if(isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK) {
+         $url_foto_perfil = $this->imageService->uploadImage($_FILES['imagen']);
+      } else {
+         $url_foto_perfil = null;
+      }
 
    $passwordRecibido = $_POST['contrasenia'] ?? '';
       $contrasenia =password_hash($passwordRecibido, PASSWORD_DEFAULT); //corresponde que este aca?
@@ -85,19 +87,16 @@ class UsuarioController
             'genero' => $genero,
             'correo' =>$email,
             'contrasenia' => $contrasenia,
-            'nombre_usuario' => $nombre_usuario,
              'url_foto_perfil' => $url_foto_perfil,
              'id_ciudad' => $id_ciudad
 
          ]
       );
-      var_dump($user);
-      exit();
+
       $response = $this->usuarioService->save($user);
 
-      //$this->view->render("register", ['message' => 'Fui al controlador y volvi ', 'response' => $response]);
 
 
-      $this->view->render("register", ['message' => 'Fui al controlador y volvi ','correo' => $response->message]);
+      $this->view->render("home", ['message' => 'Fui al controlador y volvi ','correo' => $response->message]);
    }
 }

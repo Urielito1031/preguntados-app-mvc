@@ -17,9 +17,13 @@ public function __construct(PaisRepository $paisRepository, CiudadRepository $ci
 
 public function processUbication($nombrePais,$nombreCiudad):Ciudad{
     $pais = $this->paisRepository->findOrCreate($nombrePais);
-    return $this->ciudadRepository->findOrCreate($pais->getId(),$nombreCiudad);
+
+
+    $ciudad = $this->ciudadRepository->findOrCreate($pais->getId(),$nombreCiudad);
+    $ciudad->setIdPais($pais->getId());
+    return $ciudad;
 }
 
 }
 
-?>
+?>a

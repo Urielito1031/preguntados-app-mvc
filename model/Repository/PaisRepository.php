@@ -2,6 +2,7 @@
 
 namespace Repository;
 
+require_once __DIR__ . "/../Entity/Pais.php";
 use Config\Database;
 use Entity\Pais;
 use PDO;
@@ -11,35 +12,57 @@ class PaisRepository
 {
    private PDO $conn;
 
-   public function __construct(){
-      $this->conn=Database::connect();
+   public function __construct()
+   {
+      $this->conn = Database::connect();
    }
 
-   public function findOrCreate(string $nombrePais):Pais {
-      $sql = "SELECT * FROM pais WHERE nombre=:nombrePais";
-      try{
+   public function findOrCreate(string $nombrePais): Pais
+   {
+      $pais = $this->findByNombre($nombrePais);
+
+      if ($pais !== null) {
+         return $pais;
+      }
+
+      return $this->create($nombrePais);
+   }
+
+   private function findByNombre(string $nombre): ?Pais
+   {
+      $sql = "SELECT * FROM pais WHERE nombre = :nombre";
       $stmt = $this->conn->prepare($sql);
+      $stmt->bindValue(':nombre', $nombre, PDO::PARAM_STR);
       $stmt->execute();
-      $row = $stmt->fetch(PDO::FETCH_ASSOC);
-      } catch (PDOException $e) {
-          echo $e->getMessage();
-      }
-      if($row != null){
-          return new Pais($row);
-      }
-        try{
-       $sql = "INSERT INTO pais (nombre) VALUES (:nombrePais)";
-       $stmt = $this->conn->prepare($sql);
-       $stmt->bindValue(':nombre', $nombrePais);
-       $stmt->execute();}
-      catch(PDOException $e){
-          echo $e->getMessage();
-      }
-       $id = $this->conn->lastInsertId();
-       return new Pais(['id'=>$id,'nombre'=>$nombrePais]);
-//     $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
+      $data = $stmt->fetch(PDO::FETCH_ASSOC);
 
+      return $data ? new Pais($data) : null;
    }
 
+   private function create(string $nombre): Pais
+   {
+      $sql = "INSERT INTO pais (nombre) VALUES (:nombre)";
+      $stmt = $this->conn->prepare($sql);
+      $stmt->bindValue(':nombre', $nombre, PDO::PARAM_STR);
+      $stmt->execute();
+
+      $id = $this->conn->lastInsertId();
+      $data = $this->findById($id);
+      $data->setId($this->conn->lastInsertId());
+
+      return $this->findById($id);
+   }
+
+   private function findById(int $id): ?Pais
+   {
+      $sql = "SELECT * FROM pais WHERE id = :id";
+      $stmt = $this->conn->prepare($sql);
+      $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+      $stmt->execute();
+
+      $data = $stmt->fetch(PDO::FETCH_ASSOC);
+
+      return $data ? new Pais($data) : null;
+   }
 }

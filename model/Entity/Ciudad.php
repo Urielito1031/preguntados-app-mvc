@@ -12,7 +12,7 @@ class Ciudad
       {
          $this->id = $data['id'] ?? null;
          $this->nombre = $data['nombre'];
-         $this->idPais  = $data['paisId'] ;
+         $this->idPais  = $data['id_pais']?? null ;
       }
 
       public function getId(): ?int
@@ -29,5 +29,14 @@ class Ciudad
       {
          return $this->idPais;
       }
+   public function setId(int $id): void
+   {
+      $this->id = $id;
+   }
+
+   public function setIdPais(?int $idPais)
+   {
+      $this->idPais = $idPais;
+   }
 
 }
