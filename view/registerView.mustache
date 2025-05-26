@@ -87,6 +87,20 @@
              alert("Por favor, ingresa un país y/o ciudad.");
         }
     }
+    document.getElementById("formulario-registro").addEventListener("submit", function(event) {
+        event.preventDefault(); // Evita el envío inmediato del formulario
+
+        // Mostrar el modal antes de enviar
+        document.getElementById('miModal').style.display = 'block';
+
+        // Luego de mostrar el alert, enviar el formulario después de 5 segundos
+        let formulario = this;
+        setTimeout(function() {
+            formulario.submit(); // Aquí 'formulario' sigue haciendo referencia al form
+        }, 5000);
+    });
+
+
 </script>
 
 <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
