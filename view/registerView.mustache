@@ -87,6 +87,10 @@
         border: 1px solid #d9c8ff; /* Borde sutil */
         margin-bottom: 20px;
         border-radius: 5px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: #4a2a75;
     }
     .action-buttons {
         display: flex;
@@ -144,9 +148,11 @@
 
             <label style="color: #4a2a75;">Sexo</label>
             <div class="sex-options">
-                <button type="button">MASCULINO</button>
-                <button type="button">FEMENINO</button>
-                <button type="button">OTRO</button>
+                <select name="genero">
+                    <option value="Masculino">MASCULINO</option>
+                    <option value="Femenino">FEMENINO</option>
+                    <option value="Prefiero no cargarlo">OTRO</option>
+                </select>
             </div>
 
             <div class="form-grid">
@@ -154,6 +160,13 @@
                 <input type="text" id="ciudad" name="ciudad" placeholder="Ciudad">
             </div>
 
+            <iframe
+                id="mapa"
+                loading="lazy"
+                allowfullscreen
+                referrerpolicy="no-referrer-when-downgrade"
+                src="https://maps.google.com/maps?q=Plaza%20de%20Mayo%2C%20Buenos%20Aires&output=embed">
+                </iframe>
             <iframe
                     id="mapa"
                     loading="lazy"
@@ -175,32 +188,5 @@
         </form>
     </div>
 </div>
-
-<script>
-    function actualizarMapa() {
-        var paisInput = document.getElementById("pais");
-        var ciudadInput = document.getElementById("ciudad");
-        var mapaIframe = document.getElementById("mapa");
-
-        var pais = paisInput.value;
-        var ciudad = ciudadInput.value;
-        var direccion = "";
-
-        if (pais && ciudad) {
-            direccion = ciudad + ", " + pais;
-        } else if (ciudad) {
-            direccion = ciudad;
-        } else if (pais) {
-            direccion = pais;
-        }
-
-        if (direccion) {
-            var url = "https://maps.google.com/maps?q=" + encodeURIComponent(direccion) + "&output=embed";
-            mapaIframe.src = url;
-        } else {
-            alert("Por favor, ingresa un país y/o ciudad.");
-        }
-    }
-</script>
 
 <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
