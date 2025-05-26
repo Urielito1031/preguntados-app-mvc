@@ -1,7 +1,6 @@
 <link rel="stylesheet" href="/public/css/register.css">
 
 <section class="d-flex justify-content-center align-items-center m-5" style="min-height: 100vh;">
-    <form class="col-12 col-sm-8 col-md-6 col-lg-4 d-flex flex-column align-items-center justify-content-center" action="/usuario/processRegister" method="POST" enctype="multipart/form-data" id="formulario-registro">
 
         <div id="miModal" class="w3-modal w3-display-container">
             <div class="w3-modal-content w3-card-4 w3-display-middle" style="width: 50%; height: 20vh;">
@@ -15,6 +14,7 @@
             </div>
         </div>
 
+    <form class="col-12 col-sm-8 col-md-6 col-lg-4 d-flex flex-column align-items-center justify-content-center" action="/usuario/processRegister" method="POST" enctype="multipart/form-data" id="formulario-registro">
         <h1 class="text-violet mb-4 text-center">{{titulo_h1}}</h1>
 
         <input type="file">
@@ -27,7 +27,9 @@
             <input class="input-form m-2" type="password" name="contrasenia" placeholder="Contraseña" aria-label="Contraseña" required>
             <input class="input-form m-2" type="password" name="repetir_contrasenia" placeholder="Repetir contraseña" aria-label="repetir_contraseña" required>
             <input class="input-form m-2" type="text" name="apellido" placeholder="Apellido" aria-label="Apellido" required>
+            <input type="hidden" name="estado" id="estado" value="true">
         </div>
+
 
         <!--
         <label class="d-flex justify-content-around w-100 my-4" for="genero">
@@ -36,12 +38,13 @@
             {{/generos}}
         </label>
         -->
-
-        <label style="color: #4a2a75;">Sexo</label>
+            <label style="color: #4a2a75;">Sexo</label>
             <div class="sex-options">
-                <button type="button">MASCULINO</button>
-                <button type="button">FEMENINO</button>
-                <button type="button">OTRO</button>
+                <select name="genero">
+                    <option value="Masculino">MASCULINO</option>
+                    <option value="Femenino">FEMENINO</option>
+                    <option value="Prefiero no cargarlo">OTRO</option>
+                </select>
             </div>
 
 
@@ -60,7 +63,6 @@
 
         <div class="d-flex justify-content-between w-100">
             <button class="bg-color-pink text-white mt-2 mb-4" type="button" onclick="actualizarMapa()">Verificar Ubicación</button>
-            <button class="bg-color-pink text-white mt-2 mb-4" type="button">Guardar</button>
         </div>
 
         <p class="text-center text-violet">¿No tienes una cuenta? <b><a href="/usuario/showLoginForm">Iniciar Sesión</a></b></p>
@@ -88,16 +90,10 @@
         }
 
         if (direccion) {
-            // Nota: La URL de googleusercontent.com que proporcionaste puede no ser la más estándar
-            // para embeber Google Maps. Una URL más común sería del tipo:
-            // var url = "https://maps.google.com/maps?q=" + encodeURIComponent(direccion) + "&output=embed";
-            // Mantendré la estructura que diste, pero considera esto.
             var url = "https://maps.google.com/maps?q=" + encodeURIComponent(direccion) + "&output=embed";
             mapaIframe.src = url;
         } else {
-            // Opcional: Mostrar un mapa por defecto o un mensaje si no hay país/ciudad
-            // mapaIframe.src = "https://maps.google.com/maps?q=World&output=embed";
-             alert("Por favor, ingresa un país y/o ciudad.");
+            alert("Por favor, ingresa un país y/o ciudad.");
         }
     }
     document.getElementById("formulario-registro").addEventListener("submit", function(event) {
@@ -112,6 +108,7 @@
             formulario.submit(); // Aquí 'formulario' sigue haciendo referencia al form
         }, 5000);
     });
-</script>
 
+
+</script>
 <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>

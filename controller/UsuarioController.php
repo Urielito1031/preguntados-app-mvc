@@ -64,6 +64,10 @@ class UsuarioController
       $this->view->render("register");
    }
 
+
+    /**
+     * @throws Exception
+     */
     public function processRegister()
    {
       $nombre = $_POST['nombre'] ?? '';
@@ -72,6 +76,7 @@ class UsuarioController
       $nombre_usuario = $_POST['nombre_usuario'] ?? '';
       $email = $_POST['correo'] ?? '';
       $genero = $_POST['genero'] ?? '';
+      $cuentaValidada = $_POST ['estado'] ?? '';
 
       $id_ciudad = $this->ubicacionService->processUbication($_POST['pais']??'',$_POST['ciudad'])->getId();
       if(isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK) {
@@ -80,7 +85,7 @@ class UsuarioController
          $url_foto_perfil = null;
       }
 
-      $passwordRecibido = $_POST['contrasenia'] ?? '';
+   $passwordRecibido = $_POST['contrasenia'] ?? '';
       $contrasenia =password_hash($passwordRecibido, PASSWORD_DEFAULT); //corresponde que este aca?
 
       $user = new Usuario(
@@ -92,12 +97,13 @@ class UsuarioController
             'genero' => $genero,
             'correo' =>$email,
             'contrasenia' => $contrasenia,
-            'cuenta_validada' => true, //activado por defecto, arreglar despues
-
              'url_foto_perfil' => $url_foto_perfil,
-             'id_ciudad' => $id_ciudad
+             'id_ciudad' => $id_ciudad,
+             'cuenta_validada' => $cuentaValidada
+
          ]
       );
+
       $response = $this->usuarioService->save($user);
 
       $this->view->render("login", ['message' => 'Fui al controlador y volvi ','correo' => $response->message]);
