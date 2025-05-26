@@ -52,13 +52,31 @@ class UsuarioController
 
    public function processRegister()
    {
+      $nombre = $_POST['nombre'] ?? '';
+      $apellido = $_POST['apellido'] ?? '';
+      $fecha_nacimiento = $_POST['fecha_nacimiento'] ?? '';
+      $nombre_usuario = $_POST['nombre_usuario'] ?? '';
       $email = $_POST['correo'] ?? '';
+      $genero = $_POST['genero'] ?? '';
+      $pais = $_POST['pais'] ?? '';
+      $ciudad = $_POST['ciudad'] ?? '';
+      
       $passwordRecibido = $_POST['contrasenia'] ?? '';
-      $contrasenia =password_hash($passwordRecibido, PASSWORD_DEFAULT); //chequeado
-      $nombre = rand(1,1000);
-      $user = new Usuario(['correo' =>$email,'contrasenia' => $contrasenia
-         ,'nombre_usuario' => $nombre
-      ]);
+      $contrasenia =password_hash($passwordRecibido, PASSWORD_DEFAULT); //corresponde que este aca?
+
+      $user = new Usuario(
+         [
+            'nombre' => $nombre,
+            'apellido' => $apellido,
+            'fecha_nacimiento' => $fecha_nacimiento,
+            'nombre_usuario' => $nombre_usuario,
+            'genero' => $genero,
+            'correo' =>$email,
+            'contrasenia' => $contrasenia,
+            'nombre_usuario' => $nombre_usuario,
+
+         ]
+      );
       $response = $this->usuarioService->save($user);
 
       //$this->view->render("register", ['message' => 'Fui al controlador y volvi ', 'response' => $response]);
