@@ -135,8 +135,9 @@
             <div class="plus-sign">+</div>
         </div>
 
-        <form action="/usuario/processRegister" method="POST">
+        <form action="/usuario/processRegister" method="POST" enctype="multipart/form-data">
             <div class="form-grid">
+                <input type="file" name="imagen" placeholder="Imagen" required>
                 <input type="text" name="nombre" placeholder="Nombre" required>
                 <input type="text" name="apellido" placeholder="Apellido" required>
                 <input type="date" name="fecha_nacimiento" placeholder="Fecha de nacimiento" required>
@@ -166,13 +167,6 @@
                 allowfullscreen
                 referrerpolicy="no-referrer-when-downgrade"
                 src="https://maps.google.com/maps?q=Plaza%20de%20Mayo%2C%20Buenos%20Aires&output=embed">
-                </iframe>
-            <iframe
-                    id="mapa"
-                    loading="lazy"
-                    allowfullscreen
-                    referrerpolicy="no-referrer-when-downgrade"
-                    src="https://maps.google.com/maps?q=Plaza%20de%20Mayo%2C%20Buenos%20Aires&output=embed">
             </iframe>
 
             <div class="action-buttons">
@@ -188,5 +182,30 @@
         </form>
     </div>
 </div>
+<script>
+    function actualizarMapa() {
+        var paisInput = document.getElementById("pais");
+        var ciudadInput = document.getElementById("ciudad");
+        var mapaIframe = document.getElementById("mapa");
 
+        var pais = paisInput.value;
+        var ciudad = ciudadInput.value;
+        var direccion = "";
+
+        if (pais && ciudad) {
+            direccion = ciudad + ", " + pais;
+        } else if (ciudad) {
+            direccion = ciudad;
+        } else if (pais) {
+            direccion = pais;
+        }
+
+        if (direccion) {
+            var url = "https://maps.google.com/maps?q=" + encodeURIComponent(direccion) + "&output=embed";
+            mapaIframe.src = url;
+        } else {
+            alert("Por favor, ingresa un país y/o ciudad.");
+        }
+    }
+</script>
 <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>

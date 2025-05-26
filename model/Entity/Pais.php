@@ -22,4 +22,9 @@ class Pais
       return $this->nombre;
    }
 
+   public function setId(int $id): void
+   {
+      $this->id = $id;
+   }
+
 }
