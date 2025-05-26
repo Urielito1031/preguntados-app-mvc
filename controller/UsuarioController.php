@@ -36,30 +36,34 @@ class UsuarioController
       // Delegar TODA la validación al servicio
       $response = $this->usuarioService->login($email, $password);
 
-
-      if ($response->success) {
-
-         $this->handleLoginSuccess($response->data);
-         $nombre =  $response->data->getNombreUsuario();
-         $this->view->render("home", ['usuario' => $nombre]);
-      } else {
-         $this->view->render("login", ['error' => $response->message]);
-      }
+       if ($response->success) {
+           $this->handleLoginSuccess($response->data);
+           header('Location: /home/show');
+           exit;
+       } else {
+           $this->view->render("login", ['error' => $response->message]); //
+       }
    }
 
    private function handleLoginSuccess(Usuario $usuario) {
       $_SESSION['user_id'] = $usuario->getId();
       $_SESSION['user_email'] = $usuario->getCorreo();
+      $_SESSION['user_name'] = $usuario->getNombreUsuario();
    }
+
+    public function logout() {
+        session_unset();
+        session_destroy();
+        // Redirige a la raíz del sitio (que a su vez mostrará el login).
+        header('Location: /');
+        exit();
+    }
+
    public function showRegisterForm()
    {
       $this->view->render("register");
    }
 
-
-    /**
-     * @throws Exception
-     */
     public function processRegister()
    {
       $nombre = $_POST['nombre'] ?? '';
@@ -76,7 +80,7 @@ class UsuarioController
          $url_foto_perfil = null;
       }
 
-   $passwordRecibido = $_POST['contrasenia'] ?? '';
+      $passwordRecibido = $_POST['contrasenia'] ?? '';
       $contrasenia =password_hash($passwordRecibido, PASSWORD_DEFAULT); //corresponde que este aca?
 
       $user = new Usuario(
@@ -88,16 +92,14 @@ class UsuarioController
             'genero' => $genero,
             'correo' =>$email,
             'contrasenia' => $contrasenia,
+            'cuenta_validada' => true, //activado por defecto, arreglar despues
+
              'url_foto_perfil' => $url_foto_perfil,
              'id_ciudad' => $id_ciudad
-
          ]
       );
-
       $response = $this->usuarioService->save($user);
 
-
-
-      $this->view->render("home", ['message' => 'Fui al controlador y volvi ','correo' => $response->message]);
+      $this->view->render("login", ['message' => 'Fui al controlador y volvi ','correo' => $response->message]);
    }
 }
