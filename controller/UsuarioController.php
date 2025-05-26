@@ -67,6 +67,7 @@ class UsuarioController
       $nombre_usuario = $_POST['nombre_usuario'] ?? '';
       $email = $_POST['correo'] ?? '';
       $genero = $_POST['genero'] ?? '';
+      $cuentaValidada = $_POST ['estado'] ?? '';
 
       $id_ciudad = $this->ubicacionService->processUbication($_POST['pais']??'',$_POST['ciudad'])->getId();
       if(isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK) {
@@ -88,7 +89,8 @@ class UsuarioController
             'correo' =>$email,
             'contrasenia' => $contrasenia,
              'url_foto_perfil' => $url_foto_perfil,
-             'id_ciudad' => $id_ciudad
+             'id_ciudad' => $id_ciudad,
+             'cuenta_validada' => $cuentaValidada
 
          ]
       );
@@ -97,6 +99,6 @@ class UsuarioController
 
 
 
-      $this->view->render("home", ['message' => 'Fui al controlador y volvi ','correo' => $response->message]);
+      $this->view->render("login", ['message' => 'Fui al controlador y volvi ','correo' => $response->message]);
    }
 }

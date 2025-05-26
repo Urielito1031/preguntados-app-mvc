@@ -128,10 +128,6 @@
 </style>
 
 <div class="register-container">
-    <!--
-    <button onclick="document.getElementById('miModal').style.display='block'" class="w3-button w3-blue">Abrir Modal</button>-->
-
-    <!-- Modal -->
 
     <div id="miModal" class="w3-modal w3-display-container">
         <div class="w3-modal-content w3-card-4 w3-display-middle" style="width: 50%; height: 20vh;">
@@ -228,15 +224,15 @@
         }
     }
     document.getElementById("formulario-registro").addEventListener("submit", function(event) {
-        event.preventDefault(); // Evita el envío inmediato del formulario
+        event.preventDefault();
 
-        // Mostrar el modal antes de enviar
+
         document.getElementById('miModal').style.display = 'block';
 
-        // Luego de mostrar el alert, enviar el formulario después de 5 segundos
+
         let formulario = this;
         setTimeout(function() {
-            formulario.submit(); // Aquí 'formulario' sigue haciendo referencia al form
+            formulario.submit();
         }, 5000);
     });
 
