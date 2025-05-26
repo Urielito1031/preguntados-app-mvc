@@ -5,7 +5,7 @@ use Entity\Ciudad;
 use Repository\CiudadRepository;
 use Repository\PaisRepository;
 
-class UsuarioService
+class UbicacionService
 {
 private PaisRepository $paisRepository;
 private CiudadRepository $ciudadRepository;

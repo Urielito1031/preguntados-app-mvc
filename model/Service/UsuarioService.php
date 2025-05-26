@@ -4,17 +4,21 @@ namespace Service;
 
 
 use Entity\Usuario;
+use ImageService;
 use Repository\UsuarioRepository;
 use Response\DataResponse;
+
 
 require_once __DIR__ . '/../Response/DataResponse.php';
 class UsuarioService
 {
    private UsuarioRepository $repository;
 
+
    public function __construct($usuarioRepository)
    {
       $this->repository = $usuarioRepository;
+
    }
    public function save(Usuario $usuario): DataResponse
    {
@@ -25,7 +29,8 @@ class UsuarioService
          if ($this->repository->findByUsername($usuario->getNombreUsuario())) {
             return new DataResponse(false, "El nombre de usuario ya está en uso.");
          }
-         $this->repository->save($usuario);
+
+          $this->repository->save($usuario);
          return new DataResponse(true, "Usuario guardado correctamente", $usuario);
       } catch (\Exception $e) {
          return new DataResponse(false, "Error al guardar el usuario: " . $e->getMessage());

@@ -21,8 +21,8 @@ class CiudadRepository
         $stmt->execute();
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        if($row != null){
-            return new Pais($row);
+        if($row){
+            return new Ciudad($row);
         }
 
         $sql = "INSERT INTO ciudad (nombre,id_pais) VALUES (:nombreCiudad,:id_pais)";
@@ -31,7 +31,7 @@ class CiudadRepository
         $stmt->bindValue(':id_pais', $id_pais);
         $stmt->execute();
         $id = $this->conn->lastInsertId();
-        return new Ciudad(["id"=>$id,"nombre"=>$nombreCiudad,"id_pais"=>$id_pais]);
+        return new Ciudad(['id'=>$id,'nombre'=>$nombreCiudad,'id_pais'=>$id_pais]);
 //     $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
 

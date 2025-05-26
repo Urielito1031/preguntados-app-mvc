@@ -1,17 +1,22 @@
 <?php
 
 use Entity\Usuario;
+use Service\ImageService;
 use Service\UsuarioService;
 
 class UsuarioController
 {
    private UsuarioService $usuarioService;
    private $view;
+   private ImageService $imageService;
+   private UbicacionService $ubicacionService;
 
    public function __construct(UsuarioService $usuarioService, MustachePresenter $view)
    {
       $this->usuarioService = $usuarioService;
       $this->view = $view;
+      $this->imageService = new ImageService();
+      $this->ubicacionService = new UbicacionService(new \Repository\PaisRepository(), new \Repository\CiudadRepository());
    }
 
    public function showLoginForm(){
@@ -50,7 +55,11 @@ class UsuarioController
       $this->view->render("register");
    }
 
-   public function processRegister()
+
+    /**
+     * @throws Exception
+     */
+    public function processRegister()
    {
       $nombre = $_POST['nombre'] ?? '';
       $apellido = $_POST['apellido'] ?? '';
@@ -58,10 +67,13 @@ class UsuarioController
       $nombre_usuario = $_POST['nombre_usuario'] ?? '';
       $email = $_POST['correo'] ?? '';
       $genero = $_POST['genero'] ?? '';
-      $pais = $_POST['pais'] ?? '';
-      $ciudad = $_POST['ciudad'] ?? '';
+      $id_ciudad = $this->ubicacionService->processUbication($_POST['pais'],$_POST['ciudad'])->getId();
+      if(isset($_FILES['imagen'])){
+          $url_foto_perfil = $this->imageService->uploadImage($_FILES['imagen']);
+      } $url_foto_perfil = null;
 
-      $passwordRecibido = $_POST['contrasenia'] ?? '';
+
+   $passwordRecibido = $_POST['contrasenia'] ?? '';
       $contrasenia =password_hash($passwordRecibido, PASSWORD_DEFAULT); //corresponde que este aca?
 
       $user = new Usuario(
@@ -74,9 +86,13 @@ class UsuarioController
             'correo' =>$email,
             'contrasenia' => $contrasenia,
             'nombre_usuario' => $nombre_usuario,
+             'url_foto_perfil' => $url_foto_perfil,
+             'id_ciudad' => $id_ciudad
 
          ]
       );
+      var_dump($user);
+      exit();
       $response = $this->usuarioService->save($user);
 
       //$this->view->render("register", ['message' => 'Fui al controlador y volvi ', 'response' => $response]);
