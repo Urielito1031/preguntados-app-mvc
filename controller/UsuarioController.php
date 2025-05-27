@@ -43,7 +43,7 @@ class UsuarioController
            header('Location: /home/show');
            exit;
        } else {
-           $this->view->render("login", ['error' => $response->message]); //
+           $this->view->render("login", ['error' => $response->message, 'logo_url' => '/public/img/LogoQuizCode.png']); //
        }
    }
 
@@ -63,9 +63,16 @@ class UsuarioController
         exit();
     }
 
-   public function showRegisterForm()
-   {
-      $this->view->render("register");
+   public function showRegisterForm(){
+       $options = [
+            ['value' => '', 'show' => 'Sexo'],
+            ['value' => 'masculino', 'show' => 'Masculino'],
+            ['value' => 'femenino', 'show' => 'Femenino'],
+            ['value' => 'otro', 'show' => 'Otro']
+       ];
+
+      $viewData = ['sexo' => $options, 'titulo_h1' => 'REGISTRARSE'];
+      $this->view->render("register", $viewData);
    }
 
 
@@ -111,7 +118,8 @@ class UsuarioController
 
       $response = $this->usuarioService->save($user);
 
-      $this->view->render("login", ['message' => 'Fui al controlador y volvi ','correo' => $response->message]);
+
+      $this->view->render("login", ['message' => 'Fui al controlador y volvi ','correo' => $response->message, 'logo_url' => '/public/img/LogoQuizCode.png']);
    }
 
 
