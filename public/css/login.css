@@ -1,0 +1,15 @@
+.text-violet{
+    color: #4b2e77;
+}
+.text-pink{
+    color: #8e5fcf;
+}
+.bg-color-violet{
+    background: #4b2e77;
+    border: none;
+}
+.input-form{
+    border: none;
+    border-bottom: solid 2px #4b2e77;
+    background: transparent;
+}

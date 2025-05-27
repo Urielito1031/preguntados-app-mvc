@@ -9,13 +9,18 @@ class HomeController
         $this->view = $view;
     }
 
-   public function show()
-   {
-      if (!isset($_SESSION['user_id'])) {
-         $this->view->render("login");
-         exit;
-      }
+    public function show()
+    {
 
-      $this->view->render("home");
-   }
+
+        if (!isset($_SESSION['user_name'])) {
+
+            header('Location: /usuario/showLoginForm');
+            exit;
+        }
+
+
+        $data = ['usuario' => $_SESSION['user_name'] ?? ''];
+        $this->view->render("home", $data); //
+    }
 }
