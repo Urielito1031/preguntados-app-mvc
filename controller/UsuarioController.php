@@ -11,6 +11,8 @@ class UsuarioController
    private ImageService $imageService;
    private UbicacionService $ubicacionService;
 
+
+
    public function __construct(UsuarioService $usuarioService, MustachePresenter $view)
    {
       $this->usuarioService = $usuarioService;
@@ -45,12 +47,14 @@ class UsuarioController
        }
    }
 
-   private function handleLoginSuccess(Usuario $usuario) {
-      $_SESSION['user_id'] = $usuario->getId();
-      $_SESSION['user_email'] = $usuario->getCorreo();
-      $_SESSION['user_name'] = $usuario->getNombreUsuario();
+   private function handleLoginSuccess(Usuario $usuario)
+   {
+       $_SESSION['user_id'] = $usuario->getId();
+       $_SESSION['user_email'] = $usuario->getCorreo();
+       $_SESSION['user_name'] = $usuario->getNombreUsuario();
+       $_SESSION['foto_perfil'] = $usuario->getUrlFotoPerfil();
+       $_SESSION['puntaje_total'] = $usuario->getPuntajeTotal();
    }
-
     public function logout() {
         session_unset();
         session_destroy();
@@ -79,6 +83,7 @@ class UsuarioController
       $cuentaValidada = $_POST ['estado'] ?? '';
 
       $id_ciudad = $this->ubicacionService->processUbication($_POST['pais']??'',$_POST['ciudad'])->getId();
+
       if(isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK) {
          $url_foto_perfil = $this->imageService->uploadImage($_FILES['imagen']);
       } else {
@@ -107,5 +112,16 @@ class UsuarioController
       $response = $this->usuarioService->save($user);
 
       $this->view->render("login", ['message' => 'Fui al controlador y volvi ','correo' => $response->message]);
+   }
+
+
+   public function showProfile(){
+
+       $data = ['usuario' => $_SESSION['user_name'] ?? '',
+                'foto_perfil' => $_SESSION['foto_perfil'] ?? '',
+                'puntaje_total' => $_SESSION['puntaje_total'] ?? '',
+       ];
+
+        $this->view->render("profile", $data);
    }
 }

@@ -54,7 +54,7 @@ class PaisRepository
       return $this->findById($id);
    }
 
-   private function findById(int $id): ?Pais
+   public function findById(int $id): ? Pais
    {
       $sql = "SELECT * FROM pais WHERE id = :id";
       $stmt = $this->conn->prepare($sql);

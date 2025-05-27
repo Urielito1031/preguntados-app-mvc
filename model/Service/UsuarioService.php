@@ -2,12 +2,10 @@
 
 namespace Service;
 
-
 use Entity\Usuario;
-use ImageService;
+use Service\ImageService;
 use Repository\UsuarioRepository;
 use Response\DataResponse;
-
 
 require_once __DIR__ . '/../Response/DataResponse.php';
 class UsuarioService

@@ -1,6 +1,6 @@
 <link rel="stylesheet" href="/public/css/register.css">
 
-<section class="d-flex justify-content-center align-items-center m-5" style="min-height: 100vh;">
+<section class="d-flex justify-content-center align-items-center m-4">
 
         <div id="miModal" class="w3-modal w3-display-container">
             <div class="w3-modal-content w3-card-4 w3-display-middle" style="width: 50%; height: 20vh;">
@@ -17,9 +17,9 @@
     <form class="col-12 col-sm-8 col-md-6 col-lg-4 d-flex flex-column align-items-center justify-content-center" action="/usuario/processRegister" method="POST" enctype="multipart/form-data" id="formulario-registro">
         <h1 class="text-violet mb-4 text-center">{{titulo_h1}}</h1>
 
-        <input type="file">
 
         <div class="d-flex justify-content-between flex-wrap">
+            <input class="input-form m-2" type="file" name="imagen" required>
             <input class="input-form m-2" type="text" name="nombre" placeholder="Nombre" aria-label="Nombre" required>
             <input class="input-form m-2" type="date" name="fecha_nacimiento" placeholder="Fecha de nacimiento" aria-label="nacimiento" required>
             <input class="input-form m-2" type="text" name="nombre_usuario" placeholder="Nombre de usuario" aria-label="usuario" required>
@@ -30,14 +30,6 @@
             <input type="hidden" name="estado" id="estado" value="true">
         </div>
 
-
-        <!--
-        <label class="d-flex justify-content-around w-100 my-4" for="genero">
-            {{#generos}}
-                <input type="radio" name="genero" aria-label="genero" value="{{valor}}">{{texto}}
-            {{/generos}}
-        </label>
-        -->
             <label style="color: #4a2a75;">Sexo</label>
             <div class="sex-options">
                 <select name="genero">

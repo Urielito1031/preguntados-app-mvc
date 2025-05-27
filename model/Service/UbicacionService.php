@@ -25,5 +25,3 @@ public function processUbication($nombrePais,$nombreCiudad):Ciudad{
 }
 
 }
-
-?>a
