@@ -1,0 +1,48 @@
+<link href="/public/css/game.css" rel="stylesheet">
+<div class="ruleta-container">
+    <img class="w3-margin-bottom" src="{{logo_url}}" alt="Logo QuizCode"  height="150px" width="50%" style="object-fit: contain">
+    <div class="ruleta" id="ruleta">
+        <div class="categoria historia">H</div>
+        <div class="categoria arte">A</div>
+        <div class="categoria ciencia">C</div>
+        <div class="categoria deporte">D</div>
+        <div class="categoria geografia"><p>G</p></div>
+        <button class="btn-girar" onclick="girarRuleta()">¡Girar!</button>
+    </div>
+
+</div>
+
+<script>
+    let ultimoGrado = 0;
+
+    function girarRuleta() {
+        const ruleta = document.getElementById("ruleta");
+        const categorias = ["historia", "arte", "ciencia", "deporte", "geografia"];
+
+        const grados = Math.floor(Math.random() * 360) + 1440;
+
+        ruleta.style.transform = `rotate(${ultimoGrado + grados}deg)`;
+
+        ultimoGrado += grados;
+
+        setTimeout(() => {
+
+            let anguloFinal = (ultimoGrado % 360);
+            let categoriaSeleccionada = "";
+
+            if (anguloFinal >= 0 && anguloFinal < 72) categoriaSeleccionada = "historia";
+            else if (anguloFinal >= 72 && anguloFinal < 144) categoriaSeleccionada = "arte";
+            else if (anguloFinal >= 144 && anguloFinal < 216) categoriaSeleccionada = "ciencia";
+            else if (anguloFinal >= 216 && anguloFinal < 288) categoriaSeleccionada = "deporte";
+            else categoriaSeleccionada = "geografia";
+
+            categorias.forEach(cat => {
+                document.querySelector(`.${cat}`).style.opacity = cat === categoriaSeleccionada ? "1" : "0.5";
+            });
+
+            console.log(`La categoría seleccionada es: ${categoriaSeleccionada}`);
+        }, 3000);
+    }
+
+</script>
+
