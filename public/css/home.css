@@ -1,0 +1,17 @@
+.bg-color-pink{
+    background: #8e5fcf;
+    color: white;
+    border-radius: 50px;
+    transition: .8s ease;
+    border: solid 2px #8e5fcf;
+}
+.bg-color-pink:hover{
+    background: white;
+    color: #8e5fcf;
+    border: 2px solid #8e5fcf;
+}
+
+a{
+    text-decoration: none;
+
+}

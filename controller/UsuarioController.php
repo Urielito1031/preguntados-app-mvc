@@ -22,8 +22,15 @@ class UsuarioController
    }
 
     public function showLoginForm(){
-        $viewData = ['logo_url' => '/public/img/LogoQuizCode.png'];
-        $this->view->render("login", $viewData);
+       $viewData = ['logo_url' => '/public/img/LogoQuizCode.png', 'foto_perfil' => 'public/img/person-fill.svg'];
+
+        if(isset($_SESSION['user_name'])) {
+            $viewData['display'] = "display: block";
+        }else{
+            $viewData['display'] = "display: none";
+        }
+
+       $this->view->render("login", $viewData);
     }
 
    public function processLogin() {
