@@ -11,16 +11,16 @@ class HomeController
 
     public function show()
     {
-
-
         if (!isset($_SESSION['user_name'])) {
-
             header('Location: /usuario/showLoginForm');
             exit;
         }
 
-
-        $data = ['usuario' => $_SESSION['user_name'] ?? ''];
-        $this->view->render("home", $data); //
+        $viewData = [
+            'usuario' => $_SESSION['user_name'] ?? '',
+            'logo_url' => '/public/img/LogoQuizCode.png',
+            'foto_perfil' => $_SESSION['foto_perfil']
+        ];
+        $this->view->render("home", $viewData); //
     }
 }
