@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 30-05-2025 a las 17:18:03
+-- Tiempo de generación: 30-05-2025 a las 23:10:11
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -165,10 +165,10 @@ INSERT INTO `pregunta` (`id`, `respuesta_correcta`, `id_categoria`, `id_nivel`, 
 (36, 'Robert Downey Jr.', 6, 1, '¿Qué actor interpretó a Iron Man en el Universo Cinematográfico de Marvel?'),
 (37, 'Game of Thrones', 6, 2, '¿Qué serie de TV es conocida por el lema \"Winter is Coming\"?'),
 (38, 'Quentin Tarantino', 6, 3, '¿Qué director de cine es conocido por películas como \"Pulp Fiction\" y \"Kill Bill\"?'),
-(39, 'Juan Domingo Perón', 1, 2, '¿Qué presidente argentino fue conocido como \"el padre de los pobres\"?'),
-(40, 'Cuba', 1, 1, '¿Qué país sudamericano fue el último en independizarse de España?'),
+(39, 'Alberto Fernánez', 1, 2, '¿Qué presidente argentino organizó una fiesta en la quinta de Olivos?'),
+(40, 'Bolivia', 1, 1, '¿Qué país sudamericano fue el último en independizarse de España?'),
 (41, 'India', 2, 3, '¿Qué país inventó el bádminton?'),
-(42, 'Hormiga', 4, 1, '¿Qué animal tiene el cerebro más grande en proporción a su cuerpo?'),
+(42, 'Cachalote', 4, 1, '¿Qué animal tiene el cerebro más grande en proporción a su cuerpo?'),
 (43, 'Neptuno', 4, 3, '¿Qué planeta del sistema solar tiene vientos más rápidos (2,100 km/h)?'),
 (44, 'Luis Federico Leloir', 4, 2, '¿Qué científico argentino ganó el Nobel por descubrir cómo las células usan el azúcar?'),
 (45, 'Bolivia', 5, 3, '¿Qué país tiene la capital más alta del mundo?'),
@@ -249,11 +249,6 @@ INSERT INTO `respuesta_incorrecta` (`id`, `respuesta`, `id_pregunta`) VALUES
 (52, 'El Señor de los Anillos', 18),
 (53, 'Star Wars', 18),
 (54, 'Juego de Tronos', 18),
-(55, 'Brad Pitt', 19),
-(56, 'Tom Cruise', 19),
-(57, 'Johnny Depp', 19),
-(58, '1941', 20),
-(59, '1914', 20),
 (60, '1975', 21),
 (61, '1991', 21),
 (62, '1961', 21),
