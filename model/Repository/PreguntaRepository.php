@@ -2,7 +2,72 @@
 
 namespace Repository;
 
+use Config\Database;
+use Entity\Pregunta;
+use PDO;
+use PDOException;
+use Registry\CategoriaRegistry;
+use Registry\NivelRegistry;
+
+require_once __DIR__ . '/../Registry/CategoriaRegistry.php';
+require_once __DIR__ . '/../Registry/NivelRegistry.php';
+require_once __DIR__ . '/../Entity/Pregunta.php';
+
 class PreguntaRepository
 {
+   private PDO $conn;
+
+   public function __construct(){
+      $this->conn = Database::connect();
+
+      if (empty(CategoriaRegistry::getAll())) {
+         CategoriaRegistry::init($this->conn);
+      }
+      if (empty(NivelRegistry::getAll())) {
+         NivelRegistry::init($this->conn);
+      }
+   }
+
+
+   public function find(int $id):?Pregunta
+   {
+      $query = "SELECT * FROM pregunta WHERE id = :id";
+      try{
+
+      $stmt = $this->conn->prepare($query);
+      $stmt->execute(['id' => $id]);
+      $data = $stmt->fetch(PDO::FETCH_ASSOC);
+         if (!$data) return null;
+
+         $categoria = CategoriaRegistry::get($data['id_categoria']);
+         $nivel = NivelRegistry::get($data['id_nivel']);
+
+         if ($categoria === null || $nivel === null) {
+            throw new \Exception("Categoría o Nivel no encontrado en Registry");
+         }
+         $respuestasIncorrectas = $this->getRespuestasIncorrectas($id);
+
+         return new Pregunta($data, $categoria, $nivel, $respuestasIncorrectas);
+
+
+      }catch (PDOException $e){
+         throw new PDOException("No se pudo obtener la consulta:  " . $e);
+      }
+
+
+   }
+
+   public function getRespuestasIncorrectas(int $idPregunta):array
+   {
+      $query = "SELECT respuesta FROM respuesta_incorrecta WHERE id_pregunta = :id";
+      try{
+         $stmt = $this->conn->prepare($query);
+         $stmt->execute(['id' => $idPregunta]);
+         return  $stmt->fetchAll(PDO::FETCH_COLUMN, 0);
+
+      }catch (PDOException $e){
+         throw new PDOException("No se pudo obtener las respuestas incorrectas: " . $e);
+      }
+   }
 
 }
