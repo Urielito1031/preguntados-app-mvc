@@ -29,7 +29,6 @@ class PreguntaRepository
    }
 
 
-
    public function find(int $id):?Pregunta
    {
       $query = "SELECT * FROM pregunta WHERE id = :id";
@@ -114,22 +113,26 @@ class PreguntaRepository
       }
    }
 
-
-   private function saveRespuestasIncorrectas(Pregunta $pregunta): void
+   public function getPreguntaByCategoria(String $idCategoria):?Pregunta
    {
-      $query = "INSERT INTO respuesta_incorrecta (respuesta, id_pregunta) 
-                VALUES (:respuesta, :id_pregunta)";
-      try {
+       $query = "SELECT * FROM pregunta WHERE id_categoria = :id_categoria";
+       try{
 
-         $stmt = $this->conn->prepare($query);
-         foreach ($pregunta->getRespuestasIncorrectas() as $respuesta) {
-            $stmt->bindValue(':respuesta', $respuesta);
-            $stmt->bindValue(':id_pregunta', $pregunta->getId());
-            $stmt->execute();
-         }
-      } catch (PDOException) {
-         throw new PDOException("No se pudo guardar las respuestas incorrectas: " . $e);
-      }
+           $stmt = $this->conn->prepare($query);
+           $stmt->execute(['id_categoria' => $idCategoria]);
+           $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+           $preguntaAleatoria = $data[array_rand($data)];
+           $respuestasIncorrectas = $this->getRespuestasIncorrectas($preguntaAleatoria['id']);
+
+           $categoria = new Categoria($preguntaAleatoria);
+           $nivel = new Nivel($preguntaAleatoria);
+
+
+           return new Pregunta($preguntaAleatoria, $categoria, $nivel, $respuestasIncorrectas);
+       }catch (PDOException $e){
+           throw new PDOException("No se pudo obtener la consulta:  " . $e);
+       }
    }
 
 }
