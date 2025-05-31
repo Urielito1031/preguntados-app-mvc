@@ -29,6 +29,7 @@ class PreguntaRepository
    }
 
 
+
    public function find(int $id):?Pregunta
    {
       $query = "SELECT * FROM pregunta WHERE id = :id";
@@ -57,6 +58,49 @@ class PreguntaRepository
 
    }
 
+   //El objeto Pregunta debe recibir obligatoriamente un array de respuestas_incorrectas;
+
+   /**
+    * @throws \Throwable
+    */
+   public function save(Pregunta $pregunta):void
+   {
+      $this->conn->beginTransaction();
+      $query = "INSERT INTO pregunta (respuesta_correcta,id_categoria,id_nivel,enunciado) 
+                VALUES (:respuesta_correcta, :id_categoria, :id_nivel, :enunciado)";
+      try{
+         $stmt = $this->conn->prepare($query);
+         $stmt->bindValue(':respuesta_correcta', $pregunta->getRespuestaCorrecta());
+         $stmt->bindValue(':id_categoria', $pregunta->getCategoria()->getId());
+         $stmt->bindValue(':id_nivel', $pregunta->getNivel()->getId());
+         $stmt->bindValue(':enunciado', $pregunta->getEnunciado());
+         $stmt->execute();
+
+         $pregunta->setId((int)$this->conn->lastInsertId());
+
+         //otra query, por eso es importante el rollback por si llega a fallar algo
+         //que no se ejecute ninguno
+         $this->saveRespuestasIncorrectas($pregunta);
+
+         $this->conn->commit();
+
+
+      }
+      catch (PDOException $e){
+         // En caso de error no guardar nada y descartamos todo.
+         $this->conn->rollBack();
+         throw new PDOException("No se pudo guardar la pregunta: " . $e);
+      }
+      // Capturamos cualquier error.
+      catch (\Throwable $e){
+         $this->conn->rollBack();
+         throw  $e;
+      }
+
+
+
+   }
+
    public function getRespuestasIncorrectas(int $idPregunta):array
    {
       $query = "SELECT respuesta FROM respuesta_incorrecta WHERE id_pregunta = :id";
@@ -67,6 +111,24 @@ class PreguntaRepository
 
       }catch (PDOException $e){
          throw new PDOException("No se pudo obtener las respuestas incorrectas: " . $e);
+      }
+   }
+
+
+   private function saveRespuestasIncorrectas(Pregunta $pregunta): void
+   {
+      $query = "INSERT INTO respuesta_incorrecta (respuesta, id_pregunta) 
+                VALUES (:respuesta, :id_pregunta)";
+      try {
+
+         $stmt = $this->conn->prepare($query);
+         foreach ($pregunta->getRespuestasIncorrectas() as $respuesta) {
+            $stmt->bindValue(':respuesta', $respuesta);
+            $stmt->bindValue(':id_pregunta', $pregunta->getId());
+            $stmt->execute();
+         }
+      } catch (PDOException) {
+         throw new PDOException("No se pudo guardar las respuestas incorrectas: " . $e);
       }
    }
 
