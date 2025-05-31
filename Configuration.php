@@ -40,12 +40,15 @@ class Configuration
       return new UsuarioController($service, $this->getViewer());
    }
 
-
-
     public function getHomeController()
     {
         return new HomeController($this->getViewer());
     }
+
+    public function getPartidaController(){
+       return new PartidaController($this->getViewer());
+    }
+
     public function getRouter()
     {
         return new Router("getHomeController", "show", $this);
