@@ -84,11 +84,8 @@ class PreguntaRepository
            $preguntaAleatoria = $data[array_rand($data)];
            $respuestasIncorrectas = $this->getRespuestasIncorrectas($preguntaAleatoria['id']);
 
-           $categoria = new Categoria($preguntaAleatoria);
-           $nivel = new Nivel($preguntaAleatoria);
 
-
-           return new Pregunta($preguntaAleatoria, $categoria, $nivel, $respuestasIncorrectas);
+           return new Pregunta($preguntaAleatoria, CategoriaRegistry::get($preguntaAleatoria['id_categoria']), NivelRegistry::get($preguntaAleatoria['id_nivel']), $respuestasIncorrectas);
        }catch (PDOException $e){
            throw new PDOException("No se pudo obtener la consulta:  " . $e);
        }

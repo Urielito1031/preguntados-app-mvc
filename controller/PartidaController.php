@@ -15,7 +15,7 @@ class PartidaController
     public function pregunta(){
         $idCategoria = match ($_GET['categoria']) {
             "historia" => 1,
-            "deportes" => 2,
+            "deporte" => 2,
             "arte" => 3,
             "ciencia" => 4,
             "geografia" => 5,
@@ -38,8 +38,7 @@ class PartidaController
             'categoria' => $pregunta->getCategoria()->getDescripcion() ?? '',
             'enunciado' => $pregunta->getEnunciado() ?? '',
             'respuestas' => $respuestas,
-
-
+            'categoria_color' => $pregunta->getCategoria()->getColor() ?? '',
         ];
         $this->view->render("pregunta", $viewData);
     }
