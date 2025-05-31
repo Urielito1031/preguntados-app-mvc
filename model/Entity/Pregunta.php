@@ -22,7 +22,6 @@ class Pregunta
       $this->nivel = $nivel;
       $this->respuestasIncorrectas = $respuestasIncorrectas;
 
-
    }
    public function getRespuestasIncorrectas(): array
    {
