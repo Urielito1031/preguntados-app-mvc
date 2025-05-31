@@ -5,14 +5,17 @@
     color: #8e5fcf;
 }
 .bg-color-violet{
+    text-decoration: none;
     background: #4b2e77;
+    color: white;
 }
 .bg-color-pink{
     background: #8e5fcf;
     color: white;
 }
 
-section img{
-    height: 250px;
-    width: 250px;
+section article div img{
+    height: 200px;
+    width: 200px;
+
 }
