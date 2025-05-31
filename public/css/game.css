@@ -1,0 +1,51 @@
+.ruleta-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: auto;
+    width: 600px;
+    text-align: center;
+}
+
+.ruleta {
+    position: relative;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    overflow: hidden;
+    transition: transform 3s ease-out;
+}
+
+.categoria {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    clip-path: polygon(50% 50%, 100% 0, 100% 100%);
+    transform-origin: center;
+}
+
+.historia { background: #ff5733; transform: rotate(0deg); }
+.arte { background: #33c1ff; transform: rotate(72deg); }
+.ciencia { background: #ffcc33; transform: rotate(144deg); }
+.deporte { background: #33ff57; transform: rotate(216deg); }
+.geografia { background: #8e5fcf; transform: rotate(288deg); }
+
+.btn-girar {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    color: black;
+    padding: 15px 30px;
+    border-radius: 50px;
+    cursor: pointer;
+    border: solid 2px #8e5fcf;
+    transition: .8s ease;
+}
+
+.btn-girar:hover {
+    background: #8e5fcf;
+    color: white;
+}

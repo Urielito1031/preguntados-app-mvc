@@ -1,0 +1,59 @@
+<link href="/public/css/game.css" rel="stylesheet">
+<div class="ruleta-container">
+    <img class="w3-margin-bottom" src="{{logo_url}}" alt="Logo QuizCode"  height="150px" width="50%" style="object-fit: contain">
+
+    <div class="ruleta" id="ruleta">
+        <div class="categoria historia">Historia</div>
+        <div class="categoria arte">Arte</div>
+        <div class="categoria ciencia">Ciencia</div>
+        <div class="categoria deporte">Deporte</div>
+        <div class="categoria geografia"><p>Geografia</p></div>
+        <button class="btn-girar" onclick="girarRuleta()">¡Girar!</button>
+    </div>
+
+    <button id="btn-jugar" disabled onclick="window.location.href='/partida/pregunta/'">
+        ¡JUGAR!
+    </button>
+</div>
+
+<script>
+    let ultimoGrado = 0;
+    const botonJugar = document.getElementById("btn-jugar");
+    botonJugar.disabled = true
+
+    function girarRuleta() {
+        const ruleta = document.getElementById("ruleta");
+        const categorias = ["historia", "arte", "ciencia", "deporte", "geografia"];
+        const grados = Math.floor(Math.random() * 360) + 1440;
+        let categoriaSeleccionada = "";
+
+        ruleta.style.transition = `transform ${3000/1000}s ease-out`;
+        ruleta.style.transform = `rotate(${ultimoGrado + grados}deg)`;
+
+        ultimoGrado += grados;
+
+        setTimeout(() => {
+            let anguloFinal = (ultimoGrado % 360);
+            let anguloSelector = (360 - anguloFinal) % 360;
+
+            if (anguloSelector >= 0 && anguloSelector < 72) categoriaSeleccionada = "historia";
+            else if (anguloSelector >= 72 && anguloSelector < 144) categoriaSeleccionada = "arte";
+            else if (anguloSelector >= 144 && anguloSelector < 216) categoriaSeleccionada = "ciencia";
+            else if (anguloSelector >= 216 && anguloSelector < 288) categoriaSeleccionada = "deporte";
+            else categoriaSeleccionada = "geografia";
+
+            categorias.forEach(cat => {
+                document.querySelector(`.${cat}`).style.opacity = cat === categoriaSeleccionada ? "1" : "0.5";
+            });
+
+            console.log(`La categoría seleccionada es: ${categoriaSeleccionada}`);
+
+            botonJugar.disabled = false
+            botonJugar.onclick = () => {
+                window.location.href = `/partida/pregunta?categoria=${categoriaSeleccionada}`;
+            };
+        }, 3000);
+    }
+
+</script>
+
