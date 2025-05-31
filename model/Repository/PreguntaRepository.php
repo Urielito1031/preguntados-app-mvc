@@ -3,6 +3,8 @@
 namespace Repository;
 
 use Config\Database;
+use Entity\Categoria;
+use Entity\Nivel;
 use Entity\Pregunta;
 use PDO;
 use PDOException;
@@ -27,7 +29,6 @@ class PreguntaRepository
          NivelRegistry::init($this->conn);
       }
    }
-
 
    public function find(int $id):?Pregunta
    {
@@ -58,7 +59,6 @@ class PreguntaRepository
    }
 
    //El objeto Pregunta debe recibir obligatoriamente un array de respuestas_incorrectas;
-
    /**
     * @throws \Throwable
     */
@@ -113,26 +113,47 @@ class PreguntaRepository
       }
    }
 
-   public function getPreguntaByCategoria(String $idCategoria):?Pregunta
-   {
-       $query = "SELECT * FROM pregunta WHERE id_categoria = :id_categoria";
-       try{
+    public function getPreguntaByCategoria(string $idCategoria, array $array_id_pregunta): ?Pregunta
+    {
+        try {
 
-           $stmt = $this->conn->prepare($query);
-           $stmt->execute(['id_categoria' => $idCategoria]);
-           $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            if (empty($array_id_pregunta)) {
+                $query = "SELECT * FROM pregunta WHERE id_categoria = :id_categoria";
+                $stmt = $this->conn->prepare($query);
+                $stmt->execute(['id_categoria' => $idCategoria]);
 
-           $preguntaAleatoria = $data[array_rand($data)];
-           $respuestasIncorrectas = $this->getRespuestasIncorrectas($preguntaAleatoria['id']);
+            } else {
+                // array fill(desde donde empieza el array, cantidad de posiciones, valor a reemplazar)
+                $placeholders = implode(',', array_fill(0, count($array_id_pregunta), '?'));
+                $query = "SELECT * FROM pregunta WHERE id_categoria = :id_categoria AND id NOT IN ($placeholders)";
 
-           $categoria = new Categoria($preguntaAleatoria);
-           $nivel = new Nivel($preguntaAleatoria);
+                // ['$idCategoria' lo diferencia porque php interpeta que el primer elemento del array
+                // le corresponder al primer parametro en la consulta]
+                // y $array_id_pregunta otorga los valores para cada '?'
+                $params = array_merge([$idCategoria], $array_id_pregunta);
+                $stmt = $this->conn->prepare($query);
+                $stmt->execute($params);
+
+            }
+
+            $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            $preguntaAleatoria = $data[array_rand($data)];
+            $respuestasIncorrectas = $this->getRespuestasIncorrectas($preguntaAleatoria['id']);
+
+            $categoria = new Categoria($preguntaAleatoria);
+            $nivel = new Nivel($preguntaAleatoria);
+
+            return new Pregunta($preguntaAleatoria, $categoria, $nivel, $respuestasIncorrectas);
+        } catch (PDOException $e) {
+            throw new PDOException("No se pudo obtener la consulta: " . $e->getMessage());
+        }
+    }
 
 
-           return new Pregunta($preguntaAleatoria, $categoria, $nivel, $respuestasIncorrectas);
-       }catch (PDOException $e){
-           throw new PDOException("No se pudo obtener la consulta:  " . $e);
-       }
-   }
+
+
+
+
 
 }
