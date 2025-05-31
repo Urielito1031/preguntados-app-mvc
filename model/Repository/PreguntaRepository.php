@@ -3,6 +3,8 @@
 namespace Repository;
 
 use Config\Database;
+use Entity\Categoria;
+use Entity\Nivel;
 use Entity\Pregunta;
 use PDO;
 use PDOException;
@@ -68,6 +70,28 @@ class PreguntaRepository
       }catch (PDOException $e){
          throw new PDOException("No se pudo obtener las respuestas incorrectas: " . $e);
       }
+   }
+
+   public function getPreguntaByCategoria(String $idCategoria):?Pregunta
+   {
+       $query = "SELECT * FROM pregunta WHERE id_categoria = :id_categoria";
+       try{
+
+           $stmt = $this->conn->prepare($query);
+           $stmt->execute(['id_categoria' => $idCategoria]);
+           $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+           $preguntaAleatoria = $data[array_rand($data)];
+           $respuestasIncorrectas = $this->getRespuestasIncorrectas($preguntaAleatoria['id']);
+
+           $categoria = new Categoria($preguntaAleatoria);
+           $nivel = new Nivel($preguntaAleatoria);
+
+
+           return new Pregunta($preguntaAleatoria, $categoria, $nivel, $respuestasIncorrectas);
+       }catch (PDOException $e){
+           throw new PDOException("No se pudo obtener la consulta:  " . $e);
+       }
    }
 
 }
