@@ -11,7 +11,17 @@
     {{#respuestas}}
         <a class="w-100 mt-4 bg-color-pink" style="text-decoration: none;text-align: center;">{{.}}</a>
     {{/respuestas}}
-
+    <h2>ids de preguntas ya realizadas para debug </h2>
+    {{#preguntasRealizadas}}
+        <a class="w-100 mt-4 bg-color-pink" style="text-decoration: none;text-align: center;">id de pregunta{{.}}</a>
+    {{/preguntasRealizadas}}
+    Respuesta correcta para debug: {{respuestaCorrecta}}
     <a class="w-100 mt-4 bg-color-violet" style="text-decoration: none;text-align: center;">REPORTAR PREGUNTA</a>
+
+            <form class="col-12 col-sm-8 col-md-6 col-lg-4 d-flex flex-column align-items-center justify-content-center" method="POST" action="/partida/responder">
+
+                <input class="w-100 input-form mb-3 p-2" name="respuesta" type="text" aria-label="respuesta">
+                <button class="w-100 bg-color-violet text-white" type="submit">Respuesta</button>
+            </form>
 
 </section>
