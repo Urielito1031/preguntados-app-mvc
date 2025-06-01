@@ -48,8 +48,6 @@ class PartidaController
             "Aleatorio" => 7,
         };
 
-        $pregunta = $this->preguntaService->getPregunta($idCategoria);
-
         $pregunta = $this->preguntaService->getPregunta($idCategoria, $_SESSION['preguntas_realizadas']);
         $respuestas = $pregunta->getRespuestasIncorrectas();
         $respuestas[] = $pregunta->getRespuestaCorrecta();
@@ -74,10 +72,8 @@ class PartidaController
             'enunciado' => $pregunta->getEnunciado() ?? '',
             'respuestas' => $respuestas,
             'respuestaCorrecta' => $respuestaCorrecta,
-            'preguntasRealizadas' => $_SESSION['preguntas_realizadas']
-
-
-            'categoria_color' => $pregunta->getCategoria()->getColor() ?? '',
+            'preguntasRealizadas' => $_SESSION['preguntas_realizadas'],
+            'categoria_color' => $pregunta->getCategoria()->getColor() ?? ''
         ];
         $this->view->render("pregunta", $viewData);
     }
