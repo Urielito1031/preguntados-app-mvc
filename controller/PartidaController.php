@@ -1,15 +1,18 @@
 <?php
 
 use Service\PreguntaService;
+use Service\PartidaService;
 
 class PartidaController
 {
     private $view;
     private $preguntaService;
+    private $partidaService;
 
-    public function __construct(PreguntaService $preguntaService, MustachePresenter $view) {
+    public function __construct(PreguntaService $preguntaService, MustachePresenter $view, PartidaService $partidaService) {
         $this->view = $view;
         $this->preguntaService = $preguntaService;
+        $this->partidaService = $partidaService;
     }
 
     public function playGame(){
@@ -23,8 +26,12 @@ class PartidaController
 
     public function endGame(){
         //aca recopila info y hace las llamadas para guardar la partida, recupera los datos para mostrarlo en resumen de partida
+        $id =$_SESSION['user_id'];
+        $puntaje = count($_SESSION['preguntas_realizadas']) -1;
+        $estado = 'PERDIDA';
+        $preguntasCorrectas = count($_SESSION['preguntas_realizadas']) -1;
 
-        //$this->partidaService->finalizarPartida();
+        $this->partidaService->finalizarPartida($id, $puntaje,$estado, $preguntasCorrectas);
         $puntaje = count($_SESSION['preguntas_realizadas']) - 1;
         $viewData = [
             'puntaje' => $puntaje,

@@ -3,6 +3,7 @@
 
 use Repository\PreguntaRepository;
 use Repository\UsuarioRepository;
+use Repository\PartidaRepository;
 use Service\PartidaService;
 use Service\PreguntaService;
 use Service\UsuarioService;
@@ -20,6 +21,8 @@ require_once("Model/Repository/UsuarioRepository.php");
 
 require_once("model/repository/PreguntaRepository.php");
 require_once("model/service/preguntaService.php");
+require_once("model/repository/PartidaRepository.php");
+require_once("model/service/partidaService.php");
 
 
 
@@ -56,7 +59,9 @@ class Configuration
     public function getPartidaController(){
        $repository = new PreguntaRepository();
        $service = new PreguntaService($repository);
-       return new PartidaController($service, $this->getViewer());
+       $partidaRepository = new PartidaRepository();
+       $partidaService = new PartidaService($partidaRepository);
+       return new PartidaController($service, $this->getViewer(),$partidaService);
     }
 
 

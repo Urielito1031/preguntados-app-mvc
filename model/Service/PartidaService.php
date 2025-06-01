@@ -11,8 +11,8 @@ class PartidaService{
         $this->partidaRepository = $partidaRepository;
     }
 
-    public function guardarPartida(): ?\Entity\Partida
-    {
-        return false;
+    public function finalizarPartida($id_usuario, $puntaje,$estado, $preguntas_correctas){
+
+        $this->partidaRepository->saveGame($id_usuario, $puntaje,$estado, $preguntas_correctas);
     }
 }
