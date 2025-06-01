@@ -5,6 +5,7 @@ namespace Repository;
 use Config\Database;
 
 use Entity\Partida;
+use Entity\Usuario;
 use PDO;
 use PDOException;
 
@@ -47,9 +48,7 @@ class PartidaRepository
         $stmt->bindValue(':id_usuario', $id_usuario, PDO::PARAM_STR);
         $stmt->execute();
 
-        $data = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        return $data;
+       return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
     public function numForAllGamesInApp(): int {
@@ -63,7 +62,7 @@ class PartidaRepository
    {
       $sql = "SELECT * FROM partida WHERE id = :id";
       $stmt = $this->conn->prepare($sql);
-      $stmt->bindValue(':id', $getId, PDO::PARAM_INT);
+      $stmt->bindParam(':id', $getId, PDO::PARAM_INT);
       $stmt->execute();
       $data = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -71,7 +70,9 @@ class PartidaRepository
          return null;
       }
 
-      return new Partida($data, new \Entity\Usuario(['id' => $data['id_usuario']]));
+      $usuario = new Usuario(['id' =>$data['id_usuario']]);
+
+      return new Partida($data,$usuario);
    }
 }
 

@@ -21,7 +21,7 @@ try {
    $partida = new Partida([
       "id" => 0, // este se sobreescribe
       "puntaje" => 100,
-      "estado" => "ACTIVA",
+      "estado" => "PERDIDA",
       "id_usuario"=> $usuario->getId(),
       "preguntas_correctas" => 3
    ], $usuario);
