@@ -1,6 +1,8 @@
 <?php
 
 
+use Controller\PartidaController;
+use Repository\PartidaRepository;
 use Repository\PreguntaRepository;
 use Repository\UsuarioRepository;
 use Service\PartidaService;
@@ -14,11 +16,16 @@ require_once("model/Entity/Usuario.php");
 
 require_once("controller/HomeController.php");
 require_once("controller/UsuarioController.php");
+require_once("controller/PartidaController.php");
+
 
 require_once("Model/Service/UsuarioService.php");
+require_once("Model/Service/PartidaService.php");
 require_once("Model/Repository/UsuarioRepository.php");
 
+
 require_once("model/repository/PreguntaRepository.php");
+require_once("model/repository/PartidaRepository.php");
 require_once("model/service/preguntaService.php");
 
 
@@ -54,9 +61,12 @@ class Configuration
     }
 
     public function getPartidaController(){
-       $repository = new PreguntaRepository();
-       $service = new PreguntaService($repository);
-       return new PartidaController($service, $this->getViewer());
+       $preguntaRepository = new PreguntaRepository();
+       $partidaRepository = new PartidaRepository();
+
+       $preguntaService = new PreguntaService($preguntaRepository);
+       $partidaService = new PartidaService($partidaRepository);
+       return new PartidaController($partidaService,$preguntaService, $this->getViewer());
     }
 
 

@@ -3,15 +3,21 @@
 namespace Service;
 
 use Entity\Partida;
+use Entity\Usuario;
 use Repository\PartidaRepository;
+use Repository\UsuarioRepository;
 use Response\DataResponse;
+
+require_once( __DIR__ . "/../Entity/Partida.php");
 
 class PartidaService{
 
     private PartidaRepository $partidaRepository;
+    private UsuarioRepository $usuarioRepository;
 
     public function __construct(PartidaRepository $partidaRepository){
         $this->partidaRepository = $partidaRepository;
+         $this->usuarioRepository = new UsuarioRepository();
     }
 
     public function save(Partida $partidaAGuardar): DataResponse
@@ -37,4 +43,44 @@ class PartidaService{
          }
 
     }
+   public function finalizarPartida(int $userId, array $preguntasCorrectas, array $preguntasRealizadas): DataResponse
+   {
+      try {
+         // Calcular puntaje y estado
+         $puntaje = $this->calcularPuntaje($preguntasCorrectas);
+         $estado = $this->calcularEstado($preguntasCorrectas);
+         $preguntasCorrectasCount = count($preguntasCorrectas);
+
+         $usuario = $this->usuarioRepository->findById($userId);
+         if (!$usuario) {
+            return new DataResponse(false, "Usuario no encontrado");
+         }
+         // Crear objeto Partida
+         $partida = new Partida(
+            [
+               'id' => 0,
+               'puntaje' => $puntaje,
+               'estado' => $estado,
+               'preguntas_correctas' => $preguntasCorrectasCount,
+            ],
+            $usuario
+         );
+
+         // Guardar la partida
+         return $this->save($partida);
+      } catch (\Exception $e) {
+         return new DataResponse(false, "Error al finalizar la partida: " . $e->getMessage());
+      }
+   }
+
+   private function calcularPuntaje(array $preguntasCorrectas): int
+   {
+
+      return count($preguntasCorrectas) + 1;
+   }
+
+   private function calcularEstado(array $preguntasCorrectas): string
+   {
+      return count($preguntasCorrectas) > 0 ? 'GANADA' : 'PERDIDA';
+   }
 }
