@@ -1,7 +1,6 @@
 <?php
 
 
-use Repository\PartidaRepository;
 use Repository\PreguntaRepository;
 use Repository\UsuarioRepository;
 use Service\PartidaService;
@@ -55,11 +54,9 @@ class Configuration
     }
 
     public function getPartidaController(){
-        $preguntaRepository = new PreguntaRepository();
-        $preguntaService = new PreguntaService($preguntaRepository);
-
-
-        return new PartidaController($preguntaService, $this->getViewer());
+       $repository = new PreguntaRepository();
+       $service = new PreguntaService($repository);
+       return new PartidaController($service, $this->getViewer());
     }
 
 

@@ -1,9 +1,34 @@
-<link href="/public/css/home.css" rel="stylesheet">
+<link href="/public/css/pregunta.css" rel="stylesheet">
 <section class="d-flex flex-column align-items-center m-auto" style="width: 600px;">
-    <h1>Respuesta incorrecta</h1>
-    <h2> Hiciste {{puntaje}}  puntos </h2>
-    <a class="bg-color-pink p-2 mb-4 w-75 text-center">Reportar pregunta</a>
-    <h3>Partida finalizada</h3>
-    <a href="/partida/playGame" class="bg-color-pink p-2 mb-4 w-75 text-center">Crear nueva partida</a>
-    <a href="#" class="bg-color-pink p-2 mb-4 w-75 text-center">Sugerir una nueva pregunta</a>
+
+
+    <h1>Partida finalizada</h1>
+    <h2> Hiciste {{puntaje}} puntos</h2>
+    <p class="text-center p-4 w-100" style="background: #ab8dd3;color: white;">
+        {{enunciado}}
+    </p>
+
+    {{#respuestas}}
+        <button disabled type="submit" name="respuesta" value="{{.}}" class="w-100 mt-4 bg-color-pink" style="text-decoration: none;text-align: center;">{{.}}</button>
+    {{/respuestas}}
+
+    <a href="/partida/playGame" class="bg-color-violet p-2 mt-4 w-100 text-center">Crear nueva partida</a>
+
+<!--    Botones para mas adelante -->
+<!--    <a class="bg-color-violet p-2 mt-4 w-100 text-center">Reportar pregunta</a>-->
+<!--    <a href="#" class="bg-color-violet p-2 mt-4 w-100 text-center">Sugerir una nueva pregunta</a>-->
 </section>
+
+<script>
+    let respuestaCorrecta = "{{respuesta_correcta}}"
+    let respuestaUsuario = "{{respuesta_usuario}}"
+    document.querySelectorAll('.bg-color-pink').forEach(respuesta =>{
+        if(respuesta.value.trim() === respuestaCorrecta.trim()){
+            respuesta.classList.add('bg-success', 'text-white')
+        }
+
+        if(respuesta.value.trim() === respuestaUsuario.trim()){
+            respuesta.classList.add('bg-danger', 'text-white')
+        }
+    })
+</script>

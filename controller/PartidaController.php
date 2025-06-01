@@ -27,7 +27,13 @@ class PartidaController
         //$this->partidaService->finalizarPartida();
         $puntaje = count($_SESSION['preguntas_realizadas']) - 1;
         $viewData = [
-            'puntaje' => $puntaje
+            'puntaje' => $puntaje,
+            'usuario' => $_SESSION['user_name'] ?? '',
+            'foto_perfil' => $_SESSION['foto_perfil'],
+            'enunciado' => $_SESSION['enunciado_actual'],
+            'respuesta_correcta' => $_SESSION['respuesta_correcta'],
+            'respuestas' => $_SESSION['respuestas'],
+            'respuesta_usuario' => $_SESSION['respuesta_usuario']
         ];
 
         unset($_SESSION['preguntas_realizadas']);
@@ -53,6 +59,9 @@ class PartidaController
         $respuestas[] = $pregunta->getRespuestaCorrecta();
         shuffle($respuestas);
 
+        // Agrego esta linea para usarla en endGame()
+        $_SESSION['respuestas'] = $respuestas;
+
         array_push($_SESSION['preguntas_realizadas'], $pregunta->getId());
 
         $_SESSION['respuesta_correcta'] = $pregunta->getRespuestaCorrecta();
@@ -73,7 +82,7 @@ class PartidaController
             'respuestas' => $respuestas,
             'respuestaCorrecta' => $respuestaCorrecta,
             'preguntasRealizadas' => $_SESSION['preguntas_realizadas'],
-            'categoria_color' => $pregunta->getCategoria()->getColor() ?? ''
+            'categoria_color' => $pregunta->getCategoria()->getColor() ?? '',
         ];
         $this->view->render("pregunta", $viewData);
     }
@@ -83,22 +92,22 @@ class PartidaController
             // Datos para el menu desplegable
             'usuario' => $_SESSION['user_name'] ?? '',
             'foto_perfil' => $_SESSION['foto_perfil'],
-
             //datos para la mostrar
             'enunciado_actual' => $_SESSION['enunciado_actual'],
-            'respuesta_correcta' => $_SESSION['respuesta_correcta']
+            'enunciado' => $_SESSION['enunciado_actual'],
+            'respuestas' => $_SESSION['respuestas'],
+            'respuesta_usuario' => $_SESSION['respuesta_usuario']
         ];
         $this->view->render("respuestacorrecta", $viewData);
     }
     public function responder(){
-
         $continuaLaPartida = false;
+        $respuesta = $_POST['respuesta'];
+        $_SESSION['respuesta_usuario'] = $respuesta;
 
-        if($_POST['respuesta'] == $_SESSION['respuesta_correcta']){
+        if($respuesta == $_SESSION['respuesta_correcta']){
             //deberia mostrar una vista que permita reportar pregunta
             $continuaLaPartida = true;
-        }else{
-            $continuaLaPartida = false;
         }
 
         if($continuaLaPartida){
