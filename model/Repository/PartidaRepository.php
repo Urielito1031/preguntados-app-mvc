@@ -13,10 +13,12 @@ use PDOException;
 class PartidaRepository
 {
     private PDO $conn;
+    private UsuarioRepository $usuarioRepository;
 
     public function __construct()
     {
         $this->conn = Database::connect();
+         $this->usuarioRepository = new UsuarioRepository();
     }
 
 
@@ -58,6 +60,7 @@ class PartidaRepository
         return $stmt->fetchColumn();
     }
 
+
    public function getById(int $getId): ?Partida
    {
       $sql = "SELECT * FROM partida WHERE id = :id";
@@ -70,8 +73,10 @@ class PartidaRepository
          return null;
       }
 
-      $usuario = new Usuario(['id' =>$data['id_usuario']]);
-
+      $usuario = $this->usuarioRepository->findById($data['id_usuario']);
+      if (!$usuario) {
+         throw new \Exception("Usuario no encontrado para la partida ID: $getId");
+      }
       return new Partida($data,$usuario);
    }
 }

@@ -3,7 +3,6 @@ use Repository\UsuarioRepository;
 use Repository\PartidaRepository;
 use Entity\Partida;
 
-// Requiere tus clases
 require_once __DIR__ . '/../configuration/Database.php';
 require_once __DIR__ . '/../model/Entity/Usuario.php';
 require_once __DIR__ . '/../model/Entity/Partida.php';
@@ -12,18 +11,16 @@ require_once __DIR__ . '/../model/Repository/PartidaRepository.php';
 
 try {
    $usuarioRepo = new UsuarioRepository();
-   $usuario = $usuarioRepo->findByUsername('usuarioEditor123'); // o por correo
+   $usuario = $usuarioRepo->findByUsername('usuarioEditor123');
    if (!$usuario) {
       throw new Exception("Usuario no encontrado");
    }
 
-   // Ahora que tenés el usuario, podés usar su ID para la partida
    $partida = new Partida([
-      "id" => 0, // este se sobreescribe
+      "id" => 0,
       "puntaje" => 100,
-      "estado" => "PERDIDA",
-      "id_usuario"=> $usuario->getId(),
-      "preguntas_correctas" => 3
+      "estado" => "GANADA",
+      "preguntas_correctas" => 10
    ], $usuario);
 
    $partidaRepo = new PartidaRepository();
