@@ -12,8 +12,11 @@ class PreguntaService
         $this->preguntaRepository = $preguntaRepository;
     }
 
-    public function getPregunta($idCategoria): ?\Entity\Pregunta
+    /**
+     * @throws \Exception
+     */
+    public function getPregunta($idCategoria, $array_id_preguntas_realizadas): ?\Entity\Pregunta
     {
-        return $this->preguntaRepository->getPreguntaByCategoria($idCategoria);
+        return $this->preguntaRepository->getPreguntaByCategoria($idCategoria,$array_id_preguntas_realizadas);
     }
 }
