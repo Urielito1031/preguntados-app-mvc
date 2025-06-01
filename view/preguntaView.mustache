@@ -15,11 +15,15 @@
         </p>
     </div>
 
-    {{#respuestas}}
-        <a href="#" class="w-100 mt-4 bg-color-pink" style="text-decoration: none;text-align: center;">{{.}}</a>
-    {{/respuestas}}
+    <form method="POST" action="/partida/responder">
+        {{#respuestas}}
+            <button type="submit" name="respuesta" value="{{.}}" class="w-100 mt-4 bg-color-pink" style="text-decoration: none;text-align: center;">{{.}}</button>
+        {{/respuestas}}
 
-    <a class="w-100 mt-4 bg-color-violet" style="text-decoration: none;text-align: center;">REPORTAR PREGUNTA</a>
+        <input type="hidden" name="respuesta_correcta" value="{{respuestaCorrecta}}">
+    </form>
+
+<!--    <a class="w-100 mt-4 bg-color-violet" style="text-decoration: none;text-align: center;">REPORTAR PREGUNTA</a>-->
 
     <script>
         let respuestaSeleccionada = false
@@ -32,7 +36,7 @@
 
         setTimeout(() =>{
             if(!respuestaSeleccionada){
-                window.location.href = '/home/playGame'
+                window.location.href = '/partida/endGame'
             }
         }, 10000)
     </script>
