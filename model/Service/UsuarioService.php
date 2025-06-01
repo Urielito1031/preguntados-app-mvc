@@ -29,9 +29,11 @@ class UsuarioService
          if (empty(trim($usuario->getApellido()))) {
             return new DataResponse(false, "El apellido es obligatorio.");
          }
-
-         if ($usuario->getFechaNacimiento() === null || $usuario->getFechaNacimiento()->format('Y') > date('Y') - 13) {
-            return new DataResponse(false, "Debes tener al menos 13 años para registrarte.");
+         if(empty($usuario->getFechaNacimiento())) {
+            return new DataResponse(false, "La fecha de nacimiento es obligatoria.");
+         }
+         if(!$usuario->getUrlFotoPerfil()){
+            return new DataResponse(false, "La foto de perfil es obligatoria.");
          }
 
          if (empty(trim($usuario->getNombreUsuario()))) {
@@ -45,6 +47,11 @@ class UsuarioService
          if (empty(trim($usuario->getCorreo()))) {
             return new DataResponse(false, "El correo es obligatorio.");
          }
+
+         if ($usuario->getFechaNacimiento() === null || $usuario->getFechaNacimiento()->format('Y') > date('Y') - 13) {
+            return new DataResponse(false, "Debes tener al menos 13 años para registrarte.");
+         }
+
 
          if (!filter_var($usuario->getCorreo(), FILTER_VALIDATE_EMAIL)) {
             return new DataResponse(false, "El correo no es válido.");

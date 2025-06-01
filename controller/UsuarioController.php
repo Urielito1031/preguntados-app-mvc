@@ -132,7 +132,7 @@ class UsuarioController
             'apellido' => $apellido,
             'fecha_nacimiento' => $fecha_nacimiento,
             'nombre_usuario' => $nombre_usuario,
-            'genero' => $genero,
+            'sexo' => $genero,
             'correo' => $email,
             'contrasenia' => $contraseniaHash,
             'url_foto_perfil' => $url_foto_perfil,
@@ -143,9 +143,9 @@ class UsuarioController
 
       $options = [
          ['value' => '', 'show' => 'Sexo'],
-         ['value' => 'masculino', 'show' => 'Masculino'],
-         ['value' => 'femenino', 'show' => 'Femenino'],
-         ['value' => 'otro', 'show' => 'Otro']
+         ['value' => 'Masculino', 'show' => 'Masculino'],
+         ['value' => 'Femenino', 'show' => 'Femenino'],
+         ['value' => 'Prefiero no cargarlo', 'show' => 'Otro']
       ];
 
       $viewData = [
