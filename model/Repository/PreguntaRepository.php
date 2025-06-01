@@ -28,7 +28,6 @@ class PreguntaRepository
       }
    }
 
-
    public function find(int $id):?Pregunta
    {
       $query = "SELECT * FROM pregunta WHERE id = :id";
@@ -127,27 +126,66 @@ class PreguntaRepository
             $stmt->execute();
          }
       } catch (PDOException) {
-         throw new PDOException("No se pudo guardar las respuestas incorrectas: " . $e);
+         throw new PDOException("No se pudo guardar las respuestas incorrectas: " .$e);
       }
    }
-   public function getPreguntaByCategoria(String $idCategoria):?Pregunta
+   public function getPreguntaByCategoria(string $idCategoria, array $array_id_preguntas_realizadas): ?Pregunta
    {
-       $query = "SELECT * FROM pregunta WHERE id_categoria = :id_categoria";
-       try{
+      try {
+         $params = [':id_categoria' => $idCategoria];
+         $query = "SELECT * FROM pregunta WHERE id_categoria = :id_categoria";
 
-           $stmt = $this->conn->prepare($query);
-           $stmt->execute(['id_categoria' => $idCategoria]);
-           $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+         // Filtra el array para asegurarse de que solo contiene enteros.
+         $array_id_preguntas_realizadas = array_filter($array_id_preguntas_realizadas, 'is_int');
 
-           $preguntaAleatoria = $data[array_rand($data)];
-           $respuestasIncorrectas = $this->getRespuestasIncorrectas($preguntaAleatoria['id']);
+         if (!empty($array_id_preguntas_realizadas)) {
+            // Crea placeholders para los IDs a excluir para prevenir inyecciones SQL.
+            $placeholders = [];
+            foreach ($array_id_preguntas_realizadas as $key => $id) {
+               $placeholder = ":exclude_{$key}";
+               $placeholders[] = $placeholder;
+               $params[$placeholder] = $id;
+            }
+            $query .= " AND id NOT IN (" . implode(',', $placeholders) . ")";
+         }
 
+         $stmt = $this->conn->prepare($query);
+         $stmt->execute($params);
 
-           return new Pregunta($preguntaAleatoria, CategoriaRegistry::get($preguntaAleatoria['id_categoria']), NivelRegistry::get($preguntaAleatoria['id_nivel']), $respuestasIncorrectas);
-       }catch (PDOException $e){
-           throw new PDOException("No se pudo obtener la consulta:  " . $e);
-       }
+         $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+         if (empty($data)) {
+            return null;
+         }
+
+         // Selecciona una pregunta aleatoria del conjunto de resultados.
+         $preguntaAleatoria = $data[array_rand($data)];
+
+         // Obtiene los datos relacionados.
+         $respuestasIncorrectas = $this->getRespuestasIncorrectas($preguntaAleatoria['id']);
+         $categoria = CategoriaRegistry::get($preguntaAleatoria['id_categoria']);
+         $nivel = NivelRegistry::get($preguntaAleatoria['id_nivel']);
+
+         if (!$categoria || !$nivel) {
+            // Lanza una excepción si no se pueden cargar las dependencias.
+            throw new \Exception("Categoría o Nivel no encontrado en Registry para la pregunta ID: " . $preguntaAleatoria['id']);
+         }
+
+         // Retorna una nueva instancia del objeto Pregunta.
+         return new Pregunta(
+            $preguntaAleatoria,
+            $categoria,
+            $nivel,
+            $respuestasIncorrectas
+         );
+
+      } catch (PDOException $e) {
+         // Relanza la excepción con un mensaje más descriptivo.
+         throw new PDOException("Error al obtener la pregunta por categoría: " . $e->getMessage());
+      }
+
    }
+
 
 
 }

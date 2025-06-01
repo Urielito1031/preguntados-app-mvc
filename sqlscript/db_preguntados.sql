@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 31-05-2025 a las 20:54:47
+-- Tiempo de generación: 30-05-2025 a las 23:10:11
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -109,21 +109,6 @@ INSERT INTO `pais` (`id`, `nombre`) VALUES
 (2, 'Peru'),
 (3, 'Estados Unidos'),
 (4, 'Chile');
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `partida`
---
-
-CREATE TABLE `partida` (
-  `id` int(11) NOT NULL,
-  `puntaje` int(11) NOT NULL,
-  `id_usuario` int(11) NOT NULL,
-  `estado` enum('GANADA','PERDIDA') DEFAULT NULL,
-  `preguntas_correctas` int(11) NOT NULL DEFAULT 0,
-  `creado_en` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -437,13 +422,6 @@ ALTER TABLE `pais`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indices de la tabla `partida`
---
-ALTER TABLE `partida`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `id_usuario` (`id_usuario`);
-
---
 -- Indices de la tabla `pregunta`
 --
 ALTER TABLE `pregunta`
@@ -505,12 +483,6 @@ ALTER TABLE `pais`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
--- AUTO_INCREMENT de la tabla `partida`
---
-ALTER TABLE `partida`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
 -- AUTO_INCREMENT de la tabla `pregunta`
 --
 ALTER TABLE `pregunta`
@@ -543,12 +515,6 @@ ALTER TABLE `usuario`
 --
 ALTER TABLE `ciudad`
   ADD CONSTRAINT `ciudad_ibfk_1` FOREIGN KEY (`id_pais`) REFERENCES `pais` (`id`);
-
---
--- Filtros para la tabla `partida`
---
-ALTER TABLE `partida`
-  ADD CONSTRAINT `partida_ibfk_1` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`);
 
 --
 -- Filtros para la tabla `pregunta`
