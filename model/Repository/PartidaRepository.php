@@ -15,17 +15,17 @@ class PartidaRepository
     public function __construct()
     {
         $this->conn = Database::connect();
-
     }
 
     /**
      * @throws \Throwable
      */
-    public function saveGame(int $id_usuario,int $puntaje, int $cantidad_de_preguntas_correctas){
+    public function saveGame(int $id_usuario,int $puntaje, int $cantidad_de_preguntas_correctas): void
+    {
 
         $this->conn->beginTransaction();
         try{
-        $sql = "INSERT INTO partida (id_usuario, puntaje, cantidad_de_preguntas_correctas ) VALUES (:id_usuario,:puntaje,:cantidad_de_preguntas_correctas)";
+        $sql = "INSERT INTO partida (id_usuario, puntaje, preguntas_correctas ) VALUES (:id_usuario,:puntaje,:cantidad_de_preguntas_correctas)";
         $stmt = $this->conn->prepare($sql);
         $stmt->bindParam(':id_usuario', $id_usuario);
         $stmt->bindParam(':puntaje', $puntaje);
@@ -48,7 +48,7 @@ class PartidaRepository
 
     public function arrayGamesByIdUser(int $id_usuario): array
     {
-        $sql = "SELECT * FROM pais WHERE id_usuario = :id_usuario";
+        $sql = "SELECT * FROM partida WHERE id_usuario = :id_usuario";
         $stmt = $this->conn->prepare($sql);
         $stmt->bindValue(':id_usuario', $id_usuario, PDO::PARAM_STR);
         $stmt->execute();

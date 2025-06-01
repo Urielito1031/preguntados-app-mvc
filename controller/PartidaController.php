@@ -48,7 +48,8 @@ class PartidaController
             "Aleatorio" => 7,
         };
 
-        $pregunta = $this->preguntaService->getPregunta($idCategoria);
+
+        $pregunta = $this->preguntaService->getPregunta($idCategoria, $_SESSION['preguntas_realizadas']);
         $respuestas = $pregunta->getRespuestasIncorrectas();
         $respuestas[] = $pregunta->getRespuestaCorrecta();
         shuffle($respuestas);

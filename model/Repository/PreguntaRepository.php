@@ -113,44 +113,62 @@ class PreguntaRepository
       }
    }
 
-    public function getPreguntaByCategoria(string $idCategoria, array $array_id_pregunta): ?Pregunta
+    public function getPreguntaByCategoria(string $idCategoria, array $array_id_preguntas_realizadas): ?Pregunta
     {
         try {
+            $params = [':id_categoria' => $idCategoria];
+            $query = "SELECT * FROM pregunta WHERE id_categoria = :id_categoria";
 
-            if (empty($array_id_pregunta)) {
-                $query = "SELECT * FROM pregunta WHERE id_categoria = :id_categoria";
-                $stmt = $this->conn->prepare($query);
-                $stmt->execute(['id_categoria' => $idCategoria]);
+            // Filtra el array para asegurarse de que solo contiene enteros.
+            $array_id_preguntas_realizadas = array_filter($array_id_preguntas_realizadas, 'is_int');
 
-            } else {
-                // array fill(desde donde empieza el array, cantidad de posiciones, valor a reemplazar)
-                $placeholders = implode(',', array_fill(0, count($array_id_pregunta), '?'));
-                $query = "SELECT * FROM pregunta WHERE id_categoria = :id_categoria AND id NOT IN ($placeholders)";
-
-                // ['$idCategoria' lo diferencia porque php interpeta que el primer elemento del array
-                // le corresponder al primer parametro en la consulta]
-                // y $array_id_pregunta otorga los valores para cada '?'
-                $params = array_merge([$idCategoria], $array_id_pregunta);
-                $stmt = $this->conn->prepare($query);
-                $stmt->execute($params);
-
+            if (!empty($array_id_preguntas_realizadas)) {
+                // Crea placeholders para los IDs a excluir para prevenir inyecciones SQL.
+                $placeholders = [];
+                foreach ($array_id_preguntas_realizadas as $key => $id) {
+                    $placeholder = ":exclude_{$key}";
+                    $placeholders[] = $placeholder;
+                    $params[$placeholder] = $id;
+                }
+                $query .= " AND id NOT IN (" . implode(',', $placeholders) . ")";
             }
+
+            $stmt = $this->conn->prepare($query);
+            $stmt->execute($params);
 
             $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+            if (empty($data)) {
+                return null;
+            }
+
+            // Selecciona una pregunta aleatoria del conjunto de resultados.
             $preguntaAleatoria = $data[array_rand($data)];
+
+            // Obtiene los datos relacionados.
             $respuestasIncorrectas = $this->getRespuestasIncorrectas($preguntaAleatoria['id']);
+            $categoria = CategoriaRegistry::get($preguntaAleatoria['id_categoria']);
+            $nivel = NivelRegistry::get($preguntaAleatoria['id_nivel']);
 
-            $categoria = new Categoria($preguntaAleatoria);
-            $nivel = new Nivel($preguntaAleatoria);
+            if (!$categoria || !$nivel) {
+                // Lanza una excepción si no se pueden cargar las dependencias.
+                throw new \Exception("Categoría o Nivel no encontrado en Registry para la pregunta ID: " . $preguntaAleatoria['id']);
+            }
 
-            return new Pregunta($preguntaAleatoria, $categoria, $nivel, $respuestasIncorrectas);
+            // Retorna una nueva instancia del objeto Pregunta.
+            return new Pregunta(
+                $preguntaAleatoria,
+                $categoria,
+                $nivel,
+                $respuestasIncorrectas
+            );
+
         } catch (PDOException $e) {
-            throw new PDOException("No se pudo obtener la consulta: " . $e->getMessage());
+            // Relanza la excepción con un mensaje más descriptivo.
+            throw new PDOException("Error al obtener la pregunta por categoría: " . $e->getMessage());
         }
+
     }
-
-
 
 
 

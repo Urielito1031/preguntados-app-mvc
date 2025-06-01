@@ -1,8 +1,10 @@
 <?php
 
 
+use Repository\PartidaRepository;
 use Repository\PreguntaRepository;
 use Repository\UsuarioRepository;
+use Service\PartidaService;
 use Service\PreguntaService;
 use Service\UsuarioService;
 
@@ -19,6 +21,8 @@ require_once("Model/Repository/UsuarioRepository.php");
 
 require_once("model/repository/PreguntaRepository.php");
 require_once("model/service/preguntaService.php");
+
+
 
 include_once('vendor/mustache/src/Mustache/Autoloader.php');
 
@@ -51,10 +55,13 @@ class Configuration
     }
 
     public function getPartidaController(){
-       $repository = new PreguntaRepository();
-       $service = new PreguntaService($repository);
-       return new PartidaController($service, $this->getViewer());
+        $preguntaRepository = new PreguntaRepository();
+        $preguntaService = new PreguntaService($preguntaRepository);
+
+
+        return new PartidaController($preguntaService, $this->getViewer());
     }
+
 
     public function getRouter()
     {
