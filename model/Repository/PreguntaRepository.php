@@ -76,14 +76,12 @@ class PreguntaRepository
    {
        $query = "SELECT * FROM pregunta WHERE id_categoria = :id_categoria";
        try{
-
            $stmt = $this->conn->prepare($query);
            $stmt->execute(['id_categoria' => $idCategoria]);
            $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
            $preguntaAleatoria = $data[array_rand($data)];
            $respuestasIncorrectas = $this->getRespuestasIncorrectas($preguntaAleatoria['id']);
-
 
            return new Pregunta($preguntaAleatoria, CategoriaRegistry::get($preguntaAleatoria['id_categoria']), NivelRegistry::get($preguntaAleatoria['id_nivel']), $respuestasIncorrectas);
        }catch (PDOException $e){
