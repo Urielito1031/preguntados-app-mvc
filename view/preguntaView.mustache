@@ -24,4 +24,19 @@
                 <button class="w-100 bg-color-violet text-white" type="submit">Respuesta</button>
             </form>
 
+    <script>
+        let respuestaSeleccionada = false
+
+        document.querySelectorAll('.bg-color-pink').forEach(respuesta =>{
+            respuesta.addEventListener('click', () =>{
+                respuestaSeleccionada = true;
+            })
+        })
+
+        setTimeout(() =>{
+            if(!respuestaSeleccionada){
+                window.location.href = '/home/playGame'
+            }
+        }, 10000)
+    </script>
 </section>

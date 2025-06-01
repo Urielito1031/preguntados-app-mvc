@@ -17,12 +17,29 @@
     transition: .8s ease;
     border: solid 2px #8e5fcf;
 }
+
 .bg-color-pink:hover{
     background: white;
     color: #8e5fcf;
     border: 2px solid #8e5fcf;
 }
 
-a{
 
+.barra-de-carga{
+    width: 90%;
+    border: 2px solid black;
+    height: 15px;
+    border-radius: 25px;
 }
+
+#barra{
+    background: #4b2e77;
+    animation: llenarBarra 10s linear;
+}
+
+@keyframes llenarBarra{
+    0%{width: 100%;}
+    100%{width: 0}
+}
+
+
