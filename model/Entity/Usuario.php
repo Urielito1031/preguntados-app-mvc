@@ -21,7 +21,7 @@ class Usuario
 
       public function __construct(array $data = [])
       {
-         $this->id = $data['id'] ?? null;
+         $this->id = $data['id_usuario'] ?? null;
          $this->nombre = $data['nombre'] ?? null;
          $this->apellido = $data['apellido'] ?? null;
 

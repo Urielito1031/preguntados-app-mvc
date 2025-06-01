@@ -4,6 +4,7 @@ namespace Repository;
 
 use Config\Database;
 
+use Entity\Partida;
 use PDO;
 use PDOException;
 
@@ -17,31 +18,24 @@ class PartidaRepository
         $this->conn = Database::connect();
     }
 
-    /**
-     * @throws \Throwable
-     */
-    public function saveGame(int $id_usuario,int $puntaje, int $cantidad_de_preguntas_correctas): void
+
+    //funciona bien
+    public function saveGame(Partida $partida): void
     {
 
-        $this->conn->beginTransaction();
+        $sql = "INSERT INTO partida (id_usuario, puntaje,estado, preguntas_correctas ) 
+                VALUES (:id_usuario,:puntaje,:estado,:cantidad_de_preguntas_correctas)";
         try{
-        $sql = "INSERT INTO partida (id_usuario, puntaje, preguntas_correctas ) VALUES (:id_usuario,:puntaje,:cantidad_de_preguntas_correctas)";
-        $stmt = $this->conn->prepare($sql);
-        $stmt->bindParam(':id_usuario', $id_usuario);
-        $stmt->bindParam(':puntaje', $puntaje);
-        $stmt->bindParam(':cantidad_de_preguntas_correctas', $cantidad_de_preguntas_correctas);
-        $stmt->execute();
-
-        $this->conn->commit();
+           $stmt = $this->conn->prepare($sql);
+           $stmt->bindValue(':id_usuario', $partida->getUsuario()->getId(), PDO::PARAM_INT);
+           $stmt->bindValue(':puntaje', $partida->getPuntaje());
+           $stmt->bindValue(':estado', $partida->getEstado());
+           $stmt->bindValue(':cantidad_de_preguntas_correctas',$partida->getCantidadPreguntasCorrectas());
+           $stmt->execute();
+           $partida->setId($this->conn->lastInsertId());
         }
         catch (PDOException $e){
-            $this->conn->rollBack();
             throw new PDOException("No se pudo guardar la partida: " . $e);
-        }
-
-        catch (\Throwable $e){
-            $this->conn->rollBack();
-            throw $e;
         }
 
     }
@@ -64,5 +58,20 @@ class PartidaRepository
         $stmt->execute();
         return $stmt->fetchColumn();
     }
+
+   public function getById(int $getId): ?Partida
+   {
+      $sql = "SELECT * FROM partida WHERE id = :id";
+      $stmt = $this->conn->prepare($sql);
+      $stmt->bindValue(':id', $getId, PDO::PARAM_INT);
+      $stmt->execute();
+      $data = $stmt->fetch(PDO::FETCH_ASSOC);
+
+      if (!$data) {
+         return null;
+      }
+
+      return new Partida($data, new \Entity\Usuario(['id' => $data['id_usuario']]));
+   }
 }
 

@@ -5,28 +5,29 @@ namespace Entity;
 class Partida
 {
    private int $id;
-   private int $id_usuario;
+   private Usuario $usuario;
    private int $puntaje;
    private string $estado;
    private int $cantidadPreguntasCorrectas;
-   private \DateTime $fechaCreacion;
+   private \DateTimeImmutable $fechaCreacion;
 
 
-   public function __construct(array $data) {
+   public function __construct(array $data, Usuario $usuario) {
       $this->id = $data["id"];
-      $this->id_usuario = $data["id_usuario"];
       $this->puntaje = $data["puntaje"];
       $this->estado = $data["estado"];
       $this->cantidadPreguntasCorrectas = $data["preguntas_correctas"];
-      $this->fechaCreacion = new \DateTime($data["fecha_creacion"]);
+      $this->usuario = $usuario;
+      $this->fechaCreacion = new \DateTimeImmutable("now");
 
    }
    public function getId(): int {
       return $this->id;
    }
-   public function getIdUsuario(): int {
-      return $this->id_usuario;
+   public function getUsuario(): Usuario {
+      return $this->usuario;
    }
+
    public function getPuntaje(): int {
       return $this->puntaje;
    }
@@ -36,15 +37,13 @@ class Partida
    public function getCantidadPreguntasCorrectas(): int {
       return $this->cantidadPreguntasCorrectas;
    }
-   public function getFechaCreacion(): \DateTime {
+   public function getFechaCreacion(): \DateTimeImmutable {
       return $this->fechaCreacion;
    }
    public function setId(int $id): void {
       $this->id = $id;
    }
-   public function setIdUsuario(int $id_usuario): void {
-      $this->id_usuario = $id_usuario;
-   }
+
    public function setPuntaje(int $puntaje): void {
       $this->puntaje = $puntaje;
    }
