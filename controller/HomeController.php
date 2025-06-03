@@ -23,13 +23,16 @@ class HomeController
             'id_rol' => $_SESSION['id_rol']
         ];
 
-        if($viewData['id_rol'] === 2) {
-            $this->view->render("homeEditor", $viewData);
-        } else if ($viewData['id_rol'] === 1) {
-            $this->view->render("homeAdmin", $viewData);
-        } else {
-            $this->view->render("home", $viewData);
-            var_dump($_SESSION['id_rol']);
+        switch ($viewData['id_rol']) {
+            case 2:
+                $this->view->render("homeEditor", $viewData);
+                break;
+            case 1:
+                $this->view->render("homeAdmin", $viewData);
+                break;
+            default:
+                $this->view->render("home", $viewData);
+                break;
         }
     }
 
