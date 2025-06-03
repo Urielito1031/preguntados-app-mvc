@@ -1,14 +1,17 @@
 <section class="d-flex flex-column align-items-center m-auto" style="width: 600px;">
 
     <h2> Puntaje actual: {{puntaje}} puntos</h2>
-    <p class="text-center p-4 w-100" style="background: #ab8dd3;color: white;">
-        {{enunciado_actual}}
-    </p>
 
-    {{#respuestas}}
+    <div class="w-100">
+        <h2 class="text-center bg-color-violet w-100" style="border-radius: 25px 25px 0 0; background: {{pregunta.categoria.color}}">{{pregunta.categoria.descripcion}}</h2>
+        <p class="text-center p-4 w-100" style="background: #ab8dd3;color: white;">
+            {{pregunta.enunciado}}
+        </p>
+    </div>
+
+    {{#pregunta.respuestas}}
         <button disabled type="submit" name="respuesta" value="{{.}}" class="w-100 mt-4 bg-color-pink" style="text-decoration: none;text-align: center;">{{.}}</button>
-    {{/respuestas}}
-
+    {{/pregunta.respuestas}}
 
     <a href="/partida/playGame" class="w-100 mt-4 bg-color-violet" style="text-decoration: none;text-align: center;">Seguir jugando</a>
     <!--    Botones para mas adelante -->
@@ -18,6 +21,7 @@
 
 <script>
     let respuestaUsuario = "{{respuesta_usuario}}"
+
     document.querySelectorAll('.bg-color-pink').forEach(respuesta =>{
         if(respuesta.value.trim() === respuestaUsuario.trim()){
             respuesta.classList.add('bg-success', 'text-white')

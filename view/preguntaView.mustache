@@ -9,18 +9,16 @@
     </div>
 
     <div class="w-100">
-        <h2 class="text-center bg-color-violet w-100" style="border-radius: 25px 25px 0 0; background: {{categoria_color}}">{{categoria}}</h2>
+        <h2 class="text-center bg-color-violet w-100" style="border-radius: 25px 25px 0 0; background: {{pregunta.categoria.color}}">{{pregunta.categoria.descripcion}}</h2>
         <p class="text-center p-4 w-100" style="background: #ab8dd3;color: white;">
-            {{enunciado}}
+            {{pregunta.enunciado}}
         </p>
     </div>
 
     <form method="POST" action="/partida/responder">
-        {{#respuestas}}
-            <button type="submit" name="respuesta" value="{{.}}" class="w-100 mt-4 bg-color-pink" style="text-decoration: none;text-align: center;">{{.}}</button>
-        {{/respuestas}}
-
-        <input type="hidden" name="respuesta_correcta" value="{{respuestaCorrecta}}">
+        {{#pregunta.respuestas}}
+            <button type="submit" name="respuesta_usuario" value="{{.}}" class="w-100 mt-4 bg-color-pink" style="text-decoration: none;text-align: center;">{{.}}</button>
+        {{/pregunta.respuestas}}
     </form>
 
 <!--    <a class="w-100 mt-4 bg-color-violet" style="text-decoration: none;text-align: center;">REPORTAR PREGUNTA</a>-->

@@ -1,33 +1,29 @@
 <?php
 
-
 use Repository\PreguntaRepository;
 use Repository\UsuarioRepository;
-use Service\PartidaService;
 use Service\PreguntaService;
 use Service\UsuarioService;
 
-require_once("core/MustachePresenter.php");
-require_once("core/Router.php");
-
-require_once("model/Entity/Usuario.php");
-
-require_once("controller/HomeController.php");
-require_once("controller/UsuarioController.php");
-
 require_once("Model/Service/UsuarioService.php");
-require_once("Model/Repository/UsuarioRepository.php");
-
-require_once("model/repository/PreguntaRepository.php");
 require_once("model/service/preguntaService.php");
-
-
-
+require_once("model/Service/ImageService.php");
+require_once("model/Service/UbicacionService.php");
+require_once("model/Response/DataResponse.php");
+require_once("controller/UsuarioController.php");
+require_once("controller/HomeController.php");
+require_once("controller/PartidaController.php");
+require_once("model/Entity/Usuario.php");
+require_once("Model/Repository/UsuarioRepository.php");
+require_once("model/Repository/PaisRepository.php");
+require_once("model/Repository/CiudadRepository.php");
+require_once("model/repository/PreguntaRepository.php");
+require_once("core/Router.php");
+require_once("core/MustachePresenter.php");
 include_once('vendor/mustache/src/Mustache/Autoloader.php');
 
 class Configuration
 {
-
    private PDO $database;
    private $viewer;
 
@@ -59,7 +55,6 @@ class Configuration
        return new PartidaController($service, $this->getViewer());
     }
 
-
     public function getRouter()
     {
         return new Router("getHomeController", "show", $this);
@@ -70,5 +65,4 @@ class Configuration
         //return new FileView();
         return new MustachePresenter("view");
     }
-
 }

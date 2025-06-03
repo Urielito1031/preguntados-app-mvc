@@ -1,6 +1,7 @@
 <?php
 
 use Service\PreguntaService;
+use Entity\Pregunta;
 
 class PartidaController
 {
@@ -12,105 +13,72 @@ class PartidaController
         $this->preguntaService = $preguntaService;
     }
 
-    public function playGame(){
-        $viewData = [
+
+    private function getUserSessionData() : array {
+        return [
             'usuario' => $_SESSION['user_name'] ?? '',
-            'logo_url' => '/public/img/LogoQuizCode.png',
             'foto_perfil' => $_SESSION['foto_perfil']
         ];
-        $this->view->render("partida", $viewData);
     }
 
-    public function endGame(){
-        //aca recopila info y hace las llamadas para guardar la partida, recupera los datos para mostrarlo en resumen de partida
-
-        //$this->partidaService->finalizarPartida();
-        $puntaje = count($_SESSION['preguntas_realizadas']) - 1;
-        $viewData = [
-            'puntaje' => $puntaje,
-            'usuario' => $_SESSION['user_name'] ?? '',
-            'foto_perfil' => $_SESSION['foto_perfil'],
-            'enunciado' => $_SESSION['enunciado_actual'],
-            'respuesta_correcta' => $_SESSION['respuesta_correcta'],
-            'respuestas' => $_SESSION['respuestas'],
-            'respuesta_usuario' => $_SESSION['respuesta_usuario']
-        ];
-
-        unset($_SESSION['preguntas_realizadas']);
-        $this->view->render("finpartida",$viewData);
-    }
-    public function pregunta(){
+    public function pregunta(): void {
         if(!isset($_SESSION['preguntas_realizadas'])){
             $_SESSION['preguntas_realizadas'] = array();
         }
 
-        $idCategoria = match ($_GET['categoria']) {
-            "historia" => 1,
-            "deporte" => 2,
-            "arte" => 3,
-            "ciencia" => 4,
-            "geografia" => 5,
-            "Entrenamiento" => 6,
-            "Aleatorio" => 7,
-        };
-
+        // Miedo me da tocar esto xD
+        $idCategoria = rand(1,6);
         $pregunta = $this->preguntaService->getPregunta($idCategoria, $_SESSION['preguntas_realizadas']);
         $respuestas = $pregunta->getRespuestasIncorrectas();
         $respuestas[] = $pregunta->getRespuestaCorrecta();
         shuffle($respuestas);
-
-        // Agrego esta linea para usarla en endGame()
         $_SESSION['respuestas'] = $respuestas;
+
+        $_SESSION['pregunta'] = [
+            'id' => $pregunta->getId(),
+            'enunciado' => $pregunta->getEnunciado(),
+            'respuesta_correcta' => $pregunta->getRespuestaCorrecta(),
+            'respuestas' => $respuestas,
+            'categoria' => [
+                'id' => $idCategoria,
+                'descripcion' => $pregunta->getCategoria()->getDescripcion(),
+                'color' => $pregunta->getCategoria()->getColor()
+            ]
+        ];
 
         array_push($_SESSION['preguntas_realizadas'], $pregunta->getId());
 
-        $_SESSION['respuesta_correcta'] = $pregunta->getRespuestaCorrecta();
-
-        $_SESSION['pregunta_actual'] = $pregunta->getId();
-        $_SESSION['enunciado_actual'] = $pregunta->getEnunciado();
-
-        $respuestaCorrecta = $pregunta->getRespuestaCorrecta();
-
-        $viewData = [
-            // Datos para el menu desplegable
-            'usuario' => $_SESSION['user_name'] ?? '',
-            'foto_perfil' => $_SESSION['foto_perfil'],
-
-            //datos para la pregunta
-            'categoria' => $pregunta->getCategoria()->getDescripcion() ?? '',
-            'enunciado' => $pregunta->getEnunciado() ?? '',
-            'respuestas' => $respuestas,
-            'respuestaCorrecta' => $respuestaCorrecta,
+        $viewData = array_merge($this->getUserSessionData(),[
             'preguntasRealizadas' => $_SESSION['preguntas_realizadas'],
-            'categoria_color' => $pregunta->getCategoria()->getColor() ?? '',
-        ];
+            'pregunta' => $_SESSION['pregunta'],
+        ]);
+
         $this->view->render("pregunta", $viewData);
     }
 
-    public function showPreguntaCorrecta(){
-        $viewData = [
-            // Datos para el menu desplegable
-            'usuario' => $_SESSION['user_name'] ?? '',
-            'foto_perfil' => $_SESSION['foto_perfil'],
-            //datos para la mostrar
-            'enunciado_actual' => $_SESSION['enunciado_actual'],
-            'enunciado' => $_SESSION['enunciado_actual'],
-            'respuestas' => $_SESSION['respuestas'],
-            'respuesta_usuario' => $_SESSION['respuesta_usuario']
-        ];
+    public function showPreguntaCorrecta(): void {
+        $viewData = array_merge($this->getUserSessionData(),
+        [
+            'puntaje' => count($_SESSION['preguntas_realizadas']),
+            'pregunta' => $_SESSION['pregunta'],
+            'respuesta_usuario' => $_POST['respuesta_usuario'],
+        ]);
         $this->view->render("respuestacorrecta", $viewData);
     }
-    public function responder(){
-        $continuaLaPartida = false;
-        $respuesta = $_POST['respuesta'];
-        $_SESSION['respuesta_usuario'] = $respuesta;
 
-        if($respuesta == $_SESSION['respuesta_correcta']){
-            //deberia mostrar una vista que permita reportar pregunta
-            $continuaLaPartida = true;
-        }
+    public function endGame(): void {
+        $viewData = array_merge($this->getUserSessionData(),[
+            'puntaje' => count($_SESSION['preguntas_realizadas']) - 1,
+            'pregunta' => $_SESSION['pregunta'],
+            'respuesta_usuario' => $_POST['respuesta_usuario']
+        ]);
 
-        if($continuaLaPartida){
+        unset($_SESSION['preguntas_realizadas']);
+        $this->view->render("finpartida", $viewData);
+    }
+
+    public function responder(): void{
+        if($_SESSION['pregunta']['respuesta_correcta'] === $_POST['respuesta_usuario']){
             $this->showPreguntaCorrecta();
         }else{
             $this->endGame();

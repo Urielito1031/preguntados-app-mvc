@@ -5,12 +5,12 @@
     <h1>Partida finalizada</h1>
     <h2> Hiciste {{puntaje}} puntos</h2>
     <p class="text-center p-4 w-100" style="background: #ab8dd3;color: white;">
-        {{enunciado}}
+        {{pregunta.enunciado}}
     </p>
 
-    {{#respuestas}}
+    {{#pregunta.respuestas}}
         <button disabled type="submit" name="respuesta" value="{{.}}" class="w-100 mt-4 bg-color-pink" style="text-decoration: none;text-align: center;">{{.}}</button>
-    {{/respuestas}}
+    {{/pregunta.respuestas}}
 
     <a href="/partida/playGame" class="bg-color-violet p-2 mt-4 w-100 text-center">Crear nueva partida</a>
 
@@ -20,8 +20,9 @@
 </section>
 
 <script>
-    let respuestaCorrecta = "{{respuesta_correcta}}"
+    let respuestaCorrecta = "{{pregunta.respuesta_correcta}}"
     let respuestaUsuario = "{{respuesta_usuario}}"
+
     document.querySelectorAll('.bg-color-pink').forEach(respuesta =>{
         if(respuesta.value.trim() === respuestaCorrecta.trim()){
             respuesta.classList.add('bg-success', 'text-white')
