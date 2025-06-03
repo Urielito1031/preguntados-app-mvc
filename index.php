@@ -14,11 +14,6 @@ require_once("model/Repository/PaisRepository.php");
 require_once("model/Repository/CiudadRepository.php");
 require_once("model/Repository/UsuarioRepository.php");
 
-require_once("model/Response/DataResponse.php");
-
-require_once("controller/UsuarioController.php");
-
-require_once("controller/PartidaController.php");
 
 try {
    $pdo = Database::connect();
@@ -26,10 +21,11 @@ try {
    $configuration = new Configuration($pdo, $viewer);
    $router = $configuration->getRouter();
 
-   $router->go(
-      $_GET["controller"],
-      $_GET["method"]
-   );
+   $controller = (isset($_GET["controller"])) ? $_GET["controller"] : null;
+   $method = (isset($_GET["method"])) ? $_GET["method"] : null;
+
+   $router->go($controller, $method);
+
 } catch (PDOException $e) {
    echo "Error de conexión: " . $e->getMessage();
    exit;

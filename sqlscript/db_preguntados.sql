@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 01-06-2025 a las 20:37:07
+-- Tiempo de generación: 03-06-2025 a las 23:04:37
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -67,7 +67,9 @@ INSERT INTO `ciudad` (`id`, `nombre`, `id_pais`) VALUES
 (1, 'Ciudad Madero', 1),
 (2, 'Quito', 2),
 (3, 'New York', 3),
-(4, 'Puente Alto', 4);
+(4, 'Puente Alto', 4),
+(5, 'Manchester', 5),
+(6, '', 6);
 
 -- --------------------------------------------------------
 
@@ -85,9 +87,11 @@ CREATE TABLE `nivel` (
 --
 
 INSERT INTO `nivel` (`id_nivel`, `nombre_nivel`) VALUES
-(1, 'Principiante'),
-(2, 'Intermedio'),
-(3, 'Avanzado');
+(1, 'Aspirante'),
+(2, 'Novato'),
+(3, 'Estrella'),
+(4, 'Heroe'),
+(5, 'Legendario');
 
 -- --------------------------------------------------------
 
@@ -108,7 +112,9 @@ INSERT INTO `pais` (`id`, `nombre`) VALUES
 (1, 'Argentina'),
 (2, 'Peru'),
 (3, 'Estados Unidos'),
-(4, 'Chile');
+(4, 'Chile'),
+(5, 'Inglaterra'),
+(6, '');
 
 -- --------------------------------------------------------
 
@@ -121,7 +127,8 @@ CREATE TABLE `partida` (
   `id_usuario` int(11) NOT NULL,
   `puntaje` int(11) DEFAULT 0,
   `estado` enum('GANADA','PERDIDA') DEFAULT NULL,
-  `preguntas_correctas` int(11) DEFAULT 0
+  `preguntas_correctas` int(11) DEFAULT 0,
+  `creado_en` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -135,62 +142,65 @@ CREATE TABLE `pregunta` (
   `respuesta_correcta` varchar(255) NOT NULL,
   `id_categoria` int(11) NOT NULL,
   `id_nivel` int(11) NOT NULL,
-  `enunciado` varchar(255) NOT NULL
+  `enunciado` varchar(255) NOT NULL,
+  `cantidad_jugada` int(11) DEFAULT 0,
+  `cantidad_aciertos` int(11) DEFAULT 0,
+  `cantidad_reportes` int(11) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `pregunta`
 --
 
-INSERT INTO `pregunta` (`id`, `respuesta_correcta`, `id_categoria`, `id_nivel`, `enunciado`) VALUES
-(1, 'George Washington', 1, 1, '¿Quién fue el primer presidente de los Estados Unidos?'),
-(2, '1939', 1, 1, '¿En qué año comenzó la Segunda Guerra Mundial?'),
-(3, 'Egipcia', 1, 1, '¿Qué civilización construyó las pirámides de Giza?'),
-(4, 'Fútbol', 2, 1, '¿Cuál es el deporte más popular del mundo?'),
-(5, 'Michael Jordan', 2, 1, '¿Quién es considerado el mejor jugador de baloncesto de la historia?'),
-(6, 'Wimbledon', 2, 2, '¿Qué torneo de tenis se juega en hierba?'),
-(7, 'Leonardo da Vinci', 3, 1, '¿Quién pintó la Mona Lisa?'),
-(8, 'Impresionismo', 3, 3, '¿Qué movimiento artístico está asociado con Claude Monet?'),
-(9, 'La Noche Estrellada', 3, 3, '¿Cuál es el nombre de la obra famosa de Vincent van Gogh?'),
-(10, 'Isaac Newton', 4, 1, '¿Quién formuló las leyes del movimiento?'),
-(11, 'Oxígeno', 4, 1, '¿Qué elemento es el más abundante en la atmósfera terrestre?'),
-(12, 'ADN', 4, 1, '¿Qué molécula porta la información genética?'),
-(13, 'París', 5, 1, '¿Cuál es la capital de Francia?'),
-(14, 'Amazonas', 5, 1, '¿Qué río es el más largo de Sudamérica?'),
-(15, 'África', 5, 1, '¿En qué continente está Egipto?'),
-(16, 'Leonardo DiCaprio', 6, 1, '¿Qué actor ganó un Oscar por \"El Renacido\"?'),
-(17, 'The Beatles', 6, 1, '¿Qué banda escribió \"Hey Jude\"?'),
-(18, 'Harry Potter', 6, 1, '¿Qué saga incluye a un personaje llamado Harry Potter?'),
-(21, '1989', 1, 2, '¿En qué año cayó el Muro de Berlín?'),
-(22, 'Vladimir Lenin', 1, 1, '¿Quién fue el líder de la Revolución Rusa de 1917?'),
-(23, 'Vespasiano', 1, 3, '¿Qué emperador romano construyó el Coliseo?'),
-(24, 'Béisbol', 2, 1, '¿En qué deporte se utiliza un bate y una pelota?'),
-(25, 'Brasil', 2, 1, '¿Qué país ha ganado más Copas Mundiales de Fútbol?'),
-(26, 'Kareem Abdul-Jabbar', 2, 3, '¿Qué jugador de la NBA combinó su dominio con el \"skyhook\" y un récord de 6 MVP?'),
-(27, 'Leonardo da Vinci', 3, 2, '¿Quién pintó \"La última cena\"?'),
-(28, 'Andy Warhol', 3, 2, '¿Qué artista es conocido por sus pinturas de latas de sopa Campbell?'),
-(29, 'Frank Gehry', 3, 3, '¿Qué arquitecto diseñó el Museo Guggenheim de Bilbao?'),
-(30, 'Marte', 4, 1, '¿Qué planeta es conocido como el planeta rojo?'),
-(31, 'Albert Einstein', 4, 2, '¿Qué científico propuso la teoría de la relatividad?'),
-(32, 'Protón', 4, 3, '¿Qué partícula subatómica tiene carga positiva?'),
-(33, 'Rusia', 5, 1, '¿Cuál es el país más grande del mundo por área?'),
-(34, 'Monte Everest', 5, 1, '¿Qué montaña es la más alta del mundo?'),
-(35, 'Francia', 5, 3, '¿Qué país tiene la mayor cantidad de husos horarios?'),
-(36, 'Robert Downey Jr.', 6, 1, '¿Qué actor interpretó a Iron Man en el Universo Cinematográfico de Marvel?'),
-(37, 'Game of Thrones', 6, 2, '¿Qué serie de TV es conocida por el lema \"Winter is Coming\"?'),
-(38, 'Quentin Tarantino', 6, 3, '¿Qué director de cine es conocido por películas como \"Pulp Fiction\" y \"Kill Bill\"?'),
-(39, 'Alberto Fernánez', 1, 2, '¿Qué presidente argentino organizó una fiesta en la quinta de Olivos?'),
-(40, 'Bolivia', 1, 1, '¿Qué país sudamericano fue el último en independizarse de España?'),
-(41, 'India', 2, 3, '¿Qué país inventó el bádminton?'),
-(42, 'Cachalote', 4, 1, '¿Qué animal tiene el cerebro más grande en proporción a su cuerpo?'),
-(43, 'Neptuno', 4, 3, '¿Qué planeta del sistema solar tiene vientos más rápidos (2,100 km/h)?'),
-(44, 'Luis Federico Leloir', 4, 2, '¿Qué científico argentino ganó el Nobel por descubrir cómo las células usan el azúcar?'),
-(45, 'Bolivia', 5, 3, '¿Qué país tiene la capital más alta del mundo?'),
-(46, 'Jujuy', 5, 2, '¿Qué provincia Argentina tiene frontera con Chile y Bolivia?'),
-(47, 'Factory Method', 7, 2, '¿Qué patrón de diseño sugiere crear objetos sin exponer la lógica de creación?'),
-(48, 'Principio de Responsabilidad Única', 7, 3, '¿Qué principio SOLID indica que una clase debe tener una única responsabilidad?'),
-(49, 'docker build', 7, 2, '¿Qué comando de Docker se usa para construir una imagen desde un Dockerfile?'),
-(50, 'HTTPS', 4, 2, '¿Qué protocolo asegura la comunicación encriptada en la web?');
+INSERT INTO `pregunta` (`id`, `respuesta_correcta`, `id_categoria`, `id_nivel`, `enunciado`, `cantidad_jugada`, `cantidad_aciertos`, `cantidad_reportes`) VALUES
+(1, 'George Washington', 1, 1, '¿Quién fue el primer presidente de los Estados Unidos?', 0, 0, 0),
+(2, '1939', 1, 1, '¿En qué año comenzó la Segunda Guerra Mundial?', 0, 0, 0),
+(3, 'Egipcia', 1, 1, '¿Qué civilización construyó las pirámides de Giza?', 0, 0, 0),
+(4, 'Fútbol', 2, 1, '¿Cuál es el deporte más popular del mundo?', 0, 0, 0),
+(5, 'Michael Jordan', 2, 1, '¿Quién es considerado el mejor jugador de baloncesto de la historia?', 0, 0, 0),
+(6, 'Wimbledon', 2, 2, '¿Qué torneo de tenis se juega en hierba?', 0, 0, 0),
+(7, 'Leonardo da Vinci', 3, 1, '¿Quién pintó la Mona Lisa?', 0, 0, 0),
+(8, 'Impresionismo', 3, 3, '¿Qué movimiento artístico está asociado con Claude Monet?', 0, 0, 0),
+(9, 'La Noche Estrellada', 3, 3, '¿Cuál es el nombre de la obra famosa de Vincent van Gogh?', 0, 0, 0),
+(10, 'Isaac Newton', 4, 1, '¿Quién formuló las leyes del movimiento?', 0, 0, 0),
+(11, 'Oxígeno', 4, 1, '¿Qué elemento es el más abundante en la atmósfera terrestre?', 0, 0, 0),
+(12, 'ADN', 4, 1, '¿Qué molécula porta la información genética?', 0, 0, 0),
+(13, 'París', 5, 1, '¿Cuál es la capital de Francia?', 0, 0, 0),
+(14, 'Amazonas', 5, 1, '¿Qué río es el más largo de Sudamérica?', 0, 0, 0),
+(15, 'África', 5, 1, '¿En qué continente está Egipto?', 0, 0, 0),
+(16, 'Leonardo DiCaprio', 6, 1, '¿Qué actor ganó un Oscar por \"El Renacido\"?', 0, 0, 0),
+(17, 'The Beatles', 6, 1, '¿Qué banda escribió \"Hey Jude\"?', 0, 0, 0),
+(18, 'Harry Potter', 6, 1, '¿Qué saga incluye a un personaje llamado Harry Potter?', 0, 0, 0),
+(21, '1989', 1, 2, '¿En qué año cayó el Muro de Berlín?', 0, 0, 0),
+(22, 'Vladimir Lenin', 1, 1, '¿Quién fue el líder de la Revolución Rusa de 1917?', 0, 0, 0),
+(23, 'Vespasiano', 1, 3, '¿Qué emperador romano construyó el Coliseo?', 0, 0, 0),
+(24, 'Béisbol', 2, 1, '¿En qué deporte se utiliza un bate y una pelota?', 0, 0, 0),
+(25, 'Brasil', 2, 1, '¿Qué país ha ganado más Copas Mundiales de Fútbol?', 0, 0, 0),
+(26, 'Kareem Abdul-Jabbar', 2, 3, '¿Qué jugador de la NBA combinó su dominio con el \"skyhook\" y un récord de 6 MVP?', 0, 0, 0),
+(27, 'Leonardo da Vinci', 3, 2, '¿Quién pintó \"La última cena\"?', 0, 0, 0),
+(28, 'Andy Warhol', 3, 2, '¿Qué artista es conocido por sus pinturas de latas de sopa Campbell?', 0, 0, 0),
+(29, 'Frank Gehry', 3, 3, '¿Qué arquitecto diseñó el Museo Guggenheim de Bilbao?', 0, 0, 0),
+(30, 'Marte', 4, 1, '¿Qué planeta es conocido como el planeta rojo?', 0, 0, 0),
+(31, 'Albert Einstein', 4, 2, '¿Qué científico propuso la teoría de la relatividad?', 0, 0, 0),
+(32, 'Protón', 4, 3, '¿Qué partícula subatómica tiene carga positiva?', 0, 0, 0),
+(33, 'Rusia', 5, 1, '¿Cuál es el país más grande del mundo por área?', 0, 0, 0),
+(34, 'Monte Everest', 5, 1, '¿Qué montaña es la más alta del mundo?', 0, 0, 0),
+(35, 'Francia', 5, 3, '¿Qué país tiene la mayor cantidad de husos horarios?', 0, 0, 0),
+(36, 'Robert Downey Jr.', 6, 1, '¿Qué actor interpretó a Iron Man en el Universo Cinematográfico de Marvel?', 0, 0, 0),
+(37, 'Game of Thrones', 6, 2, '¿Qué serie de TV es conocida por el lema \"Winter is Coming\"?', 0, 0, 0),
+(38, 'Quentin Tarantino', 6, 3, '¿Qué director de cine es conocido por películas como \"Pulp Fiction\" y \"Kill Bill\"?', 0, 0, 0),
+(39, 'Alberto Fernánez', 1, 2, '¿Qué presidente argentino organizó una fiesta en la quinta de Olivos?', 0, 0, 0),
+(40, 'Bolivia', 1, 1, '¿Qué país sudamericano fue el último en independizarse de España?', 0, 0, 0),
+(41, 'India', 2, 3, '¿Qué país inventó el bádminton?', 0, 0, 0),
+(42, 'Cachalote', 4, 1, '¿Qué animal tiene el cerebro más grande en proporción a su cuerpo?', 0, 0, 0),
+(43, 'Neptuno', 4, 3, '¿Qué planeta del sistema solar tiene vientos más rápidos (2,100 km/h)?', 0, 0, 0),
+(44, 'Luis Federico Leloir', 4, 2, '¿Qué científico argentino ganó el Nobel por descubrir cómo las células usan el azúcar?', 0, 0, 0),
+(45, 'Bolivia', 5, 3, '¿Qué país tiene la capital más alta del mundo?', 0, 0, 0),
+(46, 'Jujuy', 5, 2, '¿Qué provincia Argentina tiene frontera con Chile y Bolivia?', 0, 0, 0),
+(47, 'Factory Method', 7, 2, '¿Qué patrón de diseño sugiere crear objetos sin exponer la lógica de creación?', 0, 0, 0),
+(48, 'Principio de Responsabilidad Única', 7, 3, '¿Qué principio SOLID indica que una clase debe tener una única responsabilidad?', 0, 0, 0),
+(49, 'docker build', 7, 2, '¿Qué comando de Docker se usa para construir una imagen desde un Dockerfile?', 0, 0, 0),
+(50, 'HTTPS', 4, 2, '¿Qué protocolo asegura la comunicación encriptada en la web?', 0, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -403,8 +413,19 @@ CREATE TABLE `usuario` (
 --
 
 INSERT INTO `usuario` (`id_usuario`, `nombre`, `apellido`, `fecha_nacimiento`, `sexo`, `correo`, `contrasenia`, `nombre_usuario`, `url_foto_perfil`, `url_qr`, `id_rol`, `id_ciudad`, `id_nivel`, `puntaje_total`, `cuenta_validada`) VALUES
-(9, NULL, NULL, NULL, NULL, 'admin123@gmail.com', '$2y$10$OCA/OjkHJQa2uOoF/aNMKeyoEgqeNh.a9S08XTE4hZl4j.c3A/GOW', 'usuarioAdmin123', NULL, '/qr/usuarioAdmin123.png', 1, NULL, 1, 0, 1),
-(10, NULL, NULL, NULL, NULL, 'editor123@gmail.com', '$2y$10$oX6fGeN2dnaI0En7EWuhAubVO6gFgSJuC0uG9qZY3uJEAM9pQDJsy', 'usuarioEditor123', NULL, '/qr/usuarioEditor123.png', 2, NULL, 1, 0, 1);
+(9, NULL, NULL, NULL, NULL, 'admin123@gmail.com', '$2y$10$OCA/OjkHJQa2uOoF/aNMKeyoEgqeNh.a9S08XTE4hZl4j.c3A/GOW', 'usuarioAdmin123', 'public/img/photo-admin.jpg', '/qr/usuarioAdmin123.png', 1, NULL, 1, 0, 1),
+(10, NULL, NULL, NULL, NULL, 'editor123@gmail.com', '$2y$10$oX6fGeN2dnaI0En7EWuhAubVO6gFgSJuC0uG9qZY3uJEAM9pQDJsy', 'usuarioEditor123', 'public/img/photo-editor.jpg', '/qr/usuarioEditor123.png', 2, NULL, 1, 0, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `usuario_pregunta`
+--
+
+CREATE TABLE `usuario_pregunta` (
+  `id_usuario` int(11) NOT NULL,
+  `id_pregunta` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Índices para tablas volcadas
@@ -476,6 +497,13 @@ ALTER TABLE `usuario`
   ADD KEY `id_nivel` (`id_nivel`);
 
 --
+-- Indices de la tabla `usuario_pregunta`
+--
+ALTER TABLE `usuario_pregunta`
+  ADD PRIMARY KEY (`id_pregunta`,`id_usuario`),
+  ADD KEY `id_usuario` (`id_usuario`);
+
+--
 -- AUTO_INCREMENT de las tablas volcadas
 --
 
@@ -489,25 +517,25 @@ ALTER TABLE `categoria`
 -- AUTO_INCREMENT de la tabla `ciudad`
 --
 ALTER TABLE `ciudad`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT de la tabla `nivel`
 --
 ALTER TABLE `nivel`
-  MODIFY `id_nivel` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id_nivel` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT de la tabla `pais`
 --
 ALTER TABLE `pais`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT de la tabla `partida`
 --
 ALTER TABLE `partida`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT de la tabla `pregunta`
@@ -531,7 +559,7 @@ ALTER TABLE `rol`
 -- AUTO_INCREMENT de la tabla `usuario`
 --
 ALTER TABLE `usuario`
-  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- Restricciones para tablas volcadas
@@ -569,6 +597,13 @@ ALTER TABLE `usuario`
   ADD CONSTRAINT `usuario_ibfk_1` FOREIGN KEY (`id_rol`) REFERENCES `rol` (`id`),
   ADD CONSTRAINT `usuario_ibfk_2` FOREIGN KEY (`id_ciudad`) REFERENCES `ciudad` (`id`),
   ADD CONSTRAINT `usuario_ibfk_3` FOREIGN KEY (`id_nivel`) REFERENCES `nivel` (`id_nivel`);
+
+--
+-- Filtros para la tabla `usuario_pregunta`
+--
+ALTER TABLE `usuario_pregunta`
+  ADD CONSTRAINT `usuario_pregunta_ibfk_1` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`),
+  ADD CONSTRAINT `usuario_pregunta_ibfk_2` FOREIGN KEY (`id_pregunta`) REFERENCES `pregunta` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
