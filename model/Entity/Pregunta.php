@@ -8,7 +8,11 @@ class Pregunta
    private string $respuestaCorrecta;
    private Categoria $categoria;
    private string $enunciado;
+   private int $cantidadJugada;
+   private int $cantidadAciertos;
+   private int $cantidadReportes;
    private array $respuestasIncorrectas;
+
 
 
 
@@ -19,8 +23,38 @@ class Pregunta
       $this->enunciado = $data['enunciado'] ?? '';
       $this->categoria = $categoria;
       $this->respuestasIncorrectas = $respuestasIncorrectas;
+      $this->cantidadJugada = $data['cantidad_jugada'] ?? 0;
+      $this->cantidadAciertos = $data['cantidad_aciertos'] ?? 0;
+      $this->cantidadReportes = $data['cantidad_reportes'] ?? 0;
 
    }
+   public function getCantidadJugada(): int
+   {
+      return $this->cantidadJugada;
+   }
+   public function getCantidadAciertos(): int
+   {
+      return $this->cantidadAciertos;
+   }
+   public function getCantidadReportes(): int
+   {
+      return $this->cantidadReportes;
+   }
+
+   public function setCantidadJugada(int $cantidadJugada): void
+   {
+      $this->cantidadJugada = $cantidadJugada;
+   }
+   public function setCantidadAciertos(int $cantidadAciertos): void
+   {
+      $this->cantidadAciertos = $cantidadAciertos;
+   }
+   public function setCantidadReportes(int $cantidadReportes): void
+   {
+      $this->cantidadReportes = $cantidadReportes;
+   }
+
+
    public function getRespuestasIncorrectas(): array
    {
       return $this->respuestasIncorrectas;
