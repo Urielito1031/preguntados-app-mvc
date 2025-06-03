@@ -15,7 +15,7 @@ try {
     $controller = $_GET["controller"];
     $method = $_GET["method"];
 
-    if($controller === "home" && $method === "playGame" && !isset($_SESSION['user_name'])){
+    if($controller === "home" && $method === "playGame" && !isset($_SESSION["user_name"])) {
         header('Location: /usuario/showLoginForm');
         exit;
     }

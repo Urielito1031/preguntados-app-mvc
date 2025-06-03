@@ -13,6 +13,7 @@ require_once("model/Response/DataResponse.php");
 require_once("controller/UsuarioController.php");
 require_once("controller/HomeController.php");
 require_once("controller/PartidaController.php");
+require_once("controller/RankingController.php");
 require_once("model/Entity/Usuario.php");
 require_once("Model/Repository/UsuarioRepository.php");
 require_once("model/Repository/PaisRepository.php");
@@ -53,6 +54,12 @@ class Configuration
        $repository = new PreguntaRepository();
        $service = new PreguntaService($repository);
        return new PartidaController($service, $this->getViewer());
+    }
+
+    public function getRankingController(){
+       $repository = new UsuarioRepository();
+       $service = new UsuarioService($repository);
+       return new RankingController($service, $this->getViewer());
     }
 
     public function getRouter()

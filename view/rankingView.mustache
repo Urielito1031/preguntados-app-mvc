@@ -1,0 +1,23 @@
+<section class="d-flex flex-column align-items-center">
+
+    <h2>🔥 Top Jugadores 🔥</h2>
+
+
+    <div>
+        {{#jugadores}}
+            <p>{{jugador.posicion}} {{jugador.nombre}} {{jugador.puntos}}</p>
+        {{/jugadores}}
+    </div>
+
+    <h2>Historial</h2>
+
+    <div>
+        {{#partidas}}
+            <p>{{partida.nro}} {{partida.puntos}}</p>
+        {{/partidas}}
+    </div>
+
+
+    <a href="/home/show">Volver</a>
+
+</section>
