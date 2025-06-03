@@ -91,9 +91,7 @@ class PartidaController
             "Aleatorio" => 7,
          };
 
-         if (!isset($_SESSION['preguntas_realizadas'])) {
-            $_SESSION['preguntas_realizadas'] = [];
-         }
+         $_SESSION['preguntas_realizadas'] ??= [];
 
          $pregunta = $this->preguntaService->getPregunta($idCategoria, $_SESSION['preguntas_realizadas']);
          if (!$pregunta) {
@@ -109,6 +107,7 @@ class PartidaController
          $_SESSION['respuesta_correcta'] = $pregunta->getRespuestaCorrecta();
          $_SESSION['pregunta_actual'] = $pregunta->getId();
          $_SESSION['enunciado_actual'] = $pregunta->getEnunciado();
+         $_SESSION['preguntas_realizadas'][] = $pregunta->getId();
 
          $viewData = [
             'usuario' => $_SESSION['user_name'] ?? '',
@@ -121,7 +120,6 @@ class PartidaController
             'categoria_color' => $pregunta->getCategoria()->getColor() ?? '',
          ];
 
-         $_SESSION['preguntas_realizadas'][] = $pregunta->getId();
          $this->view->render("pregunta", $viewData);
       } catch (\Exception $e) {
          $viewData = [
@@ -136,6 +134,7 @@ class PartidaController
    public function responder()
    {
       try {
+
          $respuesta = $_POST['respuesta'] ?? '';
          if (empty($respuesta)) {
             throw new \Exception("No se proporcionó una respuesta");
@@ -143,7 +142,13 @@ class PartidaController
 
          $_SESSION['respuesta_usuario'] = $respuesta;
 
+
+         if(!isset($_SESSION['pregunta_actual']) || !isset($_SESSION['respuesta_correcta'])) {
+           $this->endGame();
+           return;
+         }
          $continuaLaPartida = $respuesta === $_SESSION['respuesta_correcta'];
+
          if ($continuaLaPartida) {
             $_SESSION['preguntas_correctas'][] = $_SESSION['pregunta_actual'];
             $this->showPreguntaCorrecta();
