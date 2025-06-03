@@ -19,18 +19,27 @@ class HomeController
         $viewData = [
             'usuario' => $_SESSION['user_name'] ?? '',
             'logo_url' => '/public/img/LogoQuizCode.png',
-            'foto_perfil' => $_SESSION['foto_perfil']
+            'foto_perfil' => $_SESSION['foto_perfil'],
+            'id_rol' => $_SESSION['id_rol']
         ];
-        $this->view->render("home", $viewData); //
+
+        if($viewData['id_rol'] === 2) {
+            $this->view->render("homeEditor", $viewData);
+        } else if ($viewData['id_rol'] === 1) {
+            $this->view->render("homeAdmin", $viewData);
+        } else {
+            $this->view->render("home", $viewData);
+            var_dump($_SESSION['id_rol']);
+        }
     }
 
+
     public function playGame(){
-//         CREO QUE NO TIENE SENTIDO PORQUE ANTES DE ENTRAR EN ESTE METODO YA DEBE ESTAR EN LA PAGINA,
-//         NO HAY OTRO ACCESO SEGUN ENTIENDO
-//        if (!isset($_SESSION['user_name'])) {
-//            header('Location: /usuario/showLoginForm');
-//            exit;
-//        }
+
+        if (!isset($_SESSION['user_name'])) {
+            header('Location: /usuario/showLoginForm');
+            exit;
+        }
 
         $viewData = [
             'usuario' => $_SESSION['user_name'] ?? '',
@@ -39,4 +48,9 @@ class HomeController
         ];
         $this->view->render("partida", $viewData); //
     }
+
+
+
 }
+
+

@@ -44,7 +44,7 @@ class UsuarioController
       // Delegar TODA la validación al servicio
       $response = $this->usuarioService->login($email, $password);
 
-       $viewData = ['error' => $response->message, 'logo_url' => '/public/img/LogoQuizCode.png'];
+      $viewData = ['error' => $response->message, 'logo_url' => '/public/img/LogoQuizCode.png'];
 
       if(isset($_SESSION['user_name'])) {
            $viewData['display'] = "display: block";
@@ -67,6 +67,7 @@ class UsuarioController
        $_SESSION['user_name'] = $usuario->getNombreUsuario();
        $_SESSION['foto_perfil'] = $usuario->getUrlFotoPerfil();
        $_SESSION['puntaje_total'] = $usuario->getPuntajeTotal();
+       $_SESSION['id_rol'] = $usuario->getIdRol();
    }
     public function logout() {
         session_unset();
