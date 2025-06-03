@@ -12,8 +12,8 @@ try {
    $configuration = new Configuration($pdo, $viewer);
    $router = $configuration->getRouter();
 
-    $controller = $_GET["controller"];
-    $method = $_GET["method"];
+   $controller = (isset($_GET["controller"])) ? $_GET["controller"] : null;
+   $method = (isset($_GET["method"])) ? $_GET["method"] : null;
 
     if($controller === "home" && $method === "playGame" && !isset($_SESSION["user_name"])) {
         header('Location: /usuario/showLoginForm');

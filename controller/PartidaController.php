@@ -1,17 +1,20 @@
 <?php
 
+use Service\PartidaService;
 use Service\PreguntaService;
-use Entity\Pregunta;
 
 class PartidaController
 {
-    private $view;
-    private $preguntaService;
+   private $view;
+   private $preguntaService;
+   private $service;
 
-    public function __construct(PreguntaService $preguntaService, MustachePresenter $view) {
-        $this->view = $view;
-        $this->preguntaService = $preguntaService;
-    }
+   public function __construct(PartidaService $service, PreguntaService $preguntaService, MustachePresenter $view)
+   {
+      $this->view = $view;
+      $this->service = $service;
+      $this->preguntaService = $preguntaService;
+   }
 
 
     private function getUserSessionData() : array {
@@ -24,6 +27,11 @@ class PartidaController
     public function pregunta(): void {
         if(!isset($_SESSION['preguntas_realizadas'])){
             $_SESSION['preguntas_realizadas'] = array();
+        }
+
+        if (!$pregunta) {
+            $this->endGame();
+            return;
         }
 
         // Miedo me da tocar esto xD
@@ -77,11 +85,37 @@ class PartidaController
         $this->view->render("finpartida", $viewData);
     }
 
-    public function responder(): void{
-        if($_SESSION['pregunta']['respuesta_correcta'] === $_POST['respuesta_usuario']){
-            $this->showPreguntaCorrecta();
-        }else{
-            $this->endGame();
+    public function responder()
+    {
+        try {
+
+            $respuesta = $_POST['respuesta'] ?? '';
+            if (empty($respuesta)) {
+                throw new \Exception("No se proporcionó una respuesta");
+            }
+
+            $_SESSION['respuesta_usuario'] = $respuesta;
+
+
+            if(!isset($_SESSION['pregunta_actual']) || !isset($_SESSION['respuesta_correcta'])) {
+                $this->endGame();
+                return;
+            }
+            $continuaLaPartida = $respuesta === $_SESSION['respuesta_correcta'];
+
+            if ($continuaLaPartida) {
+                $_SESSION['preguntas_correctas'][] = $_SESSION['pregunta_actual'];
+                $this->showPreguntaCorrecta();
+            } else {
+                $this->endGame();
+            }
+        } catch (\Exception $e) {
+            $viewData = [
+                'error' => "Error al procesar la respuesta: " . $e->getMessage(),
+                'usuario' => $_SESSION['user_name'] ?? '',
+                'foto_perfil' => $_SESSION['foto_perfil']
+            ];
+            $this->view->render("error", $viewData);
         }
     }
 }

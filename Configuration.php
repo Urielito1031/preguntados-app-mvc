@@ -1,7 +1,11 @@
 <?php
 
+
+use Controller\PartidaController;
+use Repository\PartidaRepository;
 use Repository\PreguntaRepository;
 use Repository\UsuarioRepository;
+use Service\PartidaService;
 use Service\PreguntaService;
 use Service\UsuarioService;
 
@@ -15,16 +19,29 @@ require_once("controller/HomeController.php");
 require_once("controller/PartidaController.php");
 require_once("controller/RankingController.php");
 require_once("model/Entity/Usuario.php");
+require_once("controller/PartidaController.php");
+
+
+require_once("Model/Service/UsuarioService.php");
+require_once("Model/Service/PartidaService.php");
 require_once("Model/Repository/UsuarioRepository.php");
 require_once("model/Repository/PaisRepository.php");
 require_once("model/Repository/CiudadRepository.php");
+
+
 require_once("model/repository/PreguntaRepository.php");
 require_once("core/Router.php");
 require_once("core/MustachePresenter.php");
+require_once("model/repository/PartidaRepository.php");
+require_once("model/service/preguntaService.php");
+
+
+
 include_once('vendor/mustache/src/Mustache/Autoloader.php');
 
 class Configuration
 {
+
    private PDO $database;
    private $viewer;
 
@@ -51,9 +68,12 @@ class Configuration
     }
 
     public function getPartidaController(){
-       $repository = new PreguntaRepository();
-       $service = new PreguntaService($repository);
-       return new PartidaController($service, $this->getViewer());
+       $preguntaRepository = new PreguntaRepository();
+       $partidaRepository = new PartidaRepository();
+
+       $preguntaService = new PreguntaService($preguntaRepository);
+       $partidaService = new PartidaService($partidaRepository);
+       return new PartidaController($partidaService,$preguntaService, $this->getViewer());
     }
 
     public function getRankingController(){
@@ -72,4 +92,5 @@ class Configuration
         //return new FileView();
         return new MustachePresenter("view");
     }
+
 }

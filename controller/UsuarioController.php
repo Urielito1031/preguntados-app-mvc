@@ -99,7 +99,10 @@ class UsuarioController
     /**
      * @throws Exception
      */
-    public function processRegister()
+   /**
+    * @throws Exception
+    */
+   public function processRegister()
    {
       $nombre = $_POST['nombre'] ?? '';
       $apellido = $_POST['apellido'] ?? '';
@@ -107,18 +110,21 @@ class UsuarioController
       $nombre_usuario = $_POST['nombre_usuario'] ?? '';
       $email = $_POST['correo'] ?? '';
       $genero = $_POST['genero'] ?? '';
-      $cuentaValidada = $_POST ['estado'] ?? '';
+      $contrasenia = $_POST['contrasenia'] ?? '';
+      $repetirContrasenia = $_POST['repetir_contrasenia'] ?? '';
+      $pais = $_POST['pais'] ?? '';
+      $ciudad = $_POST['ciudad'] ?? '';
+      $estado = $_POST['estado'] ?? '';
 
-      $id_ciudad = $this->ubicacionService->processUbication($_POST['pais']??'',$_POST['ciudad'])->getId();
+      $id_ciudad = $this->ubicacionService->processUbication($pais, $ciudad)->getId();
 
-      if(isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK) {
+      $url_foto_perfil = null;
+      if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK) {
          $url_foto_perfil = $this->imageService->uploadImage($_FILES['imagen']);
-      } else {
-         $url_foto_perfil = null;
       }
 
-   $passwordRecibido = $_POST['contrasenia'] ?? '';
-      $contrasenia =password_hash($passwordRecibido, PASSWORD_DEFAULT); //corresponde que este aca?
+      $contraseniaHash = password_hash($contrasenia, PASSWORD_DEFAULT);
+
 
       $user = new Usuario(
          [
@@ -126,31 +132,47 @@ class UsuarioController
             'apellido' => $apellido,
             'fecha_nacimiento' => $fecha_nacimiento,
             'nombre_usuario' => $nombre_usuario,
-            'genero' => $genero,
-            'correo' =>$email,
-            'contrasenia' => $contrasenia,
-             'url_foto_perfil' => $url_foto_perfil,
-             'id_ciudad' => $id_ciudad,
-             'cuenta_validada' => $cuentaValidada
-
+            'sexo' => $genero,
+            'correo' => $email,
+            'contrasenia' => $contraseniaHash,
+            'url_foto_perfil' => $url_foto_perfil,
+            'id_ciudad' => $id_ciudad,
+            'cuenta_validada' => $estado
          ]
       );
 
-      $response = $this->usuarioService->save($user);
-
-      $viewData = [
-          'message' => 'Fui al controlador y volvi ',
-          'correo' => $response->message,
-          'logo_url' => '/public/img/LogoQuizCode.png'
+      $options = [
+         ['value' => '', 'show' => 'Sexo'],
+         ['value' => 'Masculino', 'show' => 'Masculino'],
+         ['value' => 'Femenino', 'show' => 'Femenino'],
+         ['value' => 'Prefiero no cargarlo', 'show' => 'Otro']
       ];
 
-      if(isset($_SESSION['user_name'])) {
-          $viewData['display'] = "display: block";
-      }else{
-          $viewData['display'] = "display: none";
-      }
+      $viewData = [
+         'sexo' => $options,
+         'titulo_h1' => 'REGISTRARSE',
+         'nombre' => $nombre,
+         'apellido' => $apellido,
+         'fecha_nacimiento' => $fecha_nacimiento,
+         'nombre_usuario' => $nombre_usuario,
+         'correo' => $email,
+         'genero' => $genero,
+         'pais' => $pais,
+         'ciudad' => $ciudad,
+         'display' => isset($_SESSION['user_name']) ? "display: block" : "display: none"
+      ];
 
-      $this->view->render("login", $viewData);
+
+      $response = $this->usuarioService->save($user);
+
+      if ($response->success) {
+         $viewData['showModal'] = true;
+         echo '<script>setTimeout(function() { window.location.href = "/usuario/showLoginForm"; }, 5000);</script>';
+         $this->view->render("register", $viewData);
+      } else {
+         $viewData['error'] = $response->message;
+         $this->view->render("register", $viewData);
+      }
    }
 
 

@@ -27,7 +27,7 @@ class Usuario
 
          $this->fechaNacimiento = isset($data['fecha_nacimiento'])
             ? new \DateTime($data['fecha_nacimiento']) : null;
-         $this->sexo = $data['genero'] ?? null;
+         $this->sexo = $data['sexo'] ?? null;
          $this->correo = $data['correo'];
          $this->contraseniaHash = $data['contrasenia'];
          $this->nombreUsuario = $data['nombre_usuario'];

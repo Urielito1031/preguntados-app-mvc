@@ -5,6 +5,7 @@ namespace Repository;
 use Config\Database;
 
 use Entity\Partida;
+use Entity\Usuario;
 use PDO;
 use PDOException;
 
@@ -12,10 +13,12 @@ use PDOException;
 class PartidaRepository
 {
     private PDO $conn;
+    private UsuarioRepository $usuarioRepository;
 
     public function __construct()
     {
         $this->conn = Database::connect();
+         $this->usuarioRepository = new UsuarioRepository();
     }
 
 
@@ -31,8 +34,10 @@ class PartidaRepository
            $stmt->bindValue(':puntaje', $partida->getPuntaje());
            $stmt->bindValue(':estado', $partida->getEstado());
            $stmt->bindValue(':cantidad_de_preguntas_correctas',$partida->getCantidadPreguntasCorrectas());
+
            $stmt->execute();
            $partida->setId($this->conn->lastInsertId());
+
         }
         catch (PDOException $e){
             throw new PDOException("No se pudo guardar la partida: " . $e);
@@ -47,9 +52,7 @@ class PartidaRepository
         $stmt->bindValue(':id_usuario', $id_usuario, PDO::PARAM_STR);
         $stmt->execute();
 
-        $data = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        return $data;
+       return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
     public function numForAllGamesInApp(): int {
@@ -59,11 +62,12 @@ class PartidaRepository
         return $stmt->fetchColumn();
     }
 
+
    public function getById(int $getId): ?Partida
    {
       $sql = "SELECT * FROM partida WHERE id = :id";
       $stmt = $this->conn->prepare($sql);
-      $stmt->bindValue(':id', $getId, PDO::PARAM_INT);
+      $stmt->bindParam(':id', $getId, PDO::PARAM_INT);
       $stmt->execute();
       $data = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -71,7 +75,11 @@ class PartidaRepository
          return null;
       }
 
-      return new Partida($data, new \Entity\Usuario(['id' => $data['id_usuario']]));
+      $usuario = $this->usuarioRepository->findById($data['id_usuario']);
+      if (!$usuario) {
+         throw new \Exception("Usuario no encontrado para la partida ID: $getId");
+      }
+      return new Partida($data,$usuario);
    }
 }
 

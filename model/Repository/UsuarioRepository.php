@@ -93,6 +93,28 @@ class UsuarioRepository
 
    }
 
+   public function findById(int $id_usuario): ?Usuario
+   {
+      $query = "SELECT * FROM usuario WHERE id_usuario = :id";
+
+      try{
+         $stmt = $this->conn->prepare($query);
+         $stmt->bindValue(':id', $id_usuario, PDO::PARAM_INT);
+         $stmt->execute();
+         $data = $stmt->fetch(PDO::FETCH_ASSOC);
+
+         if (!$data) {
+            return null;
+         }
+
+         return new Usuario($data);
+
+      }catch (PDOException $e){
+         throw new PDOException("Error al buscar usuario por ID: " . $e->getMessage());
+      }
+
+   }
+
     public function getRanking()
     {
         $sql = "SELECT id_usuario, sum(puntaje) AS puntos

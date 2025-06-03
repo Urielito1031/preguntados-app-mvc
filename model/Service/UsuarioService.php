@@ -21,6 +21,65 @@ class UsuarioService
    public function save(Usuario $usuario): DataResponse
    {
       try {
+         // Validaciones para cada campo
+         if (empty(trim($usuario->getNombre()))) {
+            return new DataResponse(false, "El nombre es obligatorio.");
+         }
+
+         if (empty(trim($usuario->getApellido()))) {
+            return new DataResponse(false, "El apellido es obligatorio.");
+         }
+         if(empty($usuario->getFechaNacimiento())) {
+            return new DataResponse(false, "La fecha de nacimiento es obligatoria.");
+         }
+         if(!$usuario->getUrlFotoPerfil()){
+            return new DataResponse(false, "La foto de perfil es obligatoria.");
+         }
+
+         if (empty(trim($usuario->getNombreUsuario()))) {
+            return new DataResponse(false, "El nombre de usuario es obligatorio.");
+         }
+
+         if (strlen($usuario->getNombreUsuario()) < 3) {
+            return new DataResponse(false, "El nombre de usuario debe tener al menos 3 caracteres.");
+         }
+
+         if (empty(trim($usuario->getCorreo()))) {
+            return new DataResponse(false, "El correo es obligatorio.");
+         }
+
+         if ($usuario->getFechaNacimiento() === null || $usuario->getFechaNacimiento()->format('Y') > date('Y') - 13) {
+            return new DataResponse(false, "Debes tener al menos 13 años para registrarte.");
+         }
+
+
+         if (!filter_var($usuario->getCorreo(), FILTER_VALIDATE_EMAIL)) {
+            return new DataResponse(false, "El correo no es válido.");
+         }
+
+         // Validar contraseñas (comparar con repetir_contrasenia del POST)
+         $passwordRecibido = $_POST['contrasenia'] ?? '';
+         $repetirContrasenia = $_POST['repetir_contrasenia'] ?? '';
+         if (empty($passwordRecibido) || empty($repetirContrasenia)) {
+            return new DataResponse(false, "Ambas contraseñas son obligatorias.");
+         }
+
+         if ($passwordRecibido !== $repetirContrasenia) {
+            return new DataResponse(false, "Las contraseñas no coinciden.");
+         }
+
+         if (strlen($passwordRecibido) < 8) {
+            return new DataResponse(false, "La contraseña debe tener al menos 8 caracteres.");
+         }
+
+         if (empty($usuario->getSexo()) ) {
+            return new DataResponse(false, "Debes seleccionar un género.");
+         }
+
+         if (empty(trim($_POST['pais'] ?? '')) && empty(trim($_POST['ciudad'] ?? ''))) {
+            return new DataResponse(false, "Debes ingresar al menos un país o ciudad.");
+         }
+
          if ($this->repository->findByEmail($usuario->getCorreo())) {
             return new DataResponse(false, "El email ya está registrado.");
          }
