@@ -7,19 +7,17 @@ class Pregunta
    private int $id;
    private string $respuestaCorrecta;
    private Categoria $categoria;
-   private Nivel $nivel;
    private string $enunciado;
    private array $respuestasIncorrectas;
 
 
 
-   public function __construct(array $data, Categoria $categoria, Nivel $nivel, array $respuestasIncorrectas = [])
+   public function __construct(array $data, Categoria $categoria, array $respuestasIncorrectas = [])
    {
       $this->id = $data['id'] ?? 0;
       $this->respuestaCorrecta = $data['respuesta_correcta'] ?? '';
       $this->enunciado = $data['enunciado'] ?? '';
       $this->categoria = $categoria;
-      $this->nivel = $nivel;
       $this->respuestasIncorrectas = $respuestasIncorrectas;
 
    }
@@ -31,10 +29,7 @@ class Pregunta
    {
       return $this->categoria;
    }
-   public function getNivel(): Nivel
-   {
-      return $this->nivel;
-   }
+
    public function getId(): int
    {
       return $this->id;
