@@ -23,9 +23,7 @@ class PreguntaRepository
       if (empty(CategoriaRegistry::getAll())) {
          CategoriaRegistry::init($this->conn);
       }
-      if (empty(NivelRegistry::getAll())) {
-         NivelRegistry::init($this->conn);
-      }
+
    }
 
 
@@ -40,14 +38,13 @@ class PreguntaRepository
          if (!$data) return null;
 
          $categoria = CategoriaRegistry::get($data['id_categoria']);
-         $nivel = NivelRegistry::get($data['id_nivel']);
 
-         if ($categoria === null || $nivel === null) {
-            throw new \Exception("Categoría o Nivel no encontrado en Registry");
+         if ($categoria === null) {
+            throw new \Exception("Categoría no encontrado en Registry");
          }
          $respuestasIncorrectas = $this->getRespuestasIncorrectas($id);
 
-         return new Pregunta($data, $categoria, $nivel, $respuestasIncorrectas);
+         return new Pregunta($data, $categoria, $respuestasIncorrectas);
 
 
       }catch (PDOException $e){
@@ -122,18 +119,16 @@ class PreguntaRepository
          // Obtiene los datos relacionados.
          $respuestasIncorrectas = $this->getRespuestasIncorrectas($preguntaAleatoria['id']);
          $categoria = CategoriaRegistry::get($preguntaAleatoria['id_categoria']);
-         $nivel = NivelRegistry::get($preguntaAleatoria['id_nivel']);
 
-         if (!$categoria || !$nivel) {
+         if (!$categoria ) {
             // Lanza una excepción si no se pueden cargar las dependencias.
-            throw new \Exception("Categoría o Nivel no encontrado en Registry para la pregunta ID: " . $preguntaAleatoria['id']);
+            throw new \Exception("Categoría no encontrado en Registry para la pregunta ID: " . $preguntaAleatoria['id']);
          }
 
          // Retorna una nueva instancia del objeto Pregunta.
          return new Pregunta(
             $preguntaAleatoria,
             $categoria,
-            $nivel,
             $respuestasIncorrectas
          );
 

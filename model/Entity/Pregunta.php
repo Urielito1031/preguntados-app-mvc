@@ -7,22 +7,54 @@ class Pregunta
    private int $id;
    private string $respuestaCorrecta;
    private Categoria $categoria;
-   private Nivel $nivel;
    private string $enunciado;
+   private int $cantidadJugada;
+   private int $cantidadAciertos;
+   private int $cantidadReportes;
    private array $respuestasIncorrectas;
 
 
 
-   public function __construct(array $data, Categoria $categoria, Nivel $nivel, array $respuestasIncorrectas = [])
+
+   public function __construct(array $data, Categoria $categoria, array $respuestasIncorrectas = [])
    {
       $this->id = $data['id'] ?? 0;
       $this->respuestaCorrecta = $data['respuesta_correcta'] ?? '';
       $this->enunciado = $data['enunciado'] ?? '';
       $this->categoria = $categoria;
-      $this->nivel = $nivel;
       $this->respuestasIncorrectas = $respuestasIncorrectas;
+      $this->cantidadJugada = $data['cantidad_jugada'] ?? 0;
+      $this->cantidadAciertos = $data['cantidad_aciertos'] ?? 0;
+      $this->cantidadReportes = $data['cantidad_reportes'] ?? 0;
 
    }
+   public function getCantidadJugada(): int
+   {
+      return $this->cantidadJugada;
+   }
+   public function getCantidadAciertos(): int
+   {
+      return $this->cantidadAciertos;
+   }
+   public function getCantidadReportes(): int
+   {
+      return $this->cantidadReportes;
+   }
+
+   public function setCantidadJugada(int $cantidadJugada): void
+   {
+      $this->cantidadJugada = $cantidadJugada;
+   }
+   public function setCantidadAciertos(int $cantidadAciertos): void
+   {
+      $this->cantidadAciertos = $cantidadAciertos;
+   }
+   public function setCantidadReportes(int $cantidadReportes): void
+   {
+      $this->cantidadReportes = $cantidadReportes;
+   }
+
+
    public function getRespuestasIncorrectas(): array
    {
       return $this->respuestasIncorrectas;
@@ -31,10 +63,7 @@ class Pregunta
    {
       return $this->categoria;
    }
-   public function getNivel(): Nivel
-   {
-      return $this->nivel;
-   }
+
    public function getId(): int
    {
       return $this->id;

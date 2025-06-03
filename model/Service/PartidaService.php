@@ -41,7 +41,6 @@ class PartidaService{
          }catch (\Exception $e){
             return new DataResponse(false, "Error al guardar la partida: " . $e->getMessage());
          }
-
     }
    public function finalizarPartida(int $userId, array $preguntasCorrectas, array $preguntasRealizadas): DataResponse
    {

@@ -34,8 +34,10 @@ class PartidaRepository
            $stmt->bindValue(':puntaje', $partida->getPuntaje());
            $stmt->bindValue(':estado', $partida->getEstado());
            $stmt->bindValue(':cantidad_de_preguntas_correctas',$partida->getCantidadPreguntasCorrectas());
+
            $stmt->execute();
            $partida->setId($this->conn->lastInsertId());
+
         }
         catch (PDOException $e){
             throw new PDOException("No se pudo guardar la partida: " . $e);

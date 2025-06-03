@@ -54,7 +54,4 @@ class Partida
       $this->cantidadPreguntasCorrectas = $cantidadPreguntasCorrectas;
    }
 
-
-
-
 }
