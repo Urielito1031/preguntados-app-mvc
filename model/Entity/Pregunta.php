@@ -12,6 +12,8 @@ class Pregunta
    private int $cantidadAciertos;
    private int $cantidadReportes;
    private array $respuestasIncorrectas;
+   public const SUMAR_PUNTAJE = 1;
+   public const SUMAR_ACIERTOS = 1;
 
 
 

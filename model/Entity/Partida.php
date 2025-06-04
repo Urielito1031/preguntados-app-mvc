@@ -12,11 +12,9 @@ class Partida
    private \DateTimeImmutable $fechaCreacion;
 
 
-   public function __construct(array $data, Usuario $usuario) {
-      $this->id = $data["id"];
-      $this->puntaje = $data["puntaje"];
-      $this->estado = $data["estado"];
-      $this->cantidadPreguntasCorrectas = $data["preguntas_correctas"];
+   public function __construct(Usuario $usuario) {
+      $this->id = $data["id"]?? 0;
+
       $this->usuario = $usuario;
       $this->fechaCreacion = new \DateTimeImmutable("now");
 
@@ -43,6 +41,8 @@ class Partida
    public function setId(int $id): void {
       $this->id = $id;
    }
+
+
 
    public function setPuntaje(int $puntaje): void {
       $this->puntaje = $puntaje;

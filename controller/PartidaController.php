@@ -6,6 +6,7 @@ use Entity\Usuario;
 use MustachePresenter;
 use Service\PartidaService;
 use Service\PreguntaService;
+use Service\UsuarioService;
 
 class PartidaController
 {
@@ -18,6 +19,7 @@ class PartidaController
       $this->view = $view;
       $this->service = $service;
       $this->preguntaService = $preguntaService;
+
    }
 
    public function playGame()
