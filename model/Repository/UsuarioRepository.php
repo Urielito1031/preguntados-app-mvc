@@ -93,6 +93,37 @@ class UsuarioRepository
 
    }
 
+  public function incrementarPreguntaEntregada(Usuario $usuario): void
+   {
+      $sql = "UPDATE usuario
+                SET preguntas_entregadas = preguntas_entregadas + 1 
+                WHERE id_usuario = :id";
+      try{
+         $stmt = $this->conn->prepare($sql);
+         $stmt->bindValue(':id', $usuario->getId(), PDO::PARAM_INT);
+         $stmt->execute();
+         $usuario->setPreguntasEntregadas($usuario->getPreguntasEntregadas() + 1);
+
+      }catch(PDOException $e){
+         throw new PDOException("Error al incrementar preguntas entregadas: ".$e->getMessage());
+      }
+   }
+   public function sumarRespuestaCorrecta(Usuario $usuario): void
+   {
+      $sql = "UPDATE usuario
+                SET respondidas_correctamente = respondidas_correctamente + 1 
+                WHERE id_usuario = :id";
+      try{
+         $stmt = $this->conn->prepare($sql);
+         $stmt->bindValue(':id', $usuario->getId(), PDO::PARAM_INT);
+         $stmt->execute();
+         $usuario->setRespondidasCorrectamente($usuario->getRespondidasCorrectamente() + 1);
+
+      }catch(PDOException $e){
+         throw new PDOException("Error al sumar respuesta correcta: ".$e->getMessage());
+      }
+   }
+
    public function findById(int $id_usuario): ?Usuario
    {
       $query = "SELECT * FROM usuario WHERE id_usuario = :id";

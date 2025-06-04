@@ -147,4 +147,15 @@ class UsuarioService
    public function getRanking(){
        return $this->repository->getRanking();
    }
+
+
+   //
+   public function obtenerNivelUsuario(int $idUsuario): float
+   {
+      $usuario = $this->repository->findById($idUsuario);
+      if ($usuario === null) {
+         return 0.0;
+      }
+      return $usuario->getNivel();
+   }
 }
