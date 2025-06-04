@@ -16,15 +16,11 @@ try {
       throw new Exception("Usuario no encontrado");
    }
 
-   $partida = new Partida([
-      "id" => 0,
-      "puntaje" => 100,
-      "estado" => "GANADA",
-      "preguntas_correctas" => 10
-   ], $usuario);
+   $partida = new Partida( $usuario);
 
    $partidaRepo = new PartidaRepository();
    $partidaRepo->saveGame($partida);
+
 
 
    try {
