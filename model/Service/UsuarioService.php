@@ -18,6 +18,8 @@ class UsuarioService
       $this->repository = $usuarioRepository;
 
    }
+
+
    public function save(Usuario $usuario): DataResponse
    {
       try {
@@ -148,14 +150,36 @@ class UsuarioService
        return $this->repository->getRanking();
    }
 
+   public function findById(int $idUsuario):DataResponse{
+      try {
+         $usuario = $this->repository->findById($idUsuario);
+         if ($usuario === null) {
+            return new DataResponse(false, "Usuario no encontrado.");
+         }
+         return new DataResponse(true, "Usuario encontrado.", $usuario);
+      } catch (\Exception $e) {
+         return new DataResponse(false, "Error al buscar el usuario: " . $e->getMessage());
+      }
+   }
 
    //
    public function obtenerNivelUsuario(int $idUsuario): float
    {
-      $usuario = $this->repository->findById($idUsuario);
-      if ($usuario === null) {
+      $response = $this->findById($idUsuario);
+      if (!$response->message) {
          return 0.0;
       }
+      $usuario = $response->data;
       return $usuario->getNivel();
+   }
+   public function sumarPreguntaEntregada(Usuario $usuario): DataResponse
+   {
+      try {
+         $usuario->setPreguntasEntregadas($usuario->getPreguntasEntregadas() + 1);
+         $this->repository->incrementarPreguntaEntregada($usuario);
+         return new DataResponse(true, "Pregunta entregada correctamente.", $usuario);
+      } catch (\Exception $e) {
+         return new DataResponse(false, "Error al incrementar la pregunta del usuario: " . $e->getMessage());
+      }
    }
 }
