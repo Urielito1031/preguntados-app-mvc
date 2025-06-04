@@ -162,11 +162,12 @@ class UsuarioService
       }
    }
 
-   //
+   //duda si dejarlo o no, porque podria usarse cuando
+   // solo tenemos el id y no queremos el usuario directamente;
    public function obtenerNivelUsuario(int $idUsuario): float
    {
       $response = $this->findById($idUsuario);
-      if (!$response->message) {
+      if (!$response->success) {
          return 0.0;
       }
       $usuario = $response->data;

@@ -10,11 +10,7 @@ class PreguntaService
 {
     private  PreguntaRepository $repository;
     private  const  CANTIDAD_MINIMA_PARA_CALCULAR = 10;
-    private array $niveles = [
-        "DIFICIL" => [],
-        "MEDIO" =>[],
-        "FACIL" =>[]
-    ];
+
 
     public function __construct(PreguntaRepository $preguntaRepository){
         $this->repository = $preguntaRepository;
@@ -30,23 +26,18 @@ class PreguntaService
        }
 
        $ratio = $pregunta->getRatioPregunta();
-         if($ratio > 0 && $ratio < 0.3){
-            $this->niveles["DIFICIL"][] = $pregunta->getId();
-            return new DataResponse(true, "DIFÍCIL", $ratio);
-         }
-         if($ratio >= 0.3 && $ratio < 0.7){
-            $this->niveles["MEDIO"][] = $pregunta->getId();
-            return new DataResponse(true, "MEDIO", $ratio);
-         }
-         if($ratio >= 0.7 && $ratio <= 1){
-            $this->niveles["FACIL"][] = $pregunta->getId();
-            return new DataResponse(true, "FÁCIL", $ratio);
-         }
+       $dificultad = match (true) {
+          $ratio > 0 && $ratio < 0.3 => 'DIFICIL',
+          $ratio >= 0.3 && $ratio < 0.7 => 'MEDIO',
+          $ratio >= 0.7 && $ratio <= 1 => 'FACIL',
+          default => 'INDETERMINADO'
+       };
 
+       if ($dificultad === 'INDETERMINADO') {
+          return new DataResponse(false, "Nivel no determinado");
+       }
 
-       return new DataResponse(false, "Nivel no determinado");
-
-
+       return new DataResponse(true, $dificultad, $ratio);
     }
 
 
@@ -78,6 +69,13 @@ class PreguntaService
       }
    }
 
+   public function findById(int $idPregunta): DataResponse{
+         $pregunta = $this->repository->find($idPregunta);
+         if ($pregunta === null) {
+            return new DataResponse(false, "Pregunta no encontrada por id");
+         }
+         return new DataResponse(true, "Pregunta por id encontrada", $pregunta);
+   }
 
 
 
@@ -87,14 +85,24 @@ class PreguntaService
         return $this->repository->getPreguntaByCategoria($idCategoria,$array_id_preguntas_realizadas);
     }
 
-    public function acumularPreguntaJugada(Pregunta $pregunta):DataResponse{
-       $this->repository->acumularPreguntaJugada($pregunta);
-       return new DataResponse(true, "Pregunta acumulada correctamente", $pregunta);
-    }
+   public function acumularPreguntaJugada(Pregunta $pregunta): DataResponse
+   {
+      try {
+         $this->repository->acumularPreguntaJugada($pregunta);
+         return new DataResponse(true, "Pregunta acumulada correctamente", $pregunta);
+      } catch (\Exception $e) {
+         return new DataResponse(false, "Error al acumular pregunta jugada: " . $e->getMessage());
+      }
+   }
 
-   public function acumularAciertoPregunta(Pregunta $pregunta):DataResponse{
-      $this->repository->acumularCantidadAciertos($pregunta);
-      return new DataResponse(true, "Pregunta respondida correctamente", $pregunta);
+   public function acumularAciertoPregunta(Pregunta $pregunta): DataResponse
+   {
+      try {
+         $this->repository->acumularCantidadAciertos($pregunta);
+         return new DataResponse(true, "Pregunta respondida correctamente", $pregunta);
+      } catch (\Exception $e) {
+         return new DataResponse(false, "Error al acumular acierto: " . $e->getMessage());
+      }
    }
 
 
