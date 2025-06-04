@@ -147,19 +147,7 @@ class PreguntaRepository
    }
 
 
-   public function obtenerRatioPregunta(int $idPregunta): float
-   {
 
-      $query = "SELECT (cantidad_aciertos / cantidad_jugada) AS ratio
-                FROM pregunta WHERE id = :id 
-                AND cantidad_jugada > 0";//para evitar errores
-      $stmt = $this->conn->prepare($query);
-      $stmt->bindValue(':id', $idPregunta, PDO::PARAM_INT);
-      $stmt->execute();
-      $ratio = $stmt->fetchColumn();
-      return $ratio ?: 0.0;
-
-   }
    public function getPreguntasPorDificultad(string $nivel, int $minJugadas = 10): array
    {
       try {

@@ -19,6 +19,9 @@ class Usuario
       private int $puntajeTotal = 0;
       private bool $cuentaValidada = false;
 
+      private int $preguntasEntregadas;
+      private int $respondidasCorrectamente;
+
       public function __construct(array $data = [])
       {
          $this->id = $data['id_usuario'] ?? null;
@@ -38,10 +41,36 @@ class Usuario
          $this->idNivel = $data['id_nivel'] ?? 1;
          $this->puntajeTotal = $data['puntaje_total'] ?? 0;
          $this->cuentaValidada = (bool)($data['cuenta_validada'] ?? false);
+         $this->preguntasEntregadas = 0;
+         $this->respondidasCorrectamente = 0;
       }
 
 
-      //solucion paleativa.. investigar generar QR jeje
+
+      public function setPreguntasEntregadas(int $cantidad): void
+      {
+         $this->preguntasEntregadas = $cantidad;
+      }
+      public function getPreguntasEntregadas(): int
+      {
+         return $this->preguntasEntregadas;
+      }
+      public function setRespondidasCorrectamente(int $cantidad): void
+      {
+         $this->respondidasCorrectamente = $cantidad;
+      }
+      public function getRespondidasCorrectamente(): int
+      {
+         return $this->respondidasCorrectamente;
+      }
+
+      public function getNivel():float{
+         if ($this->preguntasEntregadas === 0) {
+            return 0.0;
+         }
+         return round($this->respondidasCorrectamente / $this->preguntasEntregadas,2);
+      }
+
       private function generarUrlQr(): string
       {
          return "/qr/{$this->nombreUsuario}.png";

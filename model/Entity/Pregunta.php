@@ -43,6 +43,15 @@ class Pregunta
       return $this->cantidadReportes;
    }
 
+
+   //atributo calculado///
+   public function getRatioPregunta(): float{
+      if ($this->cantidadJugada === 0) {
+         return 0.0; // Evitar división por cero
+      }
+      return round($this->cantidadAciertos / $this->cantidadJugada,2);
+   }
+
    public function setCantidadJugada(int $cantidadJugada): void
    {
       $this->cantidadJugada = $cantidadJugada;
