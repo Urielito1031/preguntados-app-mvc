@@ -143,4 +143,8 @@ class UsuarioService
    }
 
 
+
+   public function getRanking(){
+       return $this->repository->getRanking();
+   }
 }

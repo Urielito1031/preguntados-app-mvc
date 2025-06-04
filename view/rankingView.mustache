@@ -1,0 +1,45 @@
+<section class="d-flex flex-column align-items-center">
+
+    <h2>🔥 Top Jugadores 🔥</h2>
+
+
+    <table class="table table-striped w-50">
+        <thead>
+            <tr class="text-center">
+                <th>#</th>
+                <th>Nombre</th>
+                <th>Puntaje Total</th>
+                <th>Partidas Jugadas</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {{#jugadores}}
+                <tr class="text-center">
+                    <th>{{posicion}}</th>
+                    <th>
+                        <a href="#">{{nombre}}</a>
+                    </th>
+                    <th>{{puntaje_total}}</th>
+                    <th>{{partidas_jugadas}}</th>
+                </tr>
+            {{/jugadores}}
+        </tbody>
+    </table>
+
+
+
+
+
+    <h2>Historial</h2>
+
+    <div>
+        {{#partidas}}
+            <p>{{partida.nro}} {{partida.puntos}}</p>
+        {{/partidas}}
+    </div>
+
+
+    <a href="/home/show">Volver</a>
+
+</section>

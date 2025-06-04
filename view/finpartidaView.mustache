@@ -1,27 +1,23 @@
 <link href="/public/css/pregunta.css" rel="stylesheet">
 <section class="d-flex flex-column align-items-center m-auto" style="width: 600px;">
-
-
     <h1>Partida finalizada</h1>
     <h2> Hiciste {{puntaje}} puntos</h2>
     <p class="text-center p-4 w-100" style="background: #ab8dd3;color: white;">
-        {{enunciado}}
+        {{pregunta.enunciado}}
     </p>
 
-    {{#respuestas}}
+    {{#pregunta.respuestas}}
         <button disabled type="submit" name="respuesta" value="{{.}}" class="w-100 mt-4 bg-color-pink" style="text-decoration: none;text-align: center;">{{.}}</button>
-    {{/respuestas}}
+    {{/pregunta.respuestas}}
 
-    <a href="/partida/playGame" class="bg-color-violet p-2 mt-4 w-100 text-center">Crear nueva partida</a>
+    <a href="/home/playGame" class="bg-color-violet p-2 mt-4 w-100 text-center">Crear nueva partida</a>
 
-<!--    Botones para mas adelante -->
-<!--    <a class="bg-color-violet p-2 mt-4 w-100 text-center">Reportar pregunta</a>-->
-<!--    <a href="#" class="bg-color-violet p-2 mt-4 w-100 text-center">Sugerir una nueva pregunta</a>-->
 </section>
 
 <script>
-    let respuestaCorrecta = "{{respuesta_correcta}}"
+    let respuestaCorrecta = "{{pregunta.respuesta_correcta}}"
     let respuestaUsuario = "{{respuesta_usuario}}"
+
     document.querySelectorAll('.bg-color-pink').forEach(respuesta =>{
         if(respuesta.value.trim() === respuestaCorrecta.trim()){
             respuesta.classList.add('bg-success', 'text-white')

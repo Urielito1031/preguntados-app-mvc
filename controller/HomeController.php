@@ -11,11 +11,6 @@ class HomeController
 
     public function show()
     {
-        if (!isset($_SESSION['user_name'])) {
-            header('Location: /usuario/showLoginForm');
-            exit;
-        }
-
         $viewData = [
             'usuario' => $_SESSION['user_name'] ?? '',
             'logo_url' => '/public/img/LogoQuizCode.png',
@@ -25,13 +20,6 @@ class HomeController
     }
 
     public function playGame(){
-//         CREO QUE NO TIENE SENTIDO PORQUE ANTES DE ENTRAR EN ESTE METODO YA DEBE ESTAR EN LA PAGINA,
-//         NO HAY OTRO ACCESO SEGUN ENTIENDO
-//        if (!isset($_SESSION['user_name'])) {
-//            header('Location: /usuario/showLoginForm');
-//            exit;
-//        }
-
         $viewData = [
             'usuario' => $_SESSION['user_name'] ?? '',
             'logo_url' => '/public/img/LogoQuizCode.png',

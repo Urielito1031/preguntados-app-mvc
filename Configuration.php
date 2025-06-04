@@ -1,7 +1,5 @@
 <?php
 
-
-use Controller\PartidaController;
 use Repository\PartidaRepository;
 use Repository\PreguntaRepository;
 use Repository\UsuarioRepository;
@@ -9,22 +7,29 @@ use Service\PartidaService;
 use Service\PreguntaService;
 use Service\UsuarioService;
 
-require_once("core/MustachePresenter.php");
-require_once("core/Router.php");
+require_once("Model/Service/UsuarioService.php");
+require_once("model/service/preguntaService.php");
+require_once("model/Service/ImageService.php");
+require_once("model/Service/UbicacionService.php");
+require_once("model/Response/DataResponse.php");
+
+require_once("controller/UsuarioController.php");
+require_once("controller/HomeController.php");
+require_once("controller/PartidaController.php");
+require_once("controller/RankingController.php");
 
 require_once("model/Entity/Usuario.php");
-
-require_once("controller/HomeController.php");
-require_once("controller/UsuarioController.php");
-require_once("controller/PartidaController.php");
-
 
 require_once("Model/Service/UsuarioService.php");
 require_once("Model/Service/PartidaService.php");
 require_once("Model/Repository/UsuarioRepository.php");
+require_once("model/Repository/PaisRepository.php");
+require_once("model/Repository/CiudadRepository.php");
 
 
 require_once("model/repository/PreguntaRepository.php");
+require_once("core/Router.php");
+require_once("core/MustachePresenter.php");
 require_once("model/repository/PartidaRepository.php");
 require_once("model/service/preguntaService.php");
 
@@ -69,6 +74,11 @@ class Configuration
        return new PartidaController($partidaService,$preguntaService, $this->getViewer());
     }
 
+    public function getRankingController(){
+       $repository = new UsuarioRepository();
+       $service = new UsuarioService($repository);
+       return new RankingController($service, $this->getViewer());
+    }
 
     public function getRouter()
     {
