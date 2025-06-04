@@ -80,7 +80,7 @@ class PartidaRepository
       return new Partida($data,$usuario);
    }
 
-   public function sumarPuntaje(int $getPuntaje,Partida $partida):DataResponse
+   public function sumarPuntaje(int $getPuntaje,Partida $partida)
    {
       $sql = "UPDATE partida SET puntaje = puntaje + :puntaje WHERE id = :id";
       try{

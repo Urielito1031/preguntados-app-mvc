@@ -37,7 +37,6 @@ class PartidaService{
 
     public function sumarPuntaje(Partida $partida, int $puntaje):DataResponse
     {
-       $partida->setPuntaje($partida->getPuntaje() + $puntaje);
        $this->partidaRepository->sumarPuntaje($partida->getPuntaje(), $partida);
 
        return new DataResponse(true, "Acumulaste ". $puntaje." punto/s", $partida);
@@ -45,7 +44,6 @@ class PartidaService{
 
     public function finalizarPartida(Partida $partida):DataResponse
     {
-       $partida->setEstado('PERDIDA');
        $this->partidaRepository->updatePartida($partida);
 
        return new DataResponse(true, "La partida finalizó", $partida);

@@ -9,7 +9,7 @@ use Response\DataResponse;
 class PreguntaService
 {
     private $preguntaRepository;
-    private const int CANTIDAD_MINIMA_PARA_CALCULAR = 10;
+    private  const  CANTIDAD_MINIMA_PARA_CALCULAR = 10;
     private array $niveles = [
         "DIFICIL" => [],
         "MEDIO" =>[],
