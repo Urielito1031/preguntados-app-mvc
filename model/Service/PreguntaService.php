@@ -55,7 +55,7 @@ class PreguntaService
             return new DataResponse(false, "Nivel de dificultad no válido: $nivel");
          }
 
-         $preguntas = $this->preguntaRepository->getPreguntasPorDificultad($nivel, $idCategoria);
+         $preguntas = $this->preguntaRepository->getPreguntasPorDificultad($nivel);
          if (empty($preguntas)) {
             return new DataResponse(false, "No se encontraron preguntas de nivel $nivel" . ($idCategoria ? " en la categoría $idCategoria" : ""));
          }
@@ -68,48 +68,7 @@ class PreguntaService
 
 
 
-   public function calcularRatioDificultad(): DataResponse
-   {
-      try {
-         // Reiniciar los niveles para este cálculo
-         $this->niveles = [
-            "DIFICIL" => [],
-            "MEDIO" => [],
-            "FACIL" => []
-         ];
 
-         // Obtener preguntas por nivel de dificultad
-         $preguntasDificiles = $this->preguntaRepository->getPreguntasPorDificultad("DIFICIL");
-         $preguntasMedias = $this->preguntaRepository->getPreguntasPorDificultad("MEDIO");
-         $preguntasFaciles = $this->preguntaRepository->getPreguntasPorDificultad("FACIL");
-
-         // Llenar los niveles con los IDs
-         foreach ($preguntasDificiles as $pregunta) {
-            $this->niveles["DIFICIL"][] = $pregunta->getId();
-         }
-         foreach ($preguntasMedias as $pregunta) {
-            $this->niveles["MEDIO"][] = $pregunta->getId();
-         }
-         foreach ($preguntasFaciles as $pregunta) {
-            $this->niveles["FACIL"][] = $pregunta->getId();
-         }
-
-         $totalPreguntas = count($preguntasDificiles) + count($preguntasMedias) + count($preguntasFaciles);
-         if ($totalPreguntas === 0) {
-            return new DataResponse(false, "No hay preguntas con suficientes jugadas para calcular el ratio de dificultad");
-         }
-
-         $ratios = [
-            "DIFICIL" => (count($preguntasDificiles) / $totalPreguntas) * 100,
-            "MEDIO" => (count($preguntasMedias) / $totalPreguntas) * 100,
-            "FACIL" => (count($preguntasFaciles) / $totalPreguntas) * 100
-         ];
-
-         return new DataResponse(true, "Ratios de dificultad calculados", $ratios);
-      } catch (\Exception $e) {
-         return new DataResponse(false, "Error al calcular el ratio de dificultad: " . $e->getMessage());
-      }
-   }
 
     public function getPregunta($idCategoria, $array_id_preguntas_realizadas): Pregunta
     {
