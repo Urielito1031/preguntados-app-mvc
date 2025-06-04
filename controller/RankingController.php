@@ -20,11 +20,16 @@ class RankingController
         ];
     }
 
-    public function show():void {
+    public function show() : void {
+        $ranking = $this->usuarioService->getRanking();
+        foreach ($ranking as $posicion => &$jugador) {
+            $jugador['posicion'] = $posicion + 1;
+        }
+        
         $viewData = array_merge($this->getUserSessionData(), [
-            'jugadores' => 'metodo del servicio que traiga los jugadores',
-
+            'jugadores' => $ranking,
         ]);
+
         $this->view->render("ranking", $viewData);
     }
 

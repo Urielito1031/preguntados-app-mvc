@@ -117,15 +117,15 @@ class UsuarioRepository
 
     public function getRanking()
     {
-        $sql = "SELECT id_usuario, sum(puntaje) AS puntos
-                FROM partida 
-                group by id_usuario
-                ORDER by puntos
-                LIMIT 5";
+        $sql = "SELECT u.id_usuario AS id_usuario, u.nombre, SUM(p.puntaje) AS puntaje_total, COUNT(*) AS partidas_jugadas
+                FROM partida p
+                JOIN usuario u ON p.id_usuario = u.id_usuario
+                GROUP BY u.id_usuario, u.nombre
+                ORDER BY puntaje_total DESC; ";
         try{
             $stmt = $this->conn->prepare($sql);
-//            $stmt->bindValue(':email', $email, PDO::PARAM_STR);
             $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
         }catch(PDOException $e){
             throw new PDOException("Error al cargar ranking: ".$e->getMessage());
         }

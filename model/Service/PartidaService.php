@@ -74,7 +74,6 @@ class PartidaService{
 
    private function calcularPuntaje(array $preguntasCorrectas): int
    {
-
       return count($preguntasCorrectas);
    }
 
