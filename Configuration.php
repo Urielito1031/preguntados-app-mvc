@@ -1,7 +1,5 @@
 <?php
 
-
-use Controller\PartidaController;
 use Repository\PartidaRepository;
 use Repository\PreguntaRepository;
 use Repository\UsuarioRepository;
@@ -14,13 +12,13 @@ require_once("model/service/preguntaService.php");
 require_once("model/Service/ImageService.php");
 require_once("model/Service/UbicacionService.php");
 require_once("model/Response/DataResponse.php");
+
 require_once("controller/UsuarioController.php");
 require_once("controller/HomeController.php");
 require_once("controller/PartidaController.php");
 require_once("controller/RankingController.php");
-require_once("model/Entity/Usuario.php");
-require_once("controller/PartidaController.php");
 
+require_once("model/Entity/Usuario.php");
 
 require_once("Model/Service/UsuarioService.php");
 require_once("Model/Service/PartidaService.php");

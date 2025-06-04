@@ -17,11 +17,9 @@
 
     <form method="POST" action="/partida/responder">
         {{#pregunta.respuestas}}
-            <button type="submit" name="respuesta_usuario" value="{{.}}" class="w-100 mt-4 bg-color-pink" style="text-decoration: none;text-align: center;">{{.}}</button>
+            <button type="submit" name="respuesta" value="{{.}}" class="w-100 mt-4 bg-color-pink" style="text-decoration: none;text-align: center;">{{.}}</button>
         {{/pregunta.respuestas}}
     </form>
-
-<!--    <a class="w-100 mt-4 bg-color-violet" style="text-decoration: none;text-align: center;">REPORTAR PREGUNTA</a>-->
 
     <script>
         let respuestaSeleccionada = false
