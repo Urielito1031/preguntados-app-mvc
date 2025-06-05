@@ -148,7 +148,7 @@ class PreguntaRepository
 
 
 
-   public function getPreguntasPorDificultad(string $nivel, int $minJugadas = 10): array
+   public function getPreguntasPorDificultad(string $nivel): array
    {
       try {
          $params = [];
@@ -158,16 +158,17 @@ class PreguntaRepository
 
          $query .= " WHERE cantidad_jugada >= :min_jugadas";
 
+         $ratio = "(cantidad_aciertos / cantidad_jugada)";
          // Definir los rangos de ratio según el nivel
          $condicionRatio = match (strtoupper($nivel)) {
-            'DIFICIL' => "AND (cantidad_aciertos / cantidad_jugada) > 0 AND (cantidad_aciertos / cantidad_jugada) < 0.3",
-            'MEDIO' => "AND (cantidad_aciertos / cantidad_jugada) >= 0.3 AND (cantidad_aciertos / cantidad_jugada) < 0.7",
-            'FACIL' => "AND (cantidad_aciertos / cantidad_jugada) >= 0.7 AND (cantidad_aciertos / cantidad_jugada) <= 1",
+            'DIFICIL' => "AND {$ratio} >  0   AND {$ratio} < 0.3",
+            'MEDIO' =>   "AND {$ratio} >= 0.3 AND {$ratio} < 0.7",
+            'FACIL' =>   "AND {$ratio} >= 0.7 AND {$ratio} <= 1",
             default => throw new \InvalidArgumentException("Nivel de dificultad no válido: $nivel")
          };
 
          $query .= $condicionRatio;
-         $params[':min_jugadas'] = $minJugadas;
+         $params[':min_jugadas'] = 10;
 
          $stmt = $this->conn->prepare($query);
          $stmt->execute($params);

@@ -55,7 +55,14 @@ class UsuarioPreguntaService
       }
    }
 
-   public function seleccionarPreguntaParaUsuario(int $idUsuario, ?int $idCategoria = null, array $preguntasRealizadas = []): DataResponse
+   /**
+    * Selecciona una pregunta para un usuario basado en su nivel y la dificultad esperada.
+    *
+    * @param int $idUsuario ID del usuario para el cual se seleccionará la pregunta.
+    * @param array $preguntasRealizadas Array de IDs de preguntas que el usuario ya ha respondido.
+    * @return DataResponse Contiene la pregunta seleccionada o un mensaje de error.
+    */
+   public function seleccionarPreguntaParaUsuario(int $idUsuario, array $preguntasRealizadas = []): DataResponse
    {
       try {
 
@@ -74,9 +81,9 @@ class UsuarioPreguntaService
             default => throw new \Exception("Nivel de usuario inválido")
          };
 
-         $preguntasResponse = $this->preguntaService->obtenerPreguntasPorDificultad($dificultadEsperada, $idCategoria);
+         $preguntasResponse = $this->preguntaService->obtenerPreguntasPorDificultad($dificultadEsperada);
          if (!$preguntasResponse->success) {
-            return new DataResponse(false, "No se encontraron preguntas de dificultad $dificultadEsperada" . ($idCategoria ? " en la categoría $idCategoria" : ""));
+            return new DataResponse(false, "No se encontraron preguntas de dificultad $dificultadEsperada");
          }
 
          //aca filtramos las preguntas que el usuario no respondió
@@ -92,7 +99,7 @@ class UsuarioPreguntaService
 
          $preguntaSeleccionada = reset($preguntasNoRespondidas);
 
-         return new DataResponse(true, "Pregunta seleccionada correctamente (Nivel usuario: $nivelUsuario, Dificultad pregunta: $dificultadEsperada)", $preguntaSeleccionada);
+         return new DataResponse(true, "Pregunta (Nivel usuario: $nivelUsuario, Dificultad pregunta: $dificultadEsperada)", $preguntaSeleccionada);
       } catch (PDOException $e) {
          return new DataResponse(false, "Error al seleccionar la pregunta: " . $e->getMessage());
       } catch (\Exception $e) {

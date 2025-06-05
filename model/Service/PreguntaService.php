@@ -50,7 +50,7 @@ class PreguntaService
       }
       return $pregunta->getRatioPregunta();
    }
-   public function obtenerPreguntasPorDificultad(string $nivel, ?string $idCategoria = null): DataResponse
+   public function obtenerPreguntasPorDificultad(string $nivel): DataResponse
    {
       try {
          $nivel = strtoupper($nivel);
@@ -60,7 +60,7 @@ class PreguntaService
 
          $preguntas = $this->repository->getPreguntasPorDificultad($nivel);
          if (empty($preguntas)) {
-            return new DataResponse(false, "No se encontraron preguntas de nivel $nivel" . ($idCategoria ? " en la categoría $idCategoria" : ""));
+            return new DataResponse(false, "No se encontraron preguntas de nivel $nivel");
          }
 
          return new DataResponse(true, "Preguntas obtenidas correctamente", $preguntas);
