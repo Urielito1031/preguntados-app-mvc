@@ -1,5 +1,7 @@
 <?php
 
+use Repository\PreguntaRepository;
+use Repository\UsuarioRepository;
 use Service\PartidaService;
 use Service\PreguntaService;
 use Service\UsuarioPreguntaService;
@@ -8,19 +10,32 @@ use Service\UsuarioService;
 class PartidaController
 {
    private $view;
-   private $preguntaService;
-   private $usuarioPreguntaService;
-   private $service;
+   private PartidaService $service;
+
+
+   private UsuarioRepository $usuarioRepository;
+   private PreguntaRepository $preguntaRepository;
+
+   private PreguntaService $preguntaService;
+   private UsuarioService $usuarioService;
+   private UsuarioPreguntaService $usuarioPreguntaService;
 
    public function __construct(PartidaService $service,
+                               UsuarioRepository $usuarioRepository,
+                               PreguntaRepository $preguntaRepository,
+                               UsuarioService $usuarioService,
                                PreguntaService $preguntaService,
                                UsuarioPreguntaService $usuarioPreguntaService,
                                MustachePresenter $view)
    {
       $this->view = $view;
       $this->service = $service;
+      $this->usuarioRepository = $usuarioRepository;
+      $this->preguntaRepository = $preguntaRepository;
       $this->preguntaService = $preguntaService;
+      $this->usuarioService = $usuarioService;
       $this->usuarioPreguntaService = $usuarioPreguntaService;
+
 
    }
 

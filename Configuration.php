@@ -9,7 +9,6 @@ use Service\PreguntaService;
 use Service\UsuarioPreguntaService;
 use Service\UsuarioService;
 
-require_once("Model/Service/UsuarioService.php");
 require_once("model/service/preguntaService.php");
 require_once("model/Service/ImageService.php");
 require_once("model/Service/UbicacionService.php");
@@ -25,6 +24,8 @@ require_once("model/Entity/Usuario.php");
 require_once("Model/Service/UsuarioService.php");
 require_once("Model/Service/PartidaService.php");
 require_once("Model/Repository/UsuarioRepository.php");
+require_once("model/Repository/UsuarioPreguntaRepository.php");
+require_once("model/Service/UsuarioPreguntaService.php");
 require_once("model/Repository/PaisRepository.php");
 require_once("model/Repository/CiudadRepository.php");
 
@@ -33,7 +34,6 @@ require_once("model/repository/PreguntaRepository.php");
 require_once("core/Router.php");
 require_once("core/MustachePresenter.php");
 require_once("model/repository/PartidaRepository.php");
-require_once("model/service/preguntaService.php");
 
 
 
@@ -67,26 +67,36 @@ class Configuration
         return new HomeController($this->getViewer());
     }
 
-    public function getPartidaController(){
-      //repositorios
-       $preguntaRepository = new PreguntaRepository();
-       $partidaRepository = new PartidaRepository();
-       $usuarioPreguntaRepository = new UsuarioPreguntaRepository();
-       $usuarioRepository = new UsuarioRepository();
-       //servicios
-       $usuarioService = new UsuarioService($usuarioRepository);
+   public function getPartidaController() {
+      // Repositorios
+      $preguntaRepository = new PreguntaRepository();
+      $partidaRepository = new PartidaRepository();
+      $usuarioPreguntaRepository = new UsuarioPreguntaRepository();
+      $usuarioRepository = new UsuarioRepository();
 
-       $preguntaService = new PreguntaService($preguntaRepository);
-       $partidaService = new PartidaService($partidaRepository);
-       $usuarioPreguntaService = new UsuarioPreguntaService(
-          $usuarioPreguntaRepository,
-          $usuarioService,
-          $preguntaService);
+      // Servicios
+      $usuarioService = new UsuarioService($usuarioRepository);
+      $preguntaService = new PreguntaService($preguntaRepository);
+      $partidaService = new PartidaService($partidaRepository);
+      $usuarioPreguntaService = new UsuarioPreguntaService(
+         $usuarioPreguntaRepository,
+         $usuarioService,
+         $preguntaService
+      );
 
-       return new PartidaController($partidaService,$preguntaService,$usuarioPreguntaService, $this->getViewer());
-    }
+      return new PartidaController(
+         $partidaService,
+         $usuarioRepository,
+         $preguntaRepository,
+         $usuarioService,
+         $preguntaService,
+         $usuarioPreguntaService,
+         $this->getViewer()
+      );
+   }
 
-    public function getRankingController(){
+
+   public function getRankingController(){
        $repository = new UsuarioRepository();
        $service = new UsuarioService($repository);
        return new RankingController($service, $this->getViewer());
