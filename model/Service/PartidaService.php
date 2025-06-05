@@ -5,8 +5,6 @@ namespace Service;
 use Entity\Partida;
 use Entity\Usuario;
 use Repository\PartidaRepository;
-use Repository\PreguntaRepository;
-use Repository\UsuarioPreguntaRepository;
 use Repository\UsuarioRepository;
 use Response\DataResponse;
 
@@ -16,25 +14,14 @@ class PartidaService{
 
     private PartidaRepository $partidaRepository;
     private UsuarioRepository $usuarioRepository;
-    private PreguntaRepository $preguntaRepository;
-    private PreguntaService $preguntaService;
     private UsuarioService $usuarioService;
-    private UsuarioPreguntaRepository $usuarioPreguntaRepository;
-    private UsuarioPreguntaService $usuarioPreguntaService;
 
 
     public function __construct(PartidaRepository $partidaRepository){
         $this->partidaRepository = $partidaRepository;
          $this->usuarioRepository = new UsuarioRepository();
          $this->usuarioService = new UsuarioService($this->usuarioRepository);
-         $this->preguntaRepository = new PreguntaRepository();
-         $this->preguntaService = new PreguntaService($this->preguntaRepository);
-         $this->usuarioPreguntaRepository = new UsuarioPreguntaRepository();
-         $this->usuarioPreguntaService = new UsuarioPreguntaService($this->usuarioPreguntaRepository, $this->usuarioService, $this->preguntaService);
-
     }
-
-
     public function iniciarPartida(int $idUsuario):DataResponse
     {
        $response = $this->usuarioService->findById($idUsuario);
