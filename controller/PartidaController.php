@@ -2,19 +2,25 @@
 
 use Service\PartidaService;
 use Service\PreguntaService;
+use Service\UsuarioPreguntaService;
 use Service\UsuarioService;
 
 class PartidaController
 {
    private $view;
    private $preguntaService;
+   private $usuarioPreguntaService;
    private $service;
 
-   public function __construct(PartidaService $service, PreguntaService $preguntaService, MustachePresenter $view)
+   public function __construct(PartidaService $service,
+                               PreguntaService $preguntaService,
+                               UsuarioPreguntaService $usuarioPreguntaService,
+                               MustachePresenter $view)
    {
       $this->view = $view;
       $this->service = $service;
       $this->preguntaService = $preguntaService;
+      $this->usuarioPreguntaService = $usuarioPreguntaService;
 
    }
 
@@ -102,13 +108,24 @@ class PartidaController
                $_SESSION['preguntas_correctas'] = [];
                $_SESSION['preguntas_realizadas'] = [];
             }
+
+            //deberiamos aplicar logica para que no se repitan las preguntas
+           //llamar a usuarioPreguntaService para registrar la pregunta en la base de datos
+           // registrarUsuarioPregunta(int $idUsuario, int $idPregunta): DataResponse
+           //el metodo valida que la pregunta no haya sido respondida por el usuario
             $idCategoria = rand(1,6);
 
+
             $pregunta = $this->preguntaService->getPregunta($idCategoria, $_SESSION['preguntas_realizadas']);
+            //debemos calcular si el nivel de la pregunta es adecuada para el usuario
+           //preguntaService-> calcularNivelPregunta($pregunta):DataResponse;
             if (!$pregunta) {$this->endGame();return;}
 
+           //una vez que se muestre la pregunta
+           //usar servicePregunta->acumularPreguntaJuagada($pregunta);
             $respuestas = $pregunta->getRespuestasIncorrectas();
             $respuestas[] = $pregunta->getRespuestaCorrecta();
+            //si responde correctamente usar acumularAciertoPregunta(Pregunta $pregunta)
             shuffle($respuestas);
 
             $_SESSION['pregunta'] = [

@@ -2,9 +2,11 @@
 
 use Repository\PartidaRepository;
 use Repository\PreguntaRepository;
+use Repository\UsuarioPreguntaRepository;
 use Repository\UsuarioRepository;
 use Service\PartidaService;
 use Service\PreguntaService;
+use Service\UsuarioPreguntaService;
 use Service\UsuarioService;
 
 require_once("Model/Service/UsuarioService.php");
@@ -66,12 +68,22 @@ class Configuration
     }
 
     public function getPartidaController(){
+      //repositorios
        $preguntaRepository = new PreguntaRepository();
        $partidaRepository = new PartidaRepository();
+       $usuarioPreguntaRepository = new UsuarioPreguntaRepository();
+       $usuarioRepository = new UsuarioRepository();
+       //servicios
+       $usuarioService = new UsuarioService($usuarioRepository);
 
        $preguntaService = new PreguntaService($preguntaRepository);
        $partidaService = new PartidaService($partidaRepository);
-       return new PartidaController($partidaService,$preguntaService, $this->getViewer());
+       $usuarioPreguntaService = new UsuarioPreguntaService(
+          $usuarioPreguntaRepository,
+          $usuarioService,
+          $preguntaService);
+
+       return new PartidaController($partidaService,$preguntaService,$usuarioPreguntaService, $this->getViewer());
     }
 
     public function getRankingController(){

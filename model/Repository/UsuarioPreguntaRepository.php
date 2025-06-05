@@ -17,6 +17,8 @@ class UsuarioPreguntaRepository
       $this->conn = Database::connect();
    }
 
+
+
    public function save(UsuarioPregunta $usuarioPregunta): void{
       $sql = "INSERT INTO usuario_pregunta (id_usuario, id_pregunta) 
               VALUES (:id_usuario, :id_pregunta)";
