@@ -131,7 +131,17 @@ class PartidaController
             $idCategoria = rand(1,6);
 
 
-            $pregunta = $this->preguntaService->getPregunta($idCategoria, $_SESSION['preguntas_realizadas']);
+            $responsePregunta = $this->preguntaService->getPregunta($idCategoria, $_SESSION['preguntas_realizadas']);
+            if(!$responsePregunta->success){
+                  $viewData = [
+                     'error' => $responsePregunta->message,
+                     'usuario' => $_SESSION['user_name'] ?? '',
+                     'foto_perfil' => $_SESSION['foto_perfil']
+                  ];
+                  $this->view->render("error", $viewData);
+                  return;
+            }
+            $pregunta = $responsePregunta->data;
             //debemos calcular si el nivel de la pregunta es adecuada para el usuario
            //preguntaService-> calcularNivelPregunta($pregunta):DataResponse;
             if (!$pregunta) {$this->endGame();return;}

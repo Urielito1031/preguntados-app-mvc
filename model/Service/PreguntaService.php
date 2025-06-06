@@ -80,9 +80,19 @@ class PreguntaService
 
 
 
-    public function getPregunta($idCategoria, $array_id_preguntas_realizadas): Pregunta
+    public function getPregunta($idCategoria, $array_id_preguntas_realizadas): DataResponse
     {
-        return $this->repository->getPreguntaByCategoria($idCategoria,$array_id_preguntas_realizadas);
+       try{
+
+        $preguntaObtenida = $this->repository->getPreguntaByCategoria($idCategoria,$array_id_preguntas_realizadas);
+        if($preguntaObtenida === null){
+           return new DataResponse(false, "Pregunta no encontrada");
+
+        }
+        return new DataResponse(true, "Pregunta obtenida correctamente", $preguntaObtenida);
+       }catch (\Exception $e){
+            throw new \Exception("Error al obtener la pregunta: " . $e->getMessage());
+       }
     }
 
    public function acumularPreguntaJugada(Pregunta $pregunta): DataResponse
