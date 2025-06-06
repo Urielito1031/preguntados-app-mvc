@@ -86,8 +86,6 @@ class Configuration
 
       return new PartidaController(
          $partidaService,
-         $usuarioRepository,
-         $preguntaRepository,
          $usuarioService,
          $preguntaService,
          $usuarioPreguntaService,

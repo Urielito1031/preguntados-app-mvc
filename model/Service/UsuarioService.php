@@ -183,4 +183,16 @@ class UsuarioService
          return new DataResponse(false, "Error al incrementar la pregunta del usuario: " . $e->getMessage());
       }
    }
+
+   public function sumarRespuestaCorrecta(Usuario $usuario):DataResponse
+   {
+      try {
+
+      $this->repository->sumarRespuestaCorrecta($usuario);
+      return new DataResponse(true, "Respuesta enviada correctamente.", $usuario);
+
+      }catch( \Exception $e) {
+         return new DataResponse(false, "Error al sumar respuesta correcta: " . $e->getMessage());
+      }
+   }
 }

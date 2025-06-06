@@ -13,16 +13,12 @@ class PartidaController
    private PartidaService $service;
 
 
-   private UsuarioRepository $usuarioRepository;
-   private PreguntaRepository $preguntaRepository;
 
    private PreguntaService $preguntaService;
    private UsuarioService $usuarioService;
    private UsuarioPreguntaService $usuarioPreguntaService;
 
    public function __construct(PartidaService $service,
-                               UsuarioRepository $usuarioRepository,
-                               PreguntaRepository $preguntaRepository,
                                UsuarioService $usuarioService,
                                PreguntaService $preguntaService,
                                UsuarioPreguntaService $usuarioPreguntaService,
@@ -30,8 +26,7 @@ class PartidaController
    {
       $this->view = $view;
       $this->service = $service;
-      $this->usuarioRepository = $usuarioRepository;
-      $this->preguntaRepository = $preguntaRepository;
+
       $this->preguntaService = $preguntaService;
       $this->usuarioService = $usuarioService;
       $this->usuarioPreguntaService = $usuarioPreguntaService;
@@ -153,8 +148,7 @@ class PartidaController
            //preguntaService-> calcularNivelPregunta($pregunta):DataResponse;
             if (!$pregunta) {$this->endGame();return;}
 
-           //una vez que se muestre la pregunta
-           //usar servicePregunta->acumularPreguntaJuagada($pregunta);
+
             $respuestas = $pregunta->getRespuestasIncorrectas();
             $respuestas[] = $pregunta->getRespuestaCorrecta();
             //si responde correctamente usar acumularAciertoPregunta(Pregunta $pregunta)
@@ -172,6 +166,10 @@ class PartidaController
                 ]
             ];
 
+            //registrar la pregunta en la base de datos del usuario
+           $this->usuarioPreguntaService->registrarUsuarioPregunta($_SESSION['user_id'],$pregunta->getId());
+           //acumula la pregunta en su tabla
+           $this->preguntaService->acumularPreguntaJugada($pregunta);
             $_SESSION['preguntas_realizadas'][] = $pregunta->getId();
 
             $viewData = array_merge($this->getUserSessionData(), [
@@ -201,6 +199,14 @@ class PartidaController
 
          if ($_POST['respuesta'] == $_SESSION['pregunta']['respuesta_correcta']) {
             $_SESSION['preguntas_correctas'][] = $_SESSION['pregunta']['id'];
+            $preguntaId = $_SESSION['pregunta']['id'];
+            $preguntaEntity = $this->preguntaService->findById($preguntaId)->data;
+
+            $this->preguntaService->acumularAciertoPregunta($preguntaEntity);
+
+            //posible error no catcheado
+            $usuario = $this->usuarioService->findById($_SESSION['user_id']);
+            $this->usuarioService->sumarRespuestaCorrecta($usuario->data);
              $this->showPreguntaCorrecta();
 
          } else {
@@ -221,6 +227,8 @@ class PartidaController
             'puntaje' => count($_SESSION['preguntas_correctas']),
         ]);
         $this->view->render("respuestacorrecta", $viewData);
+         // Limpiar la pregunta y respuesta del usuario para evitar recargas
+       unset($_SESSION['pregunta'], $_SESSION['respuesta_usuario']);
     }
    private function calcularEstado(array $preguntasCorrectas): string
    {

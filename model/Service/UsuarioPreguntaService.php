@@ -6,6 +6,7 @@ use Entity\UsuarioPregunta;
 use PDOException;
 use Repository\UsuarioPreguntaRepository;
 use Response\DataResponse;
+require_once( __DIR__ . '/../Entity/UsuarioPregunta.php');
 
 class UsuarioPreguntaService
 {
