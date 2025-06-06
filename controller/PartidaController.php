@@ -166,7 +166,7 @@ class PartidaController
                 ]
             ];
 
-            //registrar la pregunta en la base de datos del usuario
+            //registrar la pregunta en la base de datos del usuario_pregunta
            $this->usuarioPreguntaService->registrarUsuarioPregunta($_SESSION['user_id'],$pregunta->getId());
            //acumula la pregunta en su tabla
            $this->preguntaService->acumularPreguntaJugada($pregunta);
@@ -207,9 +207,12 @@ class PartidaController
             //posible error no catcheado
             $usuario = $this->usuarioService->findById($_SESSION['user_id']);
             $this->usuarioService->sumarRespuestaCorrecta($usuario->data);
-             $this->showPreguntaCorrecta();
+            $this->usuarioService->sumarPreguntaEntregada($usuario->data);
+            $this->showPreguntaCorrecta();
 
          } else {
+             $usuario = $this->usuarioService->findById($_SESSION['user_id']);
+             $this->usuarioService->sumarPreguntaEntregada($usuario->data);
             $this->endGame();
          }
       } catch (\Exception $e) {
@@ -230,7 +233,11 @@ class PartidaController
          // Limpiar la pregunta y respuesta del usuario para evitar recargas
        unset($_SESSION['pregunta'], $_SESSION['respuesta_usuario']);
     }
-   private function calcularEstado(array $preguntasCorrectas): string
+
+    // SE USA PARA setEstado() y luego le pasa la partida seteada al servicio, para finalizar actualizandola
+    // desde el repositorio, pero el estado de la partida jamas se guarda, parece que no hace falta realizar
+    // una operacion con este atributo si no necesitamos guardarlo
+    private function calcularEstado(array $preguntasCorrectas): string
    {
       return count($preguntasCorrectas) > 0 ? 'GANADA' : 'PERDIDA';
    }
