@@ -21,6 +21,7 @@ class UsuarioPreguntaRepository
 
    public function save(UsuarioPregunta $usuarioPregunta): void{
 
+      $this->conn->beginTransaction();
       $sql = "INSERT INTO usuario_pregunta (id_usuario, id_pregunta) 
               VALUES (:id_usuario, :id_pregunta)";
       try{
@@ -29,7 +30,9 @@ class UsuarioPreguntaRepository
       $stmt->bindValue(':id_usuario', $usuarioPregunta->getIdUsuario(), PDO::PARAM_INT);
       $stmt->bindValue(':id_pregunta', $usuarioPregunta->getIdPregunta(), PDO::PARAM_INT);
       $stmt->execute();
+      $this->conn->commit();
       }catch(PDOException $e){
+         $this->conn->rollBack();
          throw new PDOException("Error al guardar la pregunta del usuario: " . $e->getMessage());
       }
    }
