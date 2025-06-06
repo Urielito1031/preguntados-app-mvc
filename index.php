@@ -15,9 +15,10 @@ try {
    $controller = (isset($_GET["controller"])) ? $_GET["controller"] : null;
    $method = (isset($_GET["method"])) ? $_GET["method"] : null;
 
-    if($controller === "home" && $method === "playGame" && !isset($_SESSION["user_name"])) {
-        header('Location: /usuario/showLoginForm');
-        exit;
+    //Si no esta logueado o no se esta registrando se tiene que loguear
+    if(!isset($_SESSION["user_name"]) && $_GET["controller"] !== 'usuario'){
+        $controller = "usuario";
+        $method = "showLoginForm";
     }
 
     $router->go($controller, $method);
