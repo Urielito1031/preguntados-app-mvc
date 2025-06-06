@@ -82,14 +82,7 @@ class PartidaController
             $viewData['success'] = "Partida finalizada correctamente";
          }
 
-         // Limpiar la sesión
-         unset(
-            $_SESSION['partida'],
-            $_SESSION['preguntas_correctas'],
-            $_SESSION['preguntas_realizadas'],
-            $_SESSION['pregunta'],
-            $_SESSION['respuesta_usuario']
-         );
+         $this->clearSession();
 
          $this->view->render("finpartida", $viewData);
       } catch (\Exception $e) {
@@ -105,13 +98,16 @@ class PartidaController
     public function pregunta(): void {
         try {
 
-          // verificamos si hay una pregunta activa, para evitar que el usuario recargue la pagina y haga trampa
-          // ok no anda jaja
-               if(!isset($_SESSION['pregunta']) && !empty($_SESSION['pregunta']['id'])){
-                  $this->endGame();
-                  return;
-
-               }
+           // Verificar si hay una pregunta activa para evitar recarga
+           if (isset($_SESSION['pregunta']) && !empty($_SESSION['pregunta']['id'])) {
+              // El usuario recargó la página con una pregunta activa, lo consideramos trampa
+              $viewData = array_merge($this->getUserSessionData(), [
+                 'error' => "¡No hagas trampa! No puedes recargar la página durante una partida."
+              ]);
+             $this->clearSession();
+              $this->view->render("tramposo", $viewData);
+              return;
+           }
 
            //en session guardamos la partida si no está creada
             if(!isset($_SESSION['partida'])){
@@ -229,5 +225,18 @@ class PartidaController
    private function calcularEstado(array $preguntasCorrectas): string
    {
       return count($preguntasCorrectas) > 0 ? 'GANADA' : 'PERDIDA';
+   }
+
+
+
+   public function clearSession(): void
+   {
+      unset(
+         $_SESSION['partida'],
+         $_SESSION['preguntas_correctas'],
+         $_SESSION['preguntas_realizadas'],
+         $_SESSION['pregunta'],
+         $_SESSION['respuesta_usuario']
+      );
    }
 }
