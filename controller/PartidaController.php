@@ -105,6 +105,14 @@ class PartidaController
     public function pregunta(): void {
         try {
 
+          // verificamos si hay una pregunta activa, para evitar que el usuario recargue la pagina y haga trampa
+          // ok no anda jaja
+               if(!isset($_SESSION['pregunta']) && !empty($_SESSION['pregunta']['id'])){
+                  $this->endGame();
+                  return;
+
+               }
+
            //en session guardamos la partida si no está creada
             if(!isset($_SESSION['partida'])){
                $response = $this->service->iniciarPartida($_SESSION['user_id']?? 0);
@@ -117,6 +125,9 @@ class PartidaController
                   $this->view->render("error", $viewData);
                   return;
                }
+
+
+
                //el serialize permite pasar el objeto partida en un formato string
                // para que la session lo pueda guardar
                $_SESSION['partida'] = serialize($response->data);
@@ -183,38 +194,30 @@ class PartidaController
             $this->view->render("error", $viewData);
         }
     }
-    public function responder() : void {
-        try {
+   public function responder(): void
+   {
+      try {
+         if (empty($_POST['respuesta'])) {
+            throw new \Exception("No se proporcionó una respuesta");
+         }
 
-            if (empty($_POST['respuesta'])) {
-                throw new \Exception("No se proporcionó una respuesta");
-            }
+         $_SESSION['respuesta_usuario'] = $_POST['respuesta'];
 
-            $_SESSION['respuesta_usuario'] = $_POST['respuesta'];
+         if ($_POST['respuesta'] == $_SESSION['pregunta']['respuesta_correcta']) {
+            $_SESSION['preguntas_correctas'][] = $_SESSION['pregunta']['id'];
+             $this->showPreguntaCorrecta();
 
-//            if(!isset($_SESSION['pregunta']['id']) || !isset($_SESSION['pregunta']['respuesta_correcta'])) {
-//                $this->endGame();
-//                return;
-//            }
-
-            if ($_POST['respuesta'] == $_SESSION['pregunta']['respuesta_correcta']) {
-                $_SESSION['preguntas_correctas'][] = $_SESSION['pregunta']['id'];
-
-                $this->showPreguntaCorrecta();
-            } else {
-                $this->endGame();
-            }
-
-        } catch (\Exception $e) {
-            $viewData = [
-                'error' => "Error al procesar la respuesta: " . $e->getMessage(),
-                'usuario' => $_SESSION['user_name'] ?? '',
-                'foto_perfil' => $_SESSION['foto_perfil'],
-                'respuesta_usuario' => $_POST['respuesta']
-            ];
-            $this->view->render("error", $viewData);
-        }
-    }
+         } else {
+            $this->endGame();
+         }
+      } catch (\Exception $e) {
+         $viewData = array_merge($this->getUserSessionData(), [
+            'error' => "Error al procesar la respuesta: " . $e->getMessage(),
+            'respuesta_usuario' => $_POST['respuesta']
+         ]);
+         $this->view->render("error", $viewData);
+      }
+   }
     public function showPreguntaCorrecta(): void {
         $viewData = array_merge($this->getUserSessionData(),[
             'pregunta' => $_SESSION['pregunta'],
