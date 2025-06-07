@@ -126,10 +126,7 @@ class PartidaController
                $_SESSION['preguntas_realizadas'] = [];
             }
 
-            //deberiamos aplicar logica para que no se repitan las preguntas
-           //llamar a usuarioPreguntaService para registrar la pregunta en la base de datos
-           // registrarUsuarioPregunta(int $idUsuario, int $idPregunta): DataResponse
-           //el metodo valida que la pregunta no haya sido respondida por el usuario
+
             $idCategoria = rand(1,6);
 
 
@@ -167,7 +164,11 @@ class PartidaController
             ];
 
             //registrar la pregunta en la base de datos del usuario_pregunta
-           $this->usuarioPreguntaService->registrarUsuarioPregunta($_SESSION['user_id'],$pregunta->getId());
+
+           $response = $this->usuarioPreguntaService->registrarUsuarioPregunta($_SESSION['user_id'],$pregunta->getId());
+
+
+
            //acumula la pregunta en su tabla
            $this->preguntaService->acumularPreguntaJugada($pregunta);
             $_SESSION['preguntas_realizadas'][] = $pregunta->getId();

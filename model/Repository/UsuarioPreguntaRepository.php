@@ -36,17 +36,50 @@ class UsuarioPreguntaRepository
          throw new PDOException("Error al guardar la pregunta del usuario: " . $e->getMessage());
       }
    }
+   //obtenerPreguntaAleatoria no respondida por usuario
+   public function getPreguntaIdRandomNoRespondida(int $idUsuario): ?int
+   {
+      try {
+         // Obtener todas las preguntas respondidas por el usuario
+         $preguntasRealizadas = $this->getPreguntasIdByUsuario($idUsuario);
+
+         // Si ya respondió todas las preguntas disponibles
+         if (count($preguntasRealizadas) >= 50) { // 50 es el número total de preguntas
+            return null;
+         }
+
+         // Construir la consulta para obtener una pregunta aleatoria no respondida
+         $sql = "SELECT id 
+                FROM pregunta 
+                WHERE id NOT IN (
+                    SELECT id_pregunta 
+                    FROM usuario_pregunta 
+                    WHERE id_usuario = :id_usuario
+                )
+                ORDER BY RAND()
+                LIMIT 1";
+
+         $stmt = $this->conn->prepare($sql);
+         $stmt->bindValue(':id_usuario', $idUsuario, PDO::PARAM_INT);
+         $stmt->execute();
+
+         return $stmt->fetchColumn() ?: null;
+
+      } catch(PDOException $e) {
+         throw new PDOException("Error al obtener pregunta aleatoria no respondida: " . $e->getMessage());
+      }
+   }
 
    //devuelve los ids de las preguntas asociadas al usuario
    public function getPreguntasIdByUsuario(int $idUsuario): array
    {
-      $sql = "SELECT * FROM usuario_pregunta WHERE id_usuario = :id_usuario";
+      $sql = "SELECT id_pregunta FROM usuario_pregunta WHERE id_usuario = :id_usuario";
       try{
 
       $stmt = $this->conn->prepare($sql);
       $stmt->bindValue(':id_usuario', $idUsuario, PDO::PARAM_INT);
       $stmt->execute();
-      return $stmt->fetchAll(PDO::FETCH_ASSOC);
+      return $stmt->fetchAll(PDO::FETCH_COLUMN,0);
       }catch(PDOException $e){
          throw new PDOException("Error al obtener las preguntas del usuario: " . $e->getMessage());
       }
@@ -62,6 +95,20 @@ class UsuarioPreguntaRepository
       $stmt->execute();
       }catch(PDOException $e){
          throw new PDOException("Error al eliminar la pregunta del usuario: " . $e->getMessage());
+      }
+   }
+
+   //se llama cuando el usuario ya respondió todas las preguntas del juego
+   public function resetearPreguntasParaUsuario(int $idUsuario)
+   {
+      $sql = "DELETE FROM usuario_pregunta WHERE id_usuario = :id_usuario";
+      try{
+
+      $stmt = $this->conn->prepare($sql);
+      $stmt->bindValue(':id_usuario', $idUsuario, PDO::PARAM_INT);
+      $stmt->execute();
+      }catch(PDOException $e){
+         throw new PDOException("Error al resetear las preguntas del usuario: " . $e->getMessage());
       }
    }
 

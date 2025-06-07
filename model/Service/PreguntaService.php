@@ -80,7 +80,7 @@ class PreguntaService
 
 
 
-    public function getPregunta($idCategoria, $array_id_preguntas_realizadas): DataResponse
+    public function getPregunta($idCategoria , $array_id_preguntas_realizadas): DataResponse
     {
        try{
 

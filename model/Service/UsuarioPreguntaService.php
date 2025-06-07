@@ -3,6 +3,7 @@
 namespace Service;
 
 use Entity\UsuarioPregunta;
+use mysql_xdevapi\Exception;
 use PDOException;
 use Repository\UsuarioPreguntaRepository;
 use Response\DataResponse;
@@ -24,33 +25,78 @@ class UsuarioPreguntaService
 
    public function registrarUsuarioPregunta(int $idUsuario, int $idPregunta): DataResponse
    {
+      if (!$this->validarPreguntaNoRepetidaEnUsuario($idUsuario, $idPregunta)) {
+         $idPregunta = $this->obtenerNuevaPregunta($idUsuario);
 
-      $validado = $this->validarPreguntaNoRepetidaEnUsuario($idUsuario,$idPregunta);
-      if(!$validado){
-         return new DataResponse(false,"La pregunta ya fue respondida por el usuario en otra ocasión");
+         if ($idPregunta === null) {
+            $this->repository->resetearPreguntasParaUsuario($idUsuario);
+            return new DataResponse(false, "No hay más preguntas disponibles para este usuario");
+         }
       }
+
       $usuarioPregunta = new UsuarioPregunta($idUsuario, $idPregunta);
       $this->repository->save($usuarioPregunta);
       return new DataResponse(true, "Pregunta registrada correctamente para el usuario", $usuarioPregunta);
    }
 
-   public function getPreguntasPorUsuario(int $idUsuario): array
+
+   public function obtenerNuevaPregunta(int $idUsuario): ?int
    {
-      return $this->repository->getPreguntasIdByUsuario($idUsuario);
+      try {
+         do {
+            $preguntaId = $this->repository->getPreguntaIdRandomNoRespondida($idUsuario);
+            if ($preguntaId === null) {
+               return null; // No hay más preguntas disponibles
+            }
+         } while (!$this->validarPreguntaNoRepetidaEnUsuario($idUsuario, $preguntaId));
+
+         return $preguntaId;
+      } catch (PDOException $e) {
+         return null;
+      }
+   }
+
+
+
+
+
+   public function getPreguntasPorUsuario(int $idUsuario): DataResponse
+   {
+      try{
+      $preguntasIds = $this->repository->getPreguntasIdByUsuario($idUsuario);
+
+
+
+
+         var_dump($preguntasIds);
+
+         return new DataResponse(true, "Preguntas obtenidas correctamente", $preguntasIds);
+
+      }catch(PDOException $e){
+         return new DataResponse(false, "Error al obtener las preguntas del usuario: " . $e->getMessage());
+      }
    }
 
    //unicamente se encarga de validar
    public function validarPreguntaNoRepetidaEnUsuario($idUsuario,$idPregunta):bool{
 
       try{
-         $this->usuarioService->findById($idUsuario);
-         $preguntas = $this->getPreguntasPorUsuario($idUsuario);
-
-         if(in_array($idPregunta, $preguntas)){
-            return false;
+         $usuarioResponse = $this->usuarioService->findById($idUsuario);
+         if(!$usuarioResponse->success) {
+            throw new \Exception("Usuario no encontrado");
          }
 
-         return true;
+
+         $response = $this->getPreguntasPorUsuario($idUsuario);
+         if (!$response->success) {
+            throw new \Exception($response->message);
+         }
+         $preguntasDeUsuario = $response->data;
+
+         var_dump($preguntasDeUsuario);
+
+         return !in_array($idPregunta, $preguntasDeUsuario, true);
+
       }catch (PDOException $e){
          throw new PDOException("Error al validar la pregunta en el usuario:  " . $e);
       }
