@@ -128,8 +128,34 @@ class PreguntaRepository
       }
    }
 
+    public function calcularNivelDePregunta(?Pregunta $preguntaObtenida)
+    {
+        $idPregunta = $preguntaObtenida->getId();
 
-   private function saveRespuestasIncorrectas(Pregunta $pregunta): void
+        $query = "SELECT cantidad_aciertos / cantidad_jugada  AS ratio
+                    FROM pregunta
+                    WHERE id = :id";
+
+        try {
+            $stmt = $this->conn->prepare($query);
+            $stmt->bindValue(':id', $idPregunta, PDO::PARAM_INT);
+            $stmt->execute();
+            $data = $stmt->fetch(PDO::FETCH_ASSOC);
+            if (!$data) {
+                return null;
+            }
+            if ($data['cantidad_jugada'] == 0) {
+                return 1; // RETORNA NIVEL FACIL
+            }
+
+            return $data['ratio'];
+        } catch (PDOException $e) {
+            throw new PDOException("Error al buscar nivel de pregunta por ID: " . $e->getMessage());
+        }
+    }
+
+
+    private function saveRespuestasIncorrectas(Pregunta $pregunta): void
    {
       $query = "INSERT INTO respuesta_incorrecta (respuesta, id_pregunta) 
                 VALUES (:respuesta, :id_pregunta)";

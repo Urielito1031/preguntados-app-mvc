@@ -130,7 +130,7 @@ class PartidaController
             $idCategoria = rand(1,6);
 
 
-            $responsePregunta = $this->preguntaService->getPregunta($idCategoria, $_SESSION['preguntas_realizadas']);
+            $responsePregunta = $this->preguntaService->getPregunta($idCategoria, $_SESSION['preguntas_realizadas'],$_SESSION['user_id']);
             if(!$responsePregunta->success){
                   $viewData = [
                      'error' => $responsePregunta->message,

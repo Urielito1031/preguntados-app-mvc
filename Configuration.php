@@ -76,7 +76,7 @@ class Configuration
 
       // Servicios
       $usuarioService = new UsuarioService($usuarioRepository);
-      $preguntaService = new PreguntaService($preguntaRepository);
+      $preguntaService = new PreguntaService($preguntaRepository,$usuarioRepository);
       $partidaService = new PartidaService($partidaRepository);
       $usuarioPreguntaService = new UsuarioPreguntaService(
          $usuarioPreguntaRepository,

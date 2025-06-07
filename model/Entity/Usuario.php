@@ -194,4 +194,7 @@ class Usuario
       {
          $this->urlFotoPerfil = $urlFotoPerfil;
       }
-   }
+
+
+
+}

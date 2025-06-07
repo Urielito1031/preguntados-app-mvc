@@ -98,7 +98,7 @@ class UsuarioPreguntaService
     * @param array $preguntasRealizadas Array de IDs de preguntas que el usuario ya ha respondido.
     * @return DataResponse Contiene la pregunta seleccionada o un mensaje de error.
     */
-   public function seleccionarPreguntaParaUsuario(int $idUsuario, array $preguntasRealizadas = []): DataResponse
+   public function seleccionarPreguntaParaUsuario(int $idUsuario, array $preguntasRealizadas = [],int $idCategoria): DataResponse
    {
       try {
 
@@ -117,7 +117,7 @@ class UsuarioPreguntaService
             default => throw new \Exception("Nivel de usuario inválido")
          };
 
-         $preguntasResponse = $this->preguntaService->obtenerPreguntasPorDificultad($dificultadEsperada);
+         $preguntasResponse = $this->preguntaService->obtenerPreguntasPorDificultad($dificultadEsperada,$idCategoria);
          if (!$preguntasResponse->success) {
             return new DataResponse(false, "No se encontraron preguntas de dificultad $dificultadEsperada");
          }

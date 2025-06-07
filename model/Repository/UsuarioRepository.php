@@ -135,7 +135,7 @@ class UsuarioRepository
          $data = $stmt->fetch(PDO::FETCH_ASSOC);
 
          if (!$data) {
-            return null;
+             return null;
          }
 
          return new Usuario($data);
@@ -162,6 +162,32 @@ class UsuarioRepository
         }
 
     }
+
+    public function calcularNivel($userId)
+    {
+        $query = "SELECT respondidas_correctamente / preguntas_entregadas  AS ratio
+                    FROM usuario
+                    WHERE id_usuario = :id";
+
+        try {
+            $stmt = $this->conn->prepare($query);
+            $stmt->bindValue(':id', $userId, PDO::PARAM_INT);
+            $stmt->execute();
+            $data = $stmt->fetch(PDO::FETCH_ASSOC);
+            if (!$data) {
+                return null;
+            }
+
+            if ($data['preguntas_entregadas'] == 0) {
+                return 1; // RETORNA NIVEL FACIL
+            }
+
+            return $data['ratio'];
+        } catch (PDOException $e) {
+            throw new PDOException("Error al buscar nivel de usuario por ID: " . $e->getMessage());
+        }
+    }
+
 
 
 }
