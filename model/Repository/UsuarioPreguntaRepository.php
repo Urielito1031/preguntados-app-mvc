@@ -40,15 +40,14 @@ class UsuarioPreguntaRepository
    public function getPreguntaIdRandomNoRespondida(int $idUsuario): ?int
    {
       try {
-         // Obtener todas las preguntas respondidas por el usuario
          $preguntasRealizadas = $this->getPreguntasIdByUsuario($idUsuario);
 
          // Si ya respondió todas las preguntas disponibles
-         if (count($preguntasRealizadas) >= 50) { // 50 es el número total de preguntas
+         if (count($preguntasRealizadas) >= 50) { //DATO HARDCODEADO
             return null;
          }
 
-         // Construir la consulta para obtener una pregunta aleatoria no respondida
+         //query qeu selecciona una pregunta aleatoria que no ha sido respondida por el usuario
          $sql = "SELECT id 
                 FROM pregunta 
                 WHERE id NOT IN (
@@ -70,7 +69,6 @@ class UsuarioPreguntaRepository
       }
    }
 
-   //devuelve los ids de las preguntas asociadas al usuario
    public function getPreguntasIdByUsuario(int $idUsuario): array
    {
       $sql = "SELECT id_pregunta FROM usuario_pregunta WHERE id_usuario = :id_usuario";
