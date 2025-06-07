@@ -56,20 +56,10 @@ class UsuarioPreguntaService
       }
    }
 
-
-
-
-
    public function getPreguntasPorUsuario(int $idUsuario): DataResponse
    {
       try{
       $preguntasIds = $this->repository->getPreguntasIdByUsuario($idUsuario);
-
-
-
-
-         var_dump($preguntasIds);
-
          return new DataResponse(true, "Preguntas obtenidas correctamente", $preguntasIds);
 
       }catch(PDOException $e){
@@ -93,7 +83,6 @@ class UsuarioPreguntaService
          }
          $preguntasDeUsuario = $response->data;
 
-         var_dump($preguntasDeUsuario);
 
          return !in_array($idPregunta, $preguntasDeUsuario, true);
 
