@@ -150,6 +150,10 @@ class UsuarioService
        return $this->repository->getRanking();
    }
 
+   public function getHistorialDePartidas($userId) {
+       return $this->repository->getHistorialDePartidas($userId);
+   }
+
    public function findById(int $idUsuario):DataResponse{
       try {
          $usuario = $this->repository->findById($idUsuario);

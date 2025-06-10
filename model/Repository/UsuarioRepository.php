@@ -163,6 +163,22 @@ class UsuarioRepository
 
     }
 
+    public function getHistorialDePartidas($userId) {
+        $sql = "SELECT puntaje AS puntaje
+                    FROM partida p
+                    WHERE id_usuario = :id_usuario
+                    ORDER BY creado_en DESC";
+        try{
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bindValue(':id_usuario', $userId, PDO::PARAM_INT);
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        }catch(PDOException $e){
+            throw new PDOException("Error al cargar historial: ".$e->getMessage());
+        }
+
+    }
+
     public function calcularNivel($userId)
     {
         $query = "SELECT respondidas_correctamente / preguntas_entregadas  AS ratio
