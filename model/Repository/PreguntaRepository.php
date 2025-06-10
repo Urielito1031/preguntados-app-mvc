@@ -45,7 +45,8 @@ class PreguntaRepository
             throw new \Exception("Categoría no encontrado en Registry");
          }
          $respuestasIncorrectas = $this->getRespuestasIncorrectas($id);
-
+         $respuestaCorrecta = $this->getRespuestaCorrecta($id);
+          $data['respuesta_correcta']= $respuestaCorrecta['0'];
          return new Pregunta($data, $categoria, $respuestasIncorrectas);
 
 
@@ -86,9 +87,22 @@ class PreguntaRepository
       }
    }
 
+    public function getRespuestaCorrecta(int $idPregunta):array
+    {
+        $query = "SELECT respuesta FROM respuesta WHERE id_pregunta = :id AND es_correcta = 1";
+        try{
+            $stmt = $this->conn->prepare($query);
+            $stmt->execute(['id' => $idPregunta]);
+            return  $stmt->fetchAll(PDO::FETCH_COLUMN, 0);
+
+        }catch (PDOException $e){
+            throw new PDOException("No se pudo obtener respuesta correcta: " . $e);
+        }
+    }
+
    public function getRespuestasIncorrectas(int $idPregunta):array
    {
-      $query = "SELECT respuesta FROM respuesta_incorrecta WHERE id_pregunta = :id";
+      $query = "SELECT respuesta FROM respuesta WHERE id_pregunta = :id AND es_correcta = 0";
       try{
          $stmt = $this->conn->prepare($query);
          $stmt->execute(['id' => $idPregunta]);
@@ -132,7 +146,7 @@ class PreguntaRepository
     {
         $idPregunta = $preguntaObtenida->getId();
 
-        $query = "SELECT cantidad_aciertos / cantidad_jugada  AS ratio
+        $query = "SELECT cantidad_aciertos / cantidad_jugada  AS ratio, cantidad_jugada 
                     FROM pregunta
                     WHERE id = :id";
 
@@ -157,8 +171,8 @@ class PreguntaRepository
 
     private function saveRespuestasIncorrectas(Pregunta $pregunta): void
    {
-      $query = "INSERT INTO respuesta_incorrecta (respuesta, id_pregunta) 
-                VALUES (:respuesta, :id_pregunta)";
+      $query = "INSERT INTO respuesta (respuesta, id_pregunta,es_correcta) 
+                VALUES (:respuesta, :id_pregunta, 0)";
       try {
 
          $stmt = $this->conn->prepare($query);
@@ -207,6 +221,8 @@ class PreguntaRepository
                throw new PDOException("Categoría no encontrada en Registry para la pregunta ID: " . $row['id']);
             }
             $respuestasIncorrectas = $this->getRespuestasIncorrectas($row['id']);
+            $respuestaCorrecta = $this->getRespuestaCorrecta($row['id']);
+            $row['respuesta_correcta']= $respuestaCorrecta['0'];
             $preguntas[] = new Pregunta($row, $categoria, $respuestasIncorrectas);
          }
 
@@ -250,6 +266,8 @@ class PreguntaRepository
          $preguntaAleatoria = $data[array_rand($data)];
 
          // Obtiene los datos relacionados.
+          $respuestaCorrecta = $this->getRespuestaCorrecta($preguntaAleatoria['id']);
+          $preguntaAleatoria['respuesta_correcta']= $respuestaCorrecta['0'];
          $respuestasIncorrectas = $this->getRespuestasIncorrectas($preguntaAleatoria['id']);
          $categoria = CategoriaRegistry::get($preguntaAleatoria['id_categoria']);
 

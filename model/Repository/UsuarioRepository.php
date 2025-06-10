@@ -165,7 +165,7 @@ class UsuarioRepository
 
     public function calcularNivel($userId)
     {
-        $query = "SELECT respondidas_correctamente / preguntas_entregadas  AS ratio
+        $query = "SELECT respondidas_correctamente / preguntas_entregadas  AS ratio, preguntas_entregadas
                     FROM usuario
                     WHERE id_usuario = :id";
 
