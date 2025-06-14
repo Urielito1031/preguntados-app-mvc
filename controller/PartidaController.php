@@ -141,6 +141,7 @@ class PartidaController
                   return;
             }
             $pregunta = $responsePregunta->data;
+            $_SESSION['tiempo_de_entrega'] = time();
             //debemos calcular si el nivel de la pregunta es adecuada para el usuario
            //preguntaService-> calcularNivelPregunta($pregunta):DataResponse;
             if (!$pregunta) {$this->endGame();return;}
@@ -195,9 +196,11 @@ class PartidaController
          if (empty($_POST['respuesta'])) {
             throw new \Exception("No se proporcionó una respuesta");
          }
-
+         var_dump($tiempo_respuesta = time());
          $_SESSION['respuesta_usuario'] = $_POST['respuesta'];
-
+          var_dump($tiempo_entrega = $tiempo_respuesta - $_SESSION['tiempo_de_entrega']);
+        if($tiempo_entrega <= 10){
+            var_dump($tiempo_entrega);
          if ($_POST['respuesta'] == $_SESSION['pregunta']['respuesta_correcta']) {
             $_SESSION['preguntas_correctas'][] = $_SESSION['pregunta']['id'];
             $preguntaId = $_SESSION['pregunta']['id'];
@@ -215,7 +218,9 @@ class PartidaController
              $usuario = $this->usuarioService->findById($_SESSION['user_id']);
              $this->usuarioService->sumarPreguntaEntregada($usuario->data);
             $this->endGame();
-         }
+         }} else {
+            $this->endGame();
+        }
       } catch (\Exception $e) {
          $viewData = array_merge($this->getUserSessionData(), [
             'error' => "Error al procesar la respuesta: " . $e->getMessage(),
