@@ -69,7 +69,7 @@ class PreguntaService
     private function determinarDificultad(float $valor): string
     {
         switch (true) {
-            case ($valor > 0 && $valor < 0.3):
+            case ($valor >= 0 && $valor < 0.3):
                 return 'DIFICIL';
             case ($valor >= 0.3 && $valor < 0.7):
                 return 'MEDIO';
