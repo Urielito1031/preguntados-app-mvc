@@ -68,6 +68,7 @@ class PartidaController
 
          $viewData = array_merge($this->getUserSessionData(), [
             'puntaje' => $partida->getPuntaje(),
+            'pregunta' => $_SESSION['pregunta'],
             'respuesta_usuario' => $_SESSION['respuesta_usuario'] ?? ''
          ]);
 
