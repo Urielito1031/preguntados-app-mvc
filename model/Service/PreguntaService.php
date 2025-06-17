@@ -10,6 +10,7 @@ use Repository\UsuarioRepository;
 class PreguntaService
 {
     private  PreguntaRepository $repository;
+    private UsuarioRepository $usuarioRepository;
     private  const  CANTIDAD_MINIMA_PARA_CALCULAR = 10;
 
 
