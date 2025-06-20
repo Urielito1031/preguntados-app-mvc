@@ -53,7 +53,7 @@ class EditorController{
             'categorias' => $categorias
         ]);
 
-        return $this->view->render("editornuevapregunta", $viewData);
+         $this->view->render("editornuevapregunta", $viewData);
     }
 
     public function editarPregunta(){

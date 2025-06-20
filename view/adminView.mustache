@@ -1,6 +1,25 @@
 <link href="/public/css/home.css" rel="stylesheet">
-<section class="d-flex flex-column align-items-center m-auto" style="width: 600px;">
-    <h1 class="w-100 text-center">¡Bienvenido, {{usuario}}!</h1>
-    <img class="mb-4 text-center" src="{{logo_url}}" alt="Logo QuizCode" height="300px" width="80%" style="object-fit: contain">
-    <a href="/home/playGame" class="bg-color-pink p-2 mb-4 w-75 text-center">DATOS DEL JUEGO</a>
+<section class="d-flex flex-column align-items-center m-auto" style="width: 800px;">
+  <h1 class="w-100 text-center">{{title}}</h1>
+  <div class="user-info mb-4 text-center">
+    <img src="{{foto_perfil}}" alt="Foto de perfil" style="width: 50px; object-fit: contain; border-radius: 50%;">
+    <p>Usuario: {{usuario}}</p>
+  </div>
+  <div class="graficos row">
+    {{#graficos}}
+      <div class="grafico col-md-4 mb-4">
+        <h2>{{@key}}</h2>
+        <img src="data:image/png;base64,{{.}}" alt="{{@key}}" style="width: 100%; height: auto;">
+      </div>
+    {{/graficos}}
+  </div>
+  <div class="datos">
+    <h2 class="text-center">Estadísticas Básicas</h2>
+    <table border="1" class="w-100">
+      <tr><th>Métrica</th><th>Valor</th></tr>
+      <tr><td>Jugadores Totales</td><td>{{data.jugadores}}</td></tr>
+      <tr><td>Partidas Jugadas</td><td>{{data.partidas}}</td></tr>
+      <tr><td>Preguntas Totales</td><td>{{data.preguntas}}</td></tr>
+    </table>
+  </div>
 </section>

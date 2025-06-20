@@ -107,5 +107,18 @@ class PartidaRepository
          throw new PDOException("No se pudo actualizar la partida: " . $e->getMessage());
       }
    }
+
+   //metodo del dashboard
+   public function getCantidadPartidasJugadas():int {
+       $sql = "SELECT COUNT(*) FROM partida";
+       try{
+          $stmt = $this->conn->prepare($sql);
+          $stmt->execute();
+          return $stmt->fetchColumn();
+       }catch (PDOException $e){
+            throw new PDOException("No se pudo obtener la cantidad de partidas jugadas: " . $e->getMessage());
+       }
+
+   }
 }
 

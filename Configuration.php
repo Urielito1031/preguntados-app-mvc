@@ -1,11 +1,14 @@
 <?php
 
+use Controller\AdminDashboardController;
+use Graph\JPGraphGenerador;
 use Repository\PartidaRepository;
 use Repository\PreguntaRepository;
 use Repository\UsuarioPreguntaRepository;
 use Repository\UsuarioRepository;
 use Repository\CategoriaRepository;
 
+use Service\DashboardService;
 use Service\PartidaService;
 use Service\PreguntaService;
 use Service\UsuarioPreguntaService;
@@ -22,6 +25,7 @@ require_once("controller/HomeController.php");
 require_once("controller/PartidaController.php");
 require_once("controller/RankingController.php");
 require_once("controller/EditorController.php");
+require_once("controller/AdminDashboardController.php");
 
 require_once("model/Entity/Usuario.php");
 
@@ -39,6 +43,8 @@ require_once("model/repository/PreguntaRepository.php");
 require_once("core/Router.php");
 require_once("core/MustachePresenter.php");
 require_once("model/repository/PartidaRepository.php");
+require_once("model/Service/DashboardService.php");
+require_once("model/Graph/JPGraphGenerador.php");
 
 
 
@@ -113,6 +119,30 @@ class Configuration
         $categoriaService = new CategoriaService($categoriaRepository);
         return new EditorController($this->getViewer(),$preguntaService,$categoriaService);
     }
+
+
+
+   public function getDashboardService(): DashboardService
+   {
+      return new DashboardService(
+         new PartidaRepository(),
+         new PreguntaRepository(),
+         new UsuarioRepository(),
+         $this->getGraphGenerator()
+      );
+   }
+
+   public function getGraphGenerator(): JPGraphGenerador
+   {
+      return new JPGraphGenerador();
+   }
+   public function getAdminDashboardController()
+   {
+      $dashboardService = $this->getDashboardService();
+      return new AdminDashboardController($this->getViewer(), $dashboardService);
+   }
+
+
 
     public function getRouter()
     {
