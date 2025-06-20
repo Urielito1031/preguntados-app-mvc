@@ -1,0 +1,45 @@
+<link href="/public/css/pregunta.css" rel="stylesheet">
+
+<form method="POST" action="/home/requestSubmit" class="m-auto d-flex flex-column align-items-center"
+      style="width: 90%; max-width: 550px">
+    <div class="w-100">
+        <select name="categoria" class="text-center bg-color-violet w-100"
+                style="border-radius: 25px 25px 0 0; cursor: pointer">
+            <option value="1">Historia</option>
+            <option value="2">Deportes</option>
+            <option value="3">Arte</option>
+            <option value="4">Ciencia</option>
+            <option value="5">Geografía</option>
+            <option value="6">Entretenimiento</option>
+        </select>
+
+        <input type="text" name="enunciado" id="enunciado" placeholder="Ingrese la pregunta"
+               class="text-center p-4 w-100" style="background: #ab8dd3; color:white; border:none;">
+    </div>
+    <br>
+    <div class="w-100 d-flex flex-column">
+        <div class="d-flex justify-content-evenly">
+            <input type="text" name="respuestas[]" placeholder="Opción 1" class="w-75 bg-color-pink">
+            <input type="radio" name="repuesta_correcta" value="opcion1"></div>
+        <br>
+
+        <div class="d-flex justify-content-evenly">
+            <input type="text" name="respuestas[]" placeholder="Opción 2" class="w-75 bg-color-pink">
+            <input type="radio" name="repuesta_correcta" value="opcion2"></div>
+        <br>
+
+        <div class="d-flex justify-content-evenly">
+            <input type="text" name="respuestas[]" placeholder="Opción 3" class="w-75 bg-color-pink">
+            <input type="radio" name="repuesta_correcta" value="opcion3"></div>
+        <br>
+
+        <div class="d-flex justify-content-evenly">
+            <input type="text" name="respuestas[]" placeholder="Opción 4" class="w-75 bg-color-pink">
+            <input type="radio" name="repuesta_correcta" value="opcion4"></div>
+        <br>
+
+        <button type="submit" class="d-flex justify-content-center align-self-center w-25 mt-4 bg-color-pink"
+                style="text-decoration: none;text-align: center;">Enviar pregunta
+        </button>
+    </div>
+</form>
