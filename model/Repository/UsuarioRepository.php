@@ -203,6 +203,134 @@ class UsuarioRepository
             throw new PDOException("Error al buscar nivel de usuario por ID: " . $e->getMessage());
         }
     }
+    //NOTA: para los metodos del dashboard hago aplico el filtro para que solo se vean datos de usuario
+   //con id_rol = 3 (jugador)
+   // no vi necesario devolver un objeto usuario, solo datos estadisticos en el array asociativo
+
+   //GUIA: la mayoria de los metodos devuelven un array de datos, (nombre, cantidad) ...
+
+    //metodos para usar en dashboard
+   //getAllPlayers
+   //getPlayersByCountry
+   //getPlayersByGroupAge (agrupar por menores,jubilados,medio)
+   //getPlayersByGender
+   //getPorcentajeAciertosByPlayer
+
+   public function getAllPlayers():int{
+      $query = "SELECT COUNT(u.id_usuario) AS usuarios_totales
+                FROM usuario u
+                WHERE id_rol = 3";
+
+      try{
+         $stmt = $this->conn->prepare($query);
+         $stmt->execute();
+         $data = $stmt->fetch(PDO::FETCH_ASSOC);
+         if (!$data) {
+            return 0;
+         }
+         return (int)$data['usuarios_totales'];
+      }catch(PDOException $e){
+         throw new PDOException("Error al obtener el total de jugadores: " . $e->getMessage());
+      }
+   }
+
+   //usuarios filtrados por pais
+   public function getPlayersByCountry():array{
+
+      $query = "SELECT p.nombre, COUNT(u.id_usuario) AS total
+                FROM usuario u 
+                JOIN ciudad c ON u.id_ciudad = c.id 
+                JOIN pais p ON c.id_pais = p.id 
+                WHERE u.id_rol = 3
+                GROUP BY p.nombre";
+      try{
+         $stmt  = $this->conn->prepare($query);
+         $stmt->execute();
+         $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+         if (!$data) {
+            return [];
+         }
+         return $data;
+      }catch (PDOException $e){
+         throw new PDOException("Error al obtener jugadores por pais: " . $e->getMessage());
+      }
+
+   }
+
+
+
+   public function getPlayersByGroupAge(): array
+   {
+      $query = "SELECT 
+                    CASE 
+                        WHEN TIMESTAMPDIFF(YEAR, fecha_nacimiento, CURDATE()) < 18 THEN 'Menores'
+                        WHEN TIMESTAMPDIFF(YEAR, fecha_nacimiento, CURDATE()) >= 65 THEN 'Jubilados'
+                        ELSE 'Medio'
+                    END as grupo_edad,
+                    COUNT(id_usuario) as total 
+                FROM usuario 
+                WHERE id_rol = 3 AND fecha_nacimiento IS NOT NULL
+                GROUP BY grupo_edad";
+      try{
+         $stmt = $this->conn->prepare($query);
+         $stmt->execute();
+         $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+         if (!$data) {
+            return [];
+         }
+         return $data;
+
+
+      }catch (PDOException $e){
+         throw new PDOException("Error al obtener jugadores por grupo de edad: " . $e->getMessage());
+      }
+
+   }
+
+   public function getPlayersByGender(): array
+   {
+      $query = "SELECT sexo, COUNT(id_usuario) AS total 
+                FROM usuario 
+                WHERE id_rol = 3
+                GROUP BY sexo";
+      try{
+         $stmt = $this->conn->prepare($query);
+         $stmt->execute();
+         $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+         if (!$data) {
+            return [];
+         }
+         return $data;
+
+      }catch (PDOException $e){
+         throw new PDOException("Error al obtener jugadores por género: " . $e->getMessage());
+      }
+   }
+
+   public function getPorcentajeAciertosByPlayer():array{
+      $query = "SELECT u.id_usuario, u.nombre_usuario, 
+                  IF(u.preguntas_entregadas = 0, 0,
+                   (u.respondidas_correctamente / u.preguntas_entregadas) * 100)
+                      as porcentaje_aciertos
+                  FROM usuario u WHERE u.id_rol = 3
+                  AND u.preguntas_entregadas > 0";
+
+      try{
+         $stmt = $this->conn->prepare($query);
+         $stmt->execute();
+         $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+         if (!$data) {
+            return [];
+         }
+         return $data;
+
+
+      }catch (PDOException $e){
+         throw new PDOException("Error al obtener porcentaje de aciertos por jugador: " . $e->getMessage());
+      }
+
+   }
+
 
 
 

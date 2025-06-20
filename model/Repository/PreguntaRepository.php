@@ -290,6 +290,18 @@ class PreguntaRepository
 
    }
 
+   //metodo para usar en dashboard
+   public function getCantidadPreguntas():int{
+      $query = "SELECT COUNT(p.id)  FROM pregunta p ";
+      try{
+         $stmt = $this->conn->prepare($query);
+         $stmt->execute();
+         return $stmt->fetchColumn();
+      }catch (PDOException $e){
+         throw new PDOException("No se pudo obtener la cantidad de preguntas: " . $e->getMessage());
+      }
+   }
+
 
 
 }
