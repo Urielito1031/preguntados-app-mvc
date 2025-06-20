@@ -636,7 +636,8 @@ ALTER TABLE `pregunta`
 -- Filtros para la tabla `respuesta_incorrecta`
 --
 ALTER TABLE `respuesta`
-    ADD CONSTRAINT `respuesta_ibfk_1` FOREIGN KEY (`id_pregunta`) REFERENCES `pregunta` (`id`);
+    ADD CONSTRAINT `respuesta_ibfk_1` FOREIGN KEY (`id_pregunta`) REFERENCES `pregunta` (`id`)
+    ON DELETE CASCADE;
 
 --
 -- Filtros para la tabla `usuario`
@@ -651,7 +652,8 @@ ALTER TABLE `usuario`
 --
 ALTER TABLE `usuario_pregunta`
     ADD CONSTRAINT `usuario_pregunta_ibfk_1` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`),
-    ADD CONSTRAINT `usuario_pregunta_ibfk_2` FOREIGN KEY (`id_pregunta`) REFERENCES `pregunta` (`id`);
+    ADD CONSTRAINT `usuario_pregunta_ibfk_2` FOREIGN KEY (`id_pregunta`) REFERENCES `pregunta` (`id`)
+    ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

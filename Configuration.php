@@ -4,10 +4,13 @@ use Repository\PartidaRepository;
 use Repository\PreguntaRepository;
 use Repository\UsuarioPreguntaRepository;
 use Repository\UsuarioRepository;
+use Repository\CategoriaRepository;
+
 use Service\PartidaService;
 use Service\PreguntaService;
 use Service\UsuarioPreguntaService;
 use Service\UsuarioService;
+use Service\CategoriaService;
 
 require_once("model/service/preguntaService.php");
 require_once("model/Service/ImageService.php");
@@ -18,6 +21,7 @@ require_once("controller/UsuarioController.php");
 require_once("controller/HomeController.php");
 require_once("controller/PartidaController.php");
 require_once("controller/RankingController.php");
+require_once("controller/EditorController.php");
 
 require_once("model/Entity/Usuario.php");
 
@@ -28,7 +32,8 @@ require_once("model/Repository/UsuarioPreguntaRepository.php");
 require_once("model/Service/UsuarioPreguntaService.php");
 require_once("model/Repository/PaisRepository.php");
 require_once("model/Repository/CiudadRepository.php");
-
+require_once("model/Repository/CategoriaRepository.php");
+require_once("Model/Service/CategoriaService.php");
 
 require_once("model/repository/PreguntaRepository.php");
 require_once("core/Router.php");
@@ -98,6 +103,15 @@ class Configuration
        $repository = new UsuarioRepository();
        $service = new UsuarioService($repository);
        return new RankingController($service, $this->getViewer());
+    }
+
+    public function getEditorController(){
+        $preguntaRepository = new PreguntaRepository();
+        $usuarioRepository = new UsuarioRepository();
+        $preguntaService = new PreguntaService($preguntaRepository,$usuarioRepository);
+        $categoriaRepository = new CategoriaRepository();
+        $categoriaService = new CategoriaService($categoriaRepository);
+        return new EditorController($this->getViewer(),$preguntaService,$categoriaService);
     }
 
     public function getRouter()

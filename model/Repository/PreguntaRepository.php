@@ -168,7 +168,6 @@ class PreguntaRepository
         }
     }
 
-
     private function saveRespuestasIncorrectas(Pregunta $pregunta): void
    {
       $query = "INSERT INTO respuesta (respuesta, id_pregunta,es_correcta) 
@@ -290,6 +289,143 @@ class PreguntaRepository
 
    }
 
+    public function traerTodasLaspreguntas(){
+        $query = "SELECT * FROM pregunta";
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute();
+        $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        return $data;
+    }
+
+    //ON DELETE -> CASCADE
+    public function eliminarPregunta($idPregunta){
+        $query = "DELETE FROM pregunta WHERE id = :idPregunta";
+        $stmt = $this->conn->prepare($query);
+        $resultado = $stmt->execute(['idPregunta' => $idPregunta]);
+        return $resultado;
+    }
+
+    public function findByIdParaEditor(int $id)
+    {
+        $query = "SELECT * FROM pregunta WHERE id = :id";
+        try{
+            $stmt = $this->conn->prepare($query);
+            $stmt->execute(['id' => $id]);
+            $data = $stmt->fetch(PDO::FETCH_ASSOC);
+            if (!$data) return null;
+
+            $categoria = CategoriaRegistry::get($data['id_categoria']);
+
+            if ($categoria === null) {
+                throw new \Exception("Categoría no encontrado en Registry");
+            }
+            $respuestasIncorrectas = $this->getRespuestasIncorrectasParaEditor($id);
+            $respuestaCorrecta = $this->getRespuestaCorrectaParaEditor($id);
+            $data['respuesta_correcta']= $respuestaCorrecta;
+            $respuesta['data'] = $data;
+            $respuesta['categoria'] = $categoria;
+            $respuesta['respuestasincorrectas'] = $respuestasIncorrectas;
+            //$respuesta['data'] = array($data,$categoria, $respuestasIncorrectas);
+
+            return $respuesta;
+
+
+        }catch (PDOException $e){
+            throw new PDOException("No se pudo obtener la consulta:  " . $e);
+        }
+    }
+
+    public function getRespuestasIncorrectasParaEditor(int $idPregunta):array
+    {
+        $query = "SELECT respuesta,id FROM respuesta WHERE id_pregunta = :id AND es_correcta = 0";
+        try{
+            $stmt = $this->conn->prepare($query);
+            $stmt->execute(['id' => $idPregunta]);
+            return  $stmt->fetchAll();
+
+        }catch (PDOException $e){
+            throw new PDOException("No se pudo obtener las respuestas incorrectas: " . $e);
+        }
+    }
+    public function getRespuestaCorrectaParaEditor(int $idPregunta):array
+    {
+        $query = "SELECT respuesta,id as idRespuestaCorrecta FROM respuesta WHERE id_pregunta = :id AND es_correcta = 1";
+        try{
+            $stmt = $this->conn->prepare($query);
+            $stmt->execute(['id' => $idPregunta]);
+            return  $stmt->fetchAll();
+
+        }catch (PDOException $e){
+            throw new PDOException("No se pudo obtener respuesta correcta: " . $e);
+        }
+    }
+    public function editarPregunta($pregunta)
+    {
+        $query = "UPDATE pregunta SET enunciado = :enunciado, id_categoria = :idCategoria WHERE id = :id";
+        $queryRespuesta = "UPDATE respuesta SET respuesta = :respuesta WHERE id = :id";
+        try {
+            $stmt = $this->conn->prepare($query);
+
+            $stmt->execute(['id' => $pregunta['idPregunta'],
+                            'idCategoria' => $pregunta['idCategoria'],
+                            'enunciado' => $pregunta['enunciado']]
+                            );
+            foreach($pregunta['respuestas'] as $respuesta){
+                $stmtRespuestas = $this->conn->prepare($queryRespuesta);
+
+                $stmtRespuestas->execute(['id' => $respuesta['id'],
+                        'respuesta' => $respuesta['respuesta']
+                    ]);
+            }
+
+            return "Edicion realizada correctamente";
+
+        } catch (PDOException $e) {
+            throw new PDOException("No se pudo actualizar la pregunta " . $e->getMessage());
+        }
+    }
+
+    public function guardarNuevaPregunta($pregunta)
+    {
+
+        $query = "INSERT INTO pregunta (id_categoria,enunciado) VALUES(:idCategoria,:enunciado)";
+        $queryRespuesta = "INSERT INTO respuesta (respuesta, id_pregunta, es_correcta) VALUES(:respuesta,:idPregunta,:es_correcta)";
+        //$queryRespuesta = "UPDATE respuesta SET respuesta = :respuesta WHERE id = :id";
+        try {
+            $stmt = $this->conn->prepare($query);
+
+            $resultado = $stmt->execute([
+                    'idCategoria' => $pregunta['idCategoria'],
+                    'enunciado' => $pregunta['enunciado']]
+            );
+
+            $idPreguntaGuardada =$this->conn->lastInsertId();
+
+            $stmtRespuestaCorrecta = $this->conn->prepare($queryRespuesta);
+            $stmtRespuestaCorrecta->execute([
+                'respuesta' => $pregunta['respuestaCorrecta'],
+                'idPregunta' => $idPreguntaGuardada,
+                'es_correcta' => 1
+            ]);
+
+            foreach($pregunta['respuestas'] as $respuesta){
+                $stmtRespuestas = $this->conn->prepare($queryRespuesta);
+
+                $stmtRespuestas->execute([
+                    'respuesta' => $respuesta['respuesta'],
+                    'idPregunta' => $idPreguntaGuardada,
+                    'es_correcta' => 0
+                ]);
+            }
+
+            return "La pregunta se ha guardado correctamente, con id= $idPreguntaGuardada";
+
+        } catch (PDOException $e) {
+            throw new PDOException("No se pudo actualizar la pregunta " . $e->getMessage());
+        }
+    }
+
    //metodo para usar en dashboard
    public function getCantidadPreguntas():int{
       $query = "SELECT COUNT(p.id)  FROM pregunta p ";
@@ -301,7 +437,6 @@ class PreguntaRepository
          throw new PDOException("No se pudo obtener la cantidad de preguntas: " . $e->getMessage());
       }
    }
-
 
 
 }
