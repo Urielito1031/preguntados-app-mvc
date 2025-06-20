@@ -1,0 +1,32 @@
+<link href="/public/css/pregunta.css" rel="stylesheet">
+<h1>Nueva pregunta</h1>
+<div class="container">
+  <form class="col-12 col-sm-8 col-md-6 col-lg-4 d-flex flex-column align-items-center justify-content-center" action="/editor/processNuevaPregunta" method="POST" enctype="multipart/form-data" id="formulario-registro">
+
+    {{#error}}
+      <div class="alert alert-danger" role="alert">
+        {{error}}
+      </div>
+    {{/error}}
+      <label for="enunciado">Enunciado</label>
+      <input type="text" name="enunciado" placeholder="enunciado" aria-label="Nombre" value="enunciado">
+
+      <label for="respuesta_correcta">Respuesta correcta</label>
+      <input type="text" name="respuesta_correcta"
+      placeholder="respuestacorrecta" aria-label="respuesta_correcta" value="respuesta_correcta">
+
+        <label for="name">Respuesta incorrecta #1</label>
+        <input type="text" name="respuesta1" placeholder="respuesta incorrecta 1" aria-label="respuesta_incorrecta" value="respuesta1">
+        <input type="text" name="respuesta2" placeholder="respuesta incorrecta 2" aria-label="respuesta_incorrecta" value="respuesta2">
+        <input type="text" name="respuesta3" placeholder="respuesta incorrecta 3" aria-label="respuesta_incorrecta" value="respuesta3">
+
+        <select name="idCategoria">
+            {{#categorias}}
+                <option value="{{id}}">{{id}}- {{descripcion}}</option>
+            {{/categorias}}
+        </select>
+
+        <button type="submit">Guardar cambios</button>
+
+      </form>
+</div>

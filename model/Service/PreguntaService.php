@@ -152,4 +152,32 @@ class PreguntaService
         }
     }
 
+    public function getPreguntas(){
+        $preguntas = $this->repository->traerTodasLaspreguntas();
+
+        return $preguntas;
+    }
+
+    public function eliminarPregunta(int $idPregunta){
+        $resultado = $this->repository->eliminarPregunta($idPregunta);
+        return $resultado;
+    }
+
+    public function findByIdParaEditor(int $idPregunta): DataResponse{
+        $pregunta = $this->repository->findByIdParaEditor($idPregunta);
+        if ($pregunta === null) {
+            return new DataResponse(false, "Pregunta no encontrada por id");
+        }
+        return new DataResponse(true, "Pregunta por id encontrada", $pregunta);
+    }
+
+    public function editarPregunta($pregunta){
+        $resultado = $this->repository->editarPregunta($pregunta);
+        return $resultado;
+    }
+
+    public function guardarNuevaPregunta($pregunta){
+        $resultado = $this->repository->guardarNuevaPregunta($pregunta);
+        return $resultado;
+    }
 }
