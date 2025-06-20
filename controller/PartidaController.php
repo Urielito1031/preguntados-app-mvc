@@ -219,7 +219,10 @@ class PartidaController
              $usuario = $this->usuarioService->findById($_SESSION['user_id']);
              $this->usuarioService->sumarPreguntaEntregada($usuario->data);
             $this->endGame();
-         }} else {
+         }
+        } else {
+           //reveer esto, anda mal y no llega acá
+           echo "El tiempo de respuesta fue mayor a 10 segundos, la partida se ha finalizado.";
             $this->endGame();
         }
       } catch (\Exception $e) {
