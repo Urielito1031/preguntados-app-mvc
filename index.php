@@ -26,6 +26,15 @@ try {
     //Roles: 1 Admin, 2 Editor , 3 Jugador
     $rol = (isset($_SESSION["id_rol"])) ? $_SESSION["id_rol"] : null;
 
+
+    //a ver si sale
+    if($rol == 1){
+       $controller = 'AdminDashboard';
+         $method = 'showDashboard';
+
+    }
+
+
     //Admin, editor y jugar tienen sus propias vistas show
     if($controller == 'home' && $method == 'showAdmin' && $rol != 1){
         $method = $rol == 2 ? 'showEditor' : 'show';
@@ -38,6 +47,7 @@ try {
     if($controller == 'home' && $method == 'show' && $rol != 3){
         $method = $rol == 1 ? 'showAdmin' : 'showEditor';
     }
+
 
     /* Fin de Control de rol */
 

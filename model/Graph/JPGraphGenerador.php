@@ -1,6 +1,11 @@
 <?php
 
 namespace Graph;
+// Incluir manualmente los archivos de JPGraph
+require_once __DIR__ . '/../../vendor/jpgraph-4.4.2/src/jpgraph.php';
+require_once __DIR__ . '/../../vendor/jpgraph-4.4.2/src/jpgraph_bar.php';
+require_once __DIR__ . '/../../vendor/jpgraph-4.4.2/src/jpgraph_pie.php';
+require_once __DIR__ . '/../../vendor/jpgraph-4.4.2/src/jpgraph_pie3d.php';
 
 use Graph;
 use BarPlot;
@@ -17,39 +22,75 @@ class JPGraphGenerador
    //
    public function generateBarChart(array $data, string $title): string
    {
-      $graph = new Graph(400, 300);
-      $graph->SetScale("textlin");
-      $graph->title->Set($title);
+      // Validar datos
+      if (!isset($data['values']) || !is_array($data['values']) || empty($data['values'])) {
+         error_log("Error en generateBarChart: Datos inválidos para '$title': " . print_r($data, true));
+         return ''; // Devolver cadena vacía si los datos son inválidos
+      }
 
-
-
+      // Verificar que todos los valores sean numéricos
       $values = array_values($data['values']);
       $labels = array_keys($data['values']);
+      if (array_filter($values, fn($v) => !is_numeric($v) || $v < 0)) {
+         error_log("Error en generateBarChart: Valores no numéricos o negativos para '$title': " . print_r($values, true));
+         return '';
+      }
 
-      $bplot = new BarPlot($values);
-      $graph->Add($bplot);
+      try {
+         $graph = new Graph(400, 300);
+         $graph->SetScale("textlin");
+         $graph->title->Set($title);
 
-      $filename = tempnam(sys_get_temp_dir(), 'graph') . '.png';
-      $graph->Stroke($filename);
+         $bplot = new BarPlot($values);
+         $graph->Add($bplot);
 
-      return base64_encode(file_get_contents($filename));
+         $filename = tempnam(sys_get_temp_dir(), 'graph') . '.png';
+         $graph->Stroke($filename);
+
+         $imageData = file_get_contents($filename);
+         unlink($filename); // Eliminar archivo temporal
+
+         return base64_encode($imageData);
+      } catch (\Exception $e) {
+         error_log("Error en generateBarChart para '$title': " . $e->getMessage());
+         return '';
+      }
    }
 
    public function generatePieChart(array $data, string $title): string
    {
-      $graph = new PieGraph(400, 300);
-      $graph->title->Set($title);
+      // Validar datos
+      if (!isset($data['values']) || !is_array($data['values']) || empty($data['values'])) {
+         error_log("Error en generatePieChart: Datos inválidos para '$title': " . print_r($data, true));
+         return ''; // Devolver cadena vacía si los datos son inválidos
+      }
 
+      // Verificar que todos los valores sean numéricos y positivos
       $values = array_values($data['values']);
       $labels = array_keys($data['values']);
+      if (array_filter($values, fn($v) => !is_numeric($v) || $v <= 0)) {
+         error_log("Error en generatePieChart: Valores no numéricos o no positivos para '$title': " . print_r($values, true));
+         return '';
+      }
 
-      $p1 = new PiePlot($values);
-      $p1->SetLegends($labels);
-      $graph->Add($p1);
+      try {
+         $graph = new PieGraph(400, 300);
+         $graph->title->Set($title);
 
-      $filename = tempnam(sys_get_temp_dir(), 'graph') . '.png';
-      $graph->Stroke($filename);
+         $p1 = new PiePlot($values);
+         $p1->SetLegends($labels);
+         $graph->Add($p1);
 
-      return base64_encode(file_get_contents($filename));
+         $filename = tempnam(sys_get_temp_dir(), 'graph') . '.png';
+         $graph->Stroke($filename);
+
+         $imageData = file_get_contents($filename);
+         unlink($filename); // Eliminar archivo temporal
+
+         return base64_encode($imageData);
+      } catch (\Exception $e) {
+         error_log("Error en generatePieChart para '$title': " . $e->getMessage());
+         return '';
+      }
    }
 }

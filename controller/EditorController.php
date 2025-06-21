@@ -44,7 +44,7 @@ class EditorController{
             'mensaje' => $this->getMensajeSession(),
         ]);
         $this->clearSession();
-        return $this->view->render("edicionrealizada",$viewData);
+         $this->view->render("edicionrealizada",$viewData);
     }
     public function nuevaPregunta(){
         $categorias = $this->categoriaService->getCategorias();

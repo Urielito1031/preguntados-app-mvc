@@ -29,11 +29,15 @@ class AdminDashboardController
    public function showDashboard():void
    {
       $results = $this->dashboardService->generateDashboardData();
-      $viewData = array_merge($this->getUserSessionData(),[
-         'title' => 'Dashboard Administrador - '. $_SESSION['user_name'],
+
+
+      $userData = $this->getUserSessionData();
+      $viewData = array_merge($userData, [
+         'title' => 'Dashboard',
          'data' => $results['data'],
          'graficos' => $results['graficos']
       ]);
+
       $this->view->render("admin", $viewData);
    }
 

@@ -1,25 +1,56 @@
-<link href="/public/css/home.css" rel="stylesheet">
-<section class="d-flex flex-column align-items-center m-auto" style="width: 800px;">
-  <h1 class="w-100 text-center">{{title}}</h1>
-  <div class="user-info mb-4 text-center">
-    <img src="{{foto_perfil}}" alt="Foto de perfil" style="width: 50px; object-fit: contain; border-radius: 50%;">
-    <p>Usuario: {{usuario}}</p>
+<link href="/public/css/admin.css" rel="stylesheet">
+<section class="main-container">
+  <div class="header-card">
+    <h1 class="title">{{title}}</h1>
+    <div class="user-profile">
+      <img src="{{foto_perfil}}" alt="Foto de perfil" class="profile-avatar">
+      <p class="profile-info">
+        <i class="fas fa-user"></i>{{usuario}}
+      </p>
+    </div>
   </div>
-  <div class="graficos row">
-    {{#graficos}}
-      <div class="grafico col-md-4 mb-4">
-        <h2>{{@key}}</h2>
-        <img src="data:image/png;base64,{{.}}" alt="{{@key}}" style="width: 100%; height: auto;">
+
+  <div class="graficos-container">
+    <h2 class="section-title">
+      <i class="fas fa-chart-bar"></i> Gráficos
+    </h2>
+    <div class="graficos-grid">
+      {{#graficos}}
+        <div class="grafico-card">
+          <img src="data:image/png;base64,{{src}}" alt="{{@key}}">
+        </div>
+      {{/graficos}}
+    </div>
+  </div>
+
+  <div class="estadisticas-container">
+    <h2 class="section-title">
+      <i class="fas fa-chart-line"></i> Estadísticas Generales
+    </h2>
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon">
+          <i class="fas fa-users"></i>
+        </div>
+        <div class="stat-value">{{data.jugadores}}</div>
+        <div class="stat-label">Jugadores Totales</div>
       </div>
-    {{/graficos}}
-  </div>
-  <div class="datos">
-    <h2 class="text-center">Estadísticas Básicas</h2>
-    <table border="1" class="w-100">
-      <tr><th>Métrica</th><th>Valor</th></tr>
-      <tr><td>Jugadores Totales</td><td>{{data.jugadores}}</td></tr>
-      <tr><td>Partidas Jugadas</td><td>{{data.partidas}}</td></tr>
-      <tr><td>Preguntas Totales</td><td>{{data.preguntas}}</td></tr>
-    </table>
+
+      <div class="stat-card">
+        <div class="stat-icon">
+          <i class="fas fa-gamepad"></i>
+        </div>
+        <div class="stat-value">{{data.partidas}}</div>
+        <div class="stat-label">Partidas Jugadas</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon">
+          <i class="fas fa-question-circle"></i>
+        </div>
+        <div class="stat-value">{{data.preguntas}}</div>
+        <div class="stat-label">Preguntas Totales</div>
+      </div>
+    </div>
   </div>
 </section>

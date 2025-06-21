@@ -13,7 +13,7 @@ class MustachePresenter{
         $this->partialsPathLoader = $partialsPathLoader;
     }
 
-    public function render($contentFile , $data = array() ){
+    public function render(string $contentFile , $data = array() ){
         echo  $this->generateHtml(  $this->partialsPathLoader . '/' . $contentFile . "View.mustache" , $data);
     }
 
