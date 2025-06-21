@@ -1,18 +1,20 @@
 <link href="/public/css/admin.css" rel="stylesheet">
 <section class="main-container">
+  <!-- Header con título y perfil de usuario -->
   <div class="header-card">
     <h1 class="title">{{title}}</h1>
     <div class="user-profile">
       <img src="{{foto_perfil}}" alt="Foto de perfil" class="profile-avatar">
       <p class="profile-info">
-        <i class="fas fa-user"></i>{{usuario}}
+        <i class="fas fa-user"></i> {{usuario}}
       </p>
     </div>
   </div>
 
+  <!-- Sección de Gráficos -->
   <div class="graficos-container">
     <h2 class="section-title">
-      <i class="fas fa-chart-bar"></i> Gráficos
+      <i class="fas fa-chart-bar"></i> Análisis Visual
     </h2>
     <div class="graficos-grid">
       {{#graficos}}
@@ -23,12 +25,13 @@
     </div>
   </div>
 
+  <!-- Sección de Estadísticas -->
   <div class="estadisticas-container">
     <h2 class="section-title">
       <i class="fas fa-chart-line"></i> Estadísticas Generales
     </h2>
-    <div class="stats-grid">
-      <div class="stat-card">
+    <div class="stats-grid d-flex flex-wrap justify-content-center gap-3">
+      <div class="stat-card flex-fill" style="min-width: 250px; max-width: 300px;">
         <div class="stat-icon">
           <i class="fas fa-users"></i>
         </div>
@@ -36,7 +39,7 @@
         <div class="stat-label">Jugadores Totales</div>
       </div>
 
-      <div class="stat-card">
+      <div class="stat-card flex-fill" style="min-width: 250px; max-width: 300px;">
         <div class="stat-icon">
           <i class="fas fa-gamepad"></i>
         </div>
@@ -44,7 +47,7 @@
         <div class="stat-label">Partidas Jugadas</div>
       </div>
 
-      <div class="stat-card">
+      <div class="stat-card flex-fill" style="min-width: 250px; max-width: 300px;">
         <div class="stat-icon">
           <i class="fas fa-question-circle"></i>
         </div>

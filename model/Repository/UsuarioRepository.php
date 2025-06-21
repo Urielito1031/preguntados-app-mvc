@@ -217,7 +217,7 @@ class UsuarioRepository
    //getPorcentajeAciertosByPlayer
 
    public function getAllPlayers():int{
-      $query = "SELECT COUNT(u.id_usuario) AS usuarios_totales
+      $query = "SELECT COUNT(*) AS usuarios_totales
                 FROM usuario u
                 WHERE id_rol = 3";
 
@@ -228,6 +228,7 @@ class UsuarioRepository
          if (!$data) {
             return 0;
          }
+
          return (int)$data['usuarios_totales'];
       }catch(PDOException $e){
          throw new PDOException("Error al obtener el total de jugadores: " . $e->getMessage());
