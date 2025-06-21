@@ -1,53 +1,52 @@
-<section class="d-flex flex-column align-items-center">
+<section class="container my-5">
+    <h1 class="text-center text-violet mb-4">Ranking de Jugadores</h1>
 
+    <div class="table-responsive mb-5">
+        <table class="table table-striped table-hover shadow-sm">
+            <thead class="bg-color-violet text-white">
+                <tr>
+                    <th scope="col">Posición</th>
+                    <th scope="col">Jugador</th>
+                    <th scope="col">Puntaje Total</th>
+                    <th scope="col">Partidas Jugadas</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#jugadores}}
+                    <tr>
+                        <td>{{posicion}}</td>
+                        <td><a href="/usuario/showProfileById?id={{id_usuario}}" class="text-pink text-decoration-none">{{nombre}}</a></td>
+                        <td>{{puntaje_total}}</td>
+                        <td>{{partidas_jugadas}}</td>
+                    </tr>
+                {{/jugadores}}
+            </tbody>
+        </table>
+    </div>
 
-    <h2>🔥 Top Jugadores 🔥</h2>
+    <h2 class="text-center text-violet mb-4">Mi Historial de Partidas</h2>
 
-
-    <table class="table table-striped w-50">
-        <thead>
-        <tr class="text-center">
-            <th>#</th>
-            <th>Nombre</th>
-            <th>Puntaje Total</th>
-            <th>Partidas Jugadas</th>
-        </tr>
-        </thead>
-
-        <tbody>
-        {{#jugadores}}
-            <tr class="text-center">
-                <th>{{posicion}}</th>
-                <th>
-                    <a href="#">{{nombre}}</a>
-                </th>
-                <th>{{puntaje_total}}</th>
-                <th>{{partidas_jugadas}}</th>
-            </tr>
-        {{/jugadores}}
-        </tbody>
-    </table>
-
-
-    <h2>Historial</h2>
-    <table class="table table-striped w-50">
-        <thead>
-        <tr class="text-center">
-            <th>#</th>
-            <th>Puntaje</th>
-        </tr>
-        </thead>
-
-        <tbody>
-        {{#partidas}}
-            <tr class="text-center">
-                <th>Partida N°{{numero}}</th>
-                <th>{{puntaje}}</th>
-            </tr>
-        {{/partidas}}
-        </tbody>
-    </table>
-
-    <a href="/home/show">Volver</a>
-
+    {{^partidas}}
+        <p class="text-center">Aún no has jugado ninguna partida. ¡Anímate a jugar!</p>
+    {{/partidas}}
+    {{#partidas}}
+    <div class="table-responsive">
+        <table class="table table-striped table-hover shadow-sm">
+            <thead class="bg-color-pink text-white">
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Puntaje</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#.}}
+                    <tr>
+                        <td>{{numero}}</td>
+                        <td>{{puntaje}}</td>
+                    </tr>
+                {{/.}}
+            </tbody>
+        </table>
+    </div>
+    {{/partidas}}
 </section>
