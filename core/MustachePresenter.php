@@ -1,6 +1,7 @@
 <?php
 
-class MustachePresenter{
+class MustachePresenter
+{
     private $mustache;
     private $partialsPathLoader;
 

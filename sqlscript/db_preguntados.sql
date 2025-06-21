@@ -133,7 +133,26 @@ CREATE TABLE `partida` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
+-- Estructura de tabla para la tabla 'pregunta-sugerida'
+CREATE TABLE `pregunta_sugerida` (
+                            `id` int(11) NOT NULL AUTO_INCREMENT,
+                            `id_categoria` int(11) NOT NULL,
+                            `enunciado` varchar(255) NOT NULL,
+                            PRIMARY KEY (`id`)
 
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+-- --------------------------------------------------------
+-- Estructura de tabla para la tabla 'respuesta-sugerida'
+
+CREATE TABLE `respuesta_sugerida` (
+                                      `id` int(11) NOT NULL AUTO_INCREMENT,
+                                      `respuesta` varchar(255) NOT NULL,
+                                      `id_pregunta` int(11) NOT NULL,
+                                      `es_correcta` TINYINT(1) NOT NULL,
+                                      PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
 --
 -- Estructura de tabla para la tabla `pregunta`
 --
@@ -152,54 +171,54 @@ CREATE TABLE `pregunta` (
 --
 
 INSERT INTO `pregunta` (`id`,`id_categoria`, `enunciado`, `cantidad_jugada`, `cantidad_aciertos`, `cantidad_reportes`) VALUES
-                                                                                                                                                  (1, 1, '¿Quién fue el primer presidente de los Estados Unidos?', 0, 0, 0),
-                                                                                                                                                  (2, 1, '¿En qué año comenzó la Segunda Guerra Mundial?', 0, 0, 0),
-                                                                                                                                                  (3, 1, '¿Qué civilización construyó las pirámides de Giza?', 0, 0, 0),
-                                                                                                                                                  (4, 2, '¿Cuál es el deporte más popular del mundo?', 0, 0, 0),
-                                                                                                                                                  (5, 2, '¿Quién es considerado el mejor jugador de baloncesto de la historia?', 0, 0, 0),
-                                                                                                                                                  (6, 2, '¿Qué torneo de tenis se juega en hierba?', 0, 0, 0),
-                                                                                                                                                  (7, 3, '¿Quién pintó la Mona Lisa?', 0, 0, 0),
-                                                                                                                                                  (8, 3, '¿Qué movimiento artístico está asociado con Claude Monet?', 0, 0, 0),
-                                                                                                                                                  (9, 3, '¿Cuál es el nombre de la obra famosa de Vincent van Gogh?', 0, 0, 0),
-                                                                                                                                                  (10, 4, '¿Quién formuló las leyes del movimiento?', 0, 0, 0),
-                                                                                                                                                  (11, 4, '¿Qué elemento es el más abundante en la atmósfera terrestre?', 0, 0, 0),
-                                                                                                                                                  (12, 4, '¿Qué molécula porta la información genética?', 0, 0, 0),
-                                                                                                                                                  (13, 5, '¿Cuál es la capital de Francia?', 0, 0, 0),
-                                                                                                                                                  (14, 5, '¿Qué río es el más largo de Sudamérica?', 0, 0, 0),
-                                                                                                                                                  (15, 5, '¿En qué continente está Egipto?', 0, 0, 0),
-                                                                                                                                                  (16, 6, '¿Qué actor ganó un Oscar por "El Renacido"?', 0, 0, 0),
-                                                                                                                                                  (17, 6, '¿Qué banda escribió "Hey Jude"?', 0, 0, 0),
-                                                                                                                                                  (18, 6, '¿Qué saga incluye a un personaje llamado Harry Potter?', 0, 0, 0),
-                                                                                                                                                  (21, 1, '¿En qué año cayó el Muro de Berlín?', 0, 0, 0),
-                                                                                                                                                  (22, 1, '¿Quién fue el líder de la Revolución Rusa de 1917?', 0, 0, 0),
-                                                                                                                                                  (23, 1, '¿Qué emperador romano construyó el Coliseo?', 0, 0, 0),
-                                                                                                                                                  (24, 2, '¿En qué deporte se utiliza un bate y una pelota?', 0, 0, 0),
-                                                                                                                                                  (25, 2, '¿Qué país ha ganado más Copas Mundiales de Fútbol?', 0, 0, 0),
-                                                                                                                                                  (26, 2, '¿Qué jugador de la NBA combinó su dominio con el "skyhook" y un récord de 6 MVP?', 0, 0, 0),
-                                                                                                                                                  (27, 3, '¿Quién pintó "La última cena"?', 0, 0, 0),
-                                                                                                                                                  (28, 3, '¿Qué artista es conocido por sus pinturas de latas de sopa Campbell?', 0, 0, 0),
-                                                                                                                                                  (29, 3, '¿Qué arquitecto diseñó el Museo Guggenheim de Bilbao?', 0, 0, 0),
-                                                                                                                                                  (30, 4, '¿Qué planeta es conocido como el planeta rojo?', 0, 0, 0),
-                                                                                                                                                  (31, 4, '¿Qué científico propuso la teoría de la relatividad?', 0, 0, 0),
-                                                                                                                                                  (32, 4, '¿Qué partícula subatómica tiene carga positiva?', 0, 0, 0),
-                                                                                                                                                  (33, 5, '¿Cuál es el país más grande del mundo por área?', 0, 0, 0),
-                                                                                                                                                  (34, 5, '¿Qué montaña es la más alta del mundo?', 0, 0, 0),
-                                                                                                                                                  (35, 5, '¿Qué país tiene la mayor cantidad de husos horarios?', 0, 0, 0),
-                                                                                                                                                  (36, 6, '¿Qué actor interpretó a Iron Man en el Universo Cinematográfico de Marvel?', 0, 0, 0),
-                                                                                                                                                  (37, 6, '¿Qué serie de TV es conocida por el lema "Winter is Coming"?', 0, 0, 0),
-                                                                                                                                                  (38, 6, '¿Qué director de cine es conocido por películas como "Pulp Fiction" y "Kill Bill"?', 0, 0, 0),
-                                                                                                                                                  (39, 1, '¿Qué presidente argentino organizó una fiesta en la quinta de Olivos?', 0, 0, 0),
-                                                                                                                                                  (40, 1, '¿Qué país sudamericano fue el último en independizarse de España?', 0, 0, 0),
-                                                                                                                                                  (41, 2, '¿Qué país inventó el bádminton?', 0, 0, 0),
-                                                                                                                                                  (42, 4, '¿Qué animal tiene el cerebro más grande en proporción a su cuerpo?', 0, 0, 0),
-                                                                                                                                                  (43, 4, '¿Qué planeta del sistema solar tiene vientos más rápidos (2,100 km/h)?', 0, 0, 0),
-                                                                                                                                                  (44, 4, '¿Qué científico argentino ganó el Nobel por descubrir cómo las células usan el azúcar?', 0, 0, 0),
-                                                                                                                                                  (45, 5, '¿Qué país tiene la capital más alta del mundo?', 0, 0, 0),
-                                                                                                                                                  (46, 5, '¿Qué provincia Argentina tiene frontera con Chile y Bolivia?', 0, 0, 0),
-                                                                                                                                                  (47, 7, '¿Qué patrón de diseño sugiere crear objetos sin exponer la lógica de creación?', 0, 0, 0),
-                                                                                                                                                  (48, 7, '¿Qué principio SOLID indica que una clase debe tener una única responsabilidad?', 0, 0, 0),
-                                                                                                                                                  (49, 7, '¿Qué comando de Docker se usa para construir una imagen desde un Dockerfile?', 0, 0, 0),
-                                                                                                                                                  (50, 4, '¿Qué protocolo asegura la comunicación encriptada en la web?', 0, 0, 0);
+                                                                                                                           (1, 1, '¿Quién fue el primer presidente de los Estados Unidos?', 0, 0, 0),
+                                                                                                                           (2, 1, '¿En qué año comenzó la Segunda Guerra Mundial?', 0, 0, 0),
+                                                                                                                           (3, 1, '¿Qué civilización construyó las pirámides de Giza?', 0, 0, 0),
+                                                                                                                           (4, 2, '¿Cuál es el deporte más popular del mundo?', 0, 0, 0),
+                                                                                                                           (5, 2, '¿Quién es considerado el mejor jugador de baloncesto de la historia?', 0, 0, 0),
+                                                                                                                           (6, 2, '¿Qué torneo de tenis se juega en hierba?', 0, 0, 0),
+                                                                                                                           (7, 3, '¿Quién pintó la Mona Lisa?', 0, 0, 0),
+                                                                                                                           (8, 3, '¿Qué movimiento artístico está asociado con Claude Monet?', 0, 0, 0),
+                                                                                                                           (9, 3, '¿Cuál es el nombre de la obra famosa de Vincent van Gogh?', 0, 0, 0),
+                                                                                                                           (10, 4, '¿Quién formuló las leyes del movimiento?', 0, 0, 0),
+                                                                                                                           (11, 4, '¿Qué elemento es el más abundante en la atmósfera terrestre?', 0, 0, 0),
+                                                                                                                           (12, 4, '¿Qué molécula porta la información genética?', 0, 0, 0),
+                                                                                                                           (13, 5, '¿Cuál es la capital de Francia?', 0, 0, 0),
+                                                                                                                           (14, 5, '¿Qué río es el más largo de Sudamérica?', 0, 0, 0),
+                                                                                                                           (15, 5, '¿En qué continente está Egipto?', 0, 0, 0),
+                                                                                                                           (16, 6, '¿Qué actor ganó un Oscar por "El Renacido"?', 0, 0, 0),
+                                                                                                                           (17, 6, '¿Qué banda escribió "Hey Jude"?', 0, 0, 0),
+                                                                                                                           (18, 6, '¿Qué saga incluye a un personaje llamado Harry Potter?', 0, 0, 0),
+                                                                                                                           (21, 1, '¿En qué año cayó el Muro de Berlín?', 0, 0, 0),
+                                                                                                                           (22, 1, '¿Quién fue el líder de la Revolución Rusa de 1917?', 0, 0, 0),
+                                                                                                                           (23, 1, '¿Qué emperador romano construyó el Coliseo?', 0, 0, 0),
+                                                                                                                           (24, 2, '¿En qué deporte se utiliza un bate y una pelota?', 0, 0, 0),
+                                                                                                                           (25, 2, '¿Qué país ha ganado más Copas Mundiales de Fútbol?', 0, 0, 0),
+                                                                                                                           (26, 2, '¿Qué jugador de la NBA combinó su dominio con el "skyhook" y un récord de 6 MVP?', 0, 0, 0),
+                                                                                                                           (27, 3, '¿Quién pintó "La última cena"?', 0, 0, 0),
+                                                                                                                           (28, 3, '¿Qué artista es conocido por sus pinturas de latas de sopa Campbell?', 0, 0, 0),
+                                                                                                                           (29, 3, '¿Qué arquitecto diseñó el Museo Guggenheim de Bilbao?', 0, 0, 0),
+                                                                                                                           (30, 4, '¿Qué planeta es conocido como el planeta rojo?', 0, 0, 0),
+                                                                                                                           (31, 4, '¿Qué científico propuso la teoría de la relatividad?', 0, 0, 0),
+                                                                                                                           (32, 4, '¿Qué partícula subatómica tiene carga positiva?', 0, 0, 0),
+                                                                                                                           (33, 5, '¿Cuál es el país más grande del mundo por área?', 0, 0, 0),
+                                                                                                                           (34, 5, '¿Qué montaña es la más alta del mundo?', 0, 0, 0),
+                                                                                                                           (35, 5, '¿Qué país tiene la mayor cantidad de husos horarios?', 0, 0, 0),
+                                                                                                                           (36, 6, '¿Qué actor interpretó a Iron Man en el Universo Cinematográfico de Marvel?', 0, 0, 0),
+                                                                                                                           (37, 6, '¿Qué serie de TV es conocida por el lema "Winter is Coming"?', 0, 0, 0),
+                                                                                                                           (38, 6, '¿Qué director de cine es conocido por películas como "Pulp Fiction" y "Kill Bill"?', 0, 0, 0),
+                                                                                                                           (39, 1, '¿Qué presidente argentino organizó una fiesta en la quinta de Olivos?', 0, 0, 0),
+                                                                                                                           (40, 1, '¿Qué país sudamericano fue el último en independizarse de España?', 0, 0, 0),
+                                                                                                                           (41, 2, '¿Qué país inventó el bádminton?', 0, 0, 0),
+                                                                                                                           (42, 4, '¿Qué animal tiene el cerebro más grande en proporción a su cuerpo?', 0, 0, 0),
+                                                                                                                           (43, 4, '¿Qué planeta del sistema solar tiene vientos más rápidos (2,100 km/h)?', 0, 0, 0),
+                                                                                                                           (44, 4, '¿Qué científico argentino ganó el Nobel por descubrir cómo las células usan el azúcar?', 0, 0, 0),
+                                                                                                                           (45, 5, '¿Qué país tiene la capital más alta del mundo?', 0, 0, 0),
+                                                                                                                           (46, 5, '¿Qué provincia Argentina tiene frontera con Chile y Bolivia?', 0, 0, 0),
+                                                                                                                           (47, 7, '¿Qué patrón de diseño sugiere crear objetos sin exponer la lógica de creación?', 0, 0, 0),
+                                                                                                                           (48, 7, '¿Qué principio SOLID indica que una clase debe tener una única responsabilidad?', 0, 0, 0),
+                                                                                                                           (49, 7, '¿Qué comando de Docker se usa para construir una imagen desde un Dockerfile?', 0, 0, 0),
+                                                                                                                           (50, 4, '¿Qué protocolo asegura la comunicación encriptada en la web?', 0, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -208,10 +227,10 @@ INSERT INTO `pregunta` (`id`,`id_categoria`, `enunciado`, `cantidad_jugada`, `ca
 --
 
 CREATE TABLE `respuesta` (
-                                        `id` int(11) NOT NULL,
-                                        `respuesta` varchar(255) NOT NULL,
-                                        `id_pregunta` int(11) NOT NULL,
-                                        `es_correcta` TINYINT(1) NOT NULL
+                             `id` int(11) NOT NULL,
+                             `respuesta` varchar(255) NOT NULL,
+                             `id_pregunta` int(11) NOT NULL,
+                             `es_correcta` TINYINT(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -345,72 +364,72 @@ INSERT INTO `respuesta` (`id`, `respuesta`, `id_pregunta`, `es_correcta`) VALUES
                                                                               (129, 'César Milstein', 44, 0),
                                                                               (130, 'Bernardo Houssay', 44, 0),
                                                                               (131, 'Juan Maldacena', 44, 0),
-(132, 'Nepal', 45, 0),
-(133, 'Perú', 45, 0),
-(134, 'Bután', 45, 0),
-(135, 'Salta', 46, 0),
-(136, 'Formosa', 46, 0),
-(137, 'Misiones', 46, 0),
-(138, 'Singleton', 47, 0),
-(139, 'Observer', 47, 0),
-(140, 'Decorator', 47, 0),
-(141, 'Principio de Abierto/Cerrado', 48, 0),
-(142, 'Principio de Sustitución de Liskov', 48, 0),
-(143, 'Principio de Segregación de Interfaces', 48, 0),
-(144, 'docker create', 49, 0),
-(145, 'docker run', 49, 0),
-(146, 'docker compose', 49, 0),
-(147, 'HTTP', 50, 0),
-(148, 'FTP', 50, 0),
-(149, 'SMTP', 50, 0),
-(150, 'George Washington', 1, 1),
-(151, '1939', 2, 1),
-(152, 'Egipcia', 3, 1),
-(153, 'Fútbol', 4, 1),
-(154, 'Michael Jordan', 5, 1),
-(155, 'Wimbledon', 6, 1),
-(156, 'Leonardo da Vinci', 7, 1),
-(157, 'Impresionismo', 8, 1),
-(158, 'La Noche Estrellada', 9, 1),
-(159, 'Isaac Newton', 10, 1),
-(160, 'Oxígeno', 11, 1),
-(161, 'ADN', 12, 1),
-(162, 'París', 13, 1),
-(163, 'Amazonas', 14, 1),
-(164, 'África', 15, 1),
-(165, 'Leonardo DiCaprio', 16, 1),
-(166, 'The Beatles', 17, 1),
-(167, 'Harry Potter', 18, 1),
-(168, '1989', 21, 1),
-(169, 'Vladimir Lenin', 22, 1),
-(170, 'Vespasiano', 23, 1),
-(171, 'Béisbol', 24, 1),
-(172, 'Brasil', 25, 1),
-(173, 'Kareem Abdul-Jabbar', 26, 1),
-(174, 'Leonardo da Vinci', 27, 1),
-(175, 'Andy Warhol', 28, 1),
-(176, 'Frank Gehry', 29, 1),
-(177, 'Marte', 30, 1),
-(178, 'Albert Einstein', 31, 1),
-(179, 'Protón', 32, 1),
-(180, 'Rusia', 33, 1),
-(181, 'Monte Everest', 34, 1),
-(182, 'Francia', 35, 1),
-(183, 'Robert Downey Jr.', 36, 1),
-(184, 'Game of Thrones', 37, 1),
-(185, 'Quentin Tarantino', 38, 1),
-(186, 'Alberto Fernández', 39, 1),
-(187, 'Bolivia', 40, 1),
-(188, 'India', 41, 1),
-(189, 'Cachalote', 42, 1),
-(190, 'Neptuno', 43, 1),
-(191, 'Luis Federico Leloir', 44, 1),
-(192, 'Bolivia', 45, 1),
-(193, 'Jujuy', 46, 1),
-(194, 'Factory Method', 47, 1),
-(195, 'Principio de Responsabilidad Única', 48, 1),
-(196, 'docker build', 49, 1),
-(197, 'HTTPS', 50, 1);
+                                                                              (132, 'Nepal', 45, 0),
+                                                                              (133, 'Perú', 45, 0),
+                                                                              (134, 'Bután', 45, 0),
+                                                                              (135, 'Salta', 46, 0),
+                                                                              (136, 'Formosa', 46, 0),
+                                                                              (137, 'Misiones', 46, 0),
+                                                                              (138, 'Singleton', 47, 0),
+                                                                              (139, 'Observer', 47, 0),
+                                                                              (140, 'Decorator', 47, 0),
+                                                                              (141, 'Principio de Abierto/Cerrado', 48, 0),
+                                                                              (142, 'Principio de Sustitución de Liskov', 48, 0),
+                                                                              (143, 'Principio de Segregación de Interfaces', 48, 0),
+                                                                              (144, 'docker create', 49, 0),
+                                                                              (145, 'docker run', 49, 0),
+                                                                              (146, 'docker compose', 49, 0),
+                                                                              (147, 'HTTP', 50, 0),
+                                                                              (148, 'FTP', 50, 0),
+                                                                              (149, 'SMTP', 50, 0),
+                                                                              (150, 'George Washington', 1, 1),
+                                                                              (151, '1939', 2, 1),
+                                                                              (152, 'Egipcia', 3, 1),
+                                                                              (153, 'Fútbol', 4, 1),
+                                                                              (154, 'Michael Jordan', 5, 1),
+                                                                              (155, 'Wimbledon', 6, 1),
+                                                                              (156, 'Leonardo da Vinci', 7, 1),
+                                                                              (157, 'Impresionismo', 8, 1),
+                                                                              (158, 'La Noche Estrellada', 9, 1),
+                                                                              (159, 'Isaac Newton', 10, 1),
+                                                                              (160, 'Oxígeno', 11, 1),
+                                                                              (161, 'ADN', 12, 1),
+                                                                              (162, 'París', 13, 1),
+                                                                              (163, 'Amazonas', 14, 1),
+                                                                              (164, 'África', 15, 1),
+                                                                              (165, 'Leonardo DiCaprio', 16, 1),
+                                                                              (166, 'The Beatles', 17, 1),
+                                                                              (167, 'Harry Potter', 18, 1),
+                                                                              (168, '1989', 21, 1),
+                                                                              (169, 'Vladimir Lenin', 22, 1),
+                                                                              (170, 'Vespasiano', 23, 1),
+                                                                              (171, 'Béisbol', 24, 1),
+                                                                              (172, 'Brasil', 25, 1),
+                                                                              (173, 'Kareem Abdul-Jabbar', 26, 1),
+                                                                              (174, 'Leonardo da Vinci', 27, 1),
+                                                                              (175, 'Andy Warhol', 28, 1),
+                                                                              (176, 'Frank Gehry', 29, 1),
+                                                                              (177, 'Marte', 30, 1),
+                                                                              (178, 'Albert Einstein', 31, 1),
+                                                                              (179, 'Protón', 32, 1),
+                                                                              (180, 'Rusia', 33, 1),
+                                                                              (181, 'Monte Everest', 34, 1),
+                                                                              (182, 'Francia', 35, 1),
+                                                                              (183, 'Robert Downey Jr.', 36, 1),
+                                                                              (184, 'Game of Thrones', 37, 1),
+                                                                              (185, 'Quentin Tarantino', 38, 1),
+                                                                              (186, 'Alberto Fernández', 39, 1),
+                                                                              (187, 'Bolivia', 40, 1),
+                                                                              (188, 'India', 41, 1),
+                                                                              (189, 'Cachalote', 42, 1),
+                                                                              (190, 'Neptuno', 43, 1),
+                                                                              (191, 'Luis Federico Leloir', 44, 1),
+                                                                              (192, 'Bolivia', 45, 1),
+                                                                              (193, 'Jujuy', 46, 1),
+                                                                              (194, 'Factory Method', 47, 1),
+                                                                              (195, 'Principio de Responsabilidad Única', 48, 1),
+                                                                              (196, 'docker build', 49, 1),
+                                                                              (197, 'HTTPS', 50, 1);
 
 -- --------------------------------------------------------
 
@@ -637,7 +656,7 @@ ALTER TABLE `pregunta`
 --
 ALTER TABLE `respuesta`
     ADD CONSTRAINT `respuesta_ibfk_1` FOREIGN KEY (`id_pregunta`) REFERENCES `pregunta` (`id`)
-    ON DELETE CASCADE;
+        ON DELETE CASCADE;
 
 --
 -- Filtros para la tabla `usuario`
@@ -653,7 +672,7 @@ ALTER TABLE `usuario`
 ALTER TABLE `usuario_pregunta`
     ADD CONSTRAINT `usuario_pregunta_ibfk_1` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`),
     ADD CONSTRAINT `usuario_pregunta_ibfk_2` FOREIGN KEY (`id_pregunta`) REFERENCES `pregunta` (`id`)
-    ON DELETE CASCADE;
+        ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
