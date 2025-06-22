@@ -1,52 +1,58 @@
-<section class="container my-5">
-    <h1 class="text-center text-violet mb-4">Ranking de Jugadores</h1>
-
-    <div class="table-responsive mb-5">
-        <table class="table table-striped table-hover shadow-sm">
-            <thead class="bg-color-violet text-white">
-                <tr>
-                    <th scope="col">Posición</th>
-                    <th scope="col">Jugador</th>
-                    <th scope="col">Puntaje Total</th>
-                    <th scope="col">Partidas Jugadas</th>
-                </tr>
-            </thead>
-            <tbody>
-                {{#jugadores}}
-                    <tr>
-                        <td>{{posicion}}</td>
-                        <td><a href="/usuario/showProfileById?id={{id_usuario}}" class="text-pink text-decoration-none">{{nombre}}</a></td>
-                        <td>{{puntaje_total}}</td>
-                        <td>{{partidas_jugadas}}</td>
-                    </tr>
-                {{/jugadores}}
-            </tbody>
-        </table>
-    </div>
-
-    <h2 class="text-center text-violet mb-4">Mi Historial de Partidas</h2>
-
-    {{^partidas}}
-        <p class="text-center">Aún no has jugado ninguna partida. ¡Anímate a jugar!</p>
-    {{/partidas}}
-    {{#partidas}}
-    <div class="table-responsive">
-        <table class="table table-striped table-hover shadow-sm">
-            <thead class="bg-color-pink text-white">
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Puntaje</th>
-                </tr>
-            </thead>
-            <tbody>
-                {{#.}}
-                    <tr>
-                        <td>{{numero}}</td>
-                        <td>{{puntaje}}</td>
-                    </tr>
-                {{/.}}
-            </tbody>
-        </table>
-    </div>
-    {{/partidas}}
+<section class="container-ranking">
+    <h2 class="text-center text-violet">{{titulo_ranking}}</h2>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Posición</th>
+                <th>Foto</th>
+                <th>Jugador</th>
+                <th>Mejor Puntaje</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#jugadores}}
+            <tr>
+                <td>{{posicion}}</td>
+                <td><img src="/{{url_foto_perfil}}" alt="Foto de {{nombre_usuario}}" class="img-ranking"></td>
+                <td>
+                    <a href="/usuario/showProfileById?id={{id_usuario}}">{{nombre_usuario}}</a>
+                </td>
+                <td>{{puntaje_maximo}}</td>
+            </tr>
+            {{/jugadores}}
+            {{^jugadores}}
+            <tr>
+                <td colspan="4" class="text-center">El ranking está vacío. ¡Juega para aparecer aquí!</td>
+            </tr>
+            {{/jugadores}}
+        </tbody>
+    </table>
 </section>
+
+<section class="container-historial mt-5">
+    <h3 class="text-center text-pink">Mi Historial de Partidas</h3>
+    <ul class="list-group">
+        {{#partidas}}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            Partida {{numero}}
+            <span class="badge bg-primary rounded-pill">{{puntaje}} puntos</span>
+        </li>
+        {{/partidas}}
+        {{^partidas}}
+        <li class="list-group-item">Aún no has jugado ninguna partida.</li>
+        {{/partidas}}
+    </ul>
+</section>
+
+<style>
+    .img-ranking {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+    .container-ranking, .container-historial {
+        max-width: 800px;
+        margin: auto;
+    }
+</style>
