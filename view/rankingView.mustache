@@ -4,7 +4,7 @@
         <thead>
             <tr>
                 <th>Posición</th>
-                <th>Foto</th>
+
                 <th>Jugador</th>
                 <th>Mejor Puntaje</th>
             </tr>
@@ -13,7 +13,7 @@
             {{#jugadores}}
             <tr>
                 <td>{{posicion}}</td>
-                <td><img src="/{{url_foto_perfil}}" alt="Foto de {{nombre_usuario}}" class="img-ranking"></td>
+          
                 <td>
                     <a href="/usuario/showProfileById?id={{id_usuario}}">{{nombre_usuario}}</a>
                 </td>
@@ -35,7 +35,7 @@
         {{#partidas}}
         <li class="list-group-item d-flex justify-content-between align-items-center">
             Partida {{numero}}
-            <span class="badge bg-primary rounded-pill">{{puntaje}} puntos</span>
+            <strong>{{puntaje}} puntos</strong>
         </li>
         {{/partidas}}
         {{^partidas}}
@@ -45,12 +45,6 @@
 </section>
 
 <style>
-    .img-ranking {
-        width: 50px;
-        height: 50px;
-        border-radius: 50%;
-        object-fit: cover;
-    }
     .container-ranking, .container-historial {
         max-width: 800px;
         margin: auto;
