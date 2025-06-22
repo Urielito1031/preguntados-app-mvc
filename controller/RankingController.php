@@ -25,7 +25,7 @@ class RankingController
         foreach ($ranking as $posicion => &$jugador) {
             $jugador['posicion'] = $posicion + 1;
         }
-        
+
         $viewData = array_merge($this->getUserSessionData(), [
             'jugadores' => $ranking,
         ]);
