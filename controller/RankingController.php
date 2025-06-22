@@ -26,8 +26,15 @@ class RankingController
             $jugador['posicion'] = $posicion + 1;
         }
 
+        $historialDePartidas = $this->usuarioService->getHistorialDePartidas($_SESSION['user_id']);
+
+        foreach ($historialDePartidas as $posicionPartidas=> &$orden) {
+            $orden['numero'] = $posicionPartidas + 1;
+        }
+
         $viewData = array_merge($this->getUserSessionData(), [
             'jugadores' => $ranking,
+            'partidas' => $historialDePartidas
         ]);
 
         $this->view->render("ranking", $viewData);

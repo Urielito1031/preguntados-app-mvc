@@ -2,12 +2,18 @@
 
 use Repository\PartidaRepository;
 use Repository\PreguntaRepository;
+use Repository\SugerenciaPreguntaRepository;
+use Repository\UsuarioPreguntaRepository;
 use Repository\UsuarioRepository;
+use Repository\CategoriaRepository;
+
 use Service\PartidaService;
 use Service\PreguntaService;
+use Service\SugerenciaPreguntaService;
+use Service\UsuarioPreguntaService;
 use Service\UsuarioService;
+use Service\CategoriaService;
 
-require_once("Model/Service/UsuarioService.php");
 require_once("model/service/preguntaService.php");
 require_once("model/Service/ImageService.php");
 require_once("model/Service/UbicacionService.php");
@@ -17,23 +23,30 @@ require_once("controller/UsuarioController.php");
 require_once("controller/HomeController.php");
 require_once("controller/PartidaController.php");
 require_once("controller/RankingController.php");
+require_once("controller/EditorController.php");
 
 require_once("model/Entity/Usuario.php");
+
 
 require_once("Model/Service/UsuarioService.php");
 require_once("Model/Service/PartidaService.php");
 require_once("Model/Repository/UsuarioRepository.php");
+require_once("model/Repository/UsuarioPreguntaRepository.php");
+require_once("model/Service/UsuarioPreguntaService.php");
 require_once("model/Repository/PaisRepository.php");
 require_once("model/Repository/CiudadRepository.php");
-
+require_once("model/Repository/CategoriaRepository.php");
+require_once("Model/Service/CategoriaService.php");
 
 require_once("model/repository/PreguntaRepository.php");
 require_once("core/Router.php");
 require_once("core/MustachePresenter.php");
 require_once("model/repository/PartidaRepository.php");
-require_once("model/service/preguntaService.php");
 
 
+require_once("model/repository/SugerenciaPreguntaRepository.php");
+require_once("model/Service/SugerenciaPreguntaService.php");
+require_once("model/Entity/PreguntaSugerida.php");
 
 include_once('vendor/mustache/src/Mustache/Autoloader.php');
 
@@ -62,22 +75,52 @@ class Configuration
 
     public function getHomeController()
     {
-        return new HomeController($this->getViewer());
+        $sugerenciaPreguntaRepository = new SugerenciaPreguntaRepository();
+        $sugerenciaPreguntaService = new SugerenciaPreguntaService($sugerenciaPreguntaRepository);
+        return new HomeController($sugerenciaPreguntaService, $this->getViewer());
+
     }
 
-    public function getPartidaController(){
-       $preguntaRepository = new PreguntaRepository();
-       $partidaRepository = new PartidaRepository();
+   public function getPartidaController() {
+      // Repositorios
+      $preguntaRepository = new PreguntaRepository();
+      $partidaRepository = new PartidaRepository();
+      $usuarioPreguntaRepository = new UsuarioPreguntaRepository();
+      $usuarioRepository = new UsuarioRepository();
 
-       $preguntaService = new PreguntaService($preguntaRepository);
-       $partidaService = new PartidaService($partidaRepository);
-       return new PartidaController($partidaService,$preguntaService, $this->getViewer());
-    }
+      // Servicios
+      $usuarioService = new UsuarioService($usuarioRepository);
+      $preguntaService = new PreguntaService($preguntaRepository,$usuarioRepository);
+      $partidaService = new PartidaService($partidaRepository);
+      $usuarioPreguntaService = new UsuarioPreguntaService(
+         $usuarioPreguntaRepository,
+         $usuarioService,
+         $preguntaService
+      );
 
-    public function getRankingController(){
+      return new PartidaController(
+         $partidaService,
+         $usuarioService,
+         $preguntaService,
+         $usuarioPreguntaService,
+         $this->getViewer()
+      );
+   }
+
+
+   public function getRankingController(){
        $repository = new UsuarioRepository();
        $service = new UsuarioService($repository);
        return new RankingController($service, $this->getViewer());
+    }
+
+    public function getEditorController(){
+        $preguntaRepository = new PreguntaRepository();
+        $usuarioRepository = new UsuarioRepository();
+        $preguntaService = new PreguntaService($preguntaRepository,$usuarioRepository);
+        $categoriaRepository = new CategoriaRepository();
+        $categoriaService = new CategoriaService($categoriaRepository);
+        return new EditorController($this->getViewer(),$preguntaService,$categoriaService);
     }
 
     public function getRouter()

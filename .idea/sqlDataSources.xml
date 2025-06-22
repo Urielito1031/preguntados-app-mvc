@@ -8,21 +8,4 @@
       </scope>
     </mapping>
   </component>
-  <component name="SqlDataSourceStorage">
-    <option name="dataSources">
-      <list>
-        <State>
-          <option name="id" value="8f8e193e-8cbf-4704-a724-7172e926eceb" />
-          <option name="name" value="DDL data source" />
-          <option name="dbmsName" value="MYSQL" />
-          <option name="urls">
-            <array>
-              <option value="file://$PROJECT_DIR$/sqlscript/db_preguntados.sql" />
-            </array>
-          </option>
-          <option name="outLayout" value="File per object by schema.groovy" />
-        </State>
-      </list>
-    </option>
-  </component>
 </project>

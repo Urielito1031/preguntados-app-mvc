@@ -1,38 +1,61 @@
 <link href="/public/css/game.css" rel="stylesheet">
 <div class="ruleta-container">
-    <img class="w3-margin-bottom" src="{{logo_url}}" alt="Logo QuizCode"  height="150px" width="50%" style="object-fit: contain">
-
+  <img class="w3-margin-bottom" src="{{logo_url}}" alt="Logo QuizCode" height="150px" width="50%" style="object-fit: contain">
+  <div class="ruleta-wrapper">
+    <div class="pointer"></div>
     <div class="ruleta" id="ruleta">
-        <div class="categoria historia">Historia</div>
-        <div class="categoria arte">Arte</div>
-        <div class="categoria ciencia">Ciencia</div>
-        <div class="categoria deporte">Deporte</div>
-        <div class="categoria geografia"><p>Geografia</p></div>
-        <button class="btn-girar" onclick="girarRuleta()">¡Girar!</button>
-    </div>
+      <div class="categoria historia"></div>
+      <div class="categoria arte"></div>
+      <div class="categoria ciencia"></div>
+      <div class="categoria deporte"></div>
+      <div class="categoria geografia"></div>
+      <div class="categoria entretenimiento"></div>
 
-    <button id="btn-jugar" disabled onclick="window.location.href='/partida/pregunta/'">
-        ¡JUGAR!
-    </button>
+      <button class="btn-girar" onclick="girarRuleta()">¡Girar!</button>
+    </div>
+  </div>
+
+  <button id="btn-jugar" disabled>¡JUGAR!</button>
 </div>
 
 <script>
-    const botonJugar = document.getElementById("btn-jugar");
-    botonJugar.disabled = false
+  const botonJugar = document.getElementById("btn-jugar");
+  let isSpinning = false;
 
-    function girarRuleta() {
-        const ruleta = document.getElementById("ruleta");
-        const grados = Math.floor(Math.random() * 360) + 1440;
+  function girarRuleta() {
+    if (isSpinning) return;
 
-        ruleta.style.transition = `transform ${3000/1000}s ease-out`;
-        ruleta.style.transform = `rotate(${grados}deg)`;
+    isSpinning = true;
+    const ruleta = document.getElementById("ruleta");
+    const grados = Math.floor(Math.random() * 360) + 1440;
 
-        setTimeout(() => {
-            botonJugar.disabled = false
-            botonJugar.onclick = () => {
-                window.location.href = '/partida/pregunta';
-            };
-        }, 3000);
-    }
+    ruleta.style.transition = "transform 3s cubic-bezier(0.23, 1, 0.32, 1)";
+    ruleta.style.transform = `rotate(${grados}deg)`;
+
+    botonJugar.disabled = true;
+    botonJugar.style.opacity = '0.6';
+
+    setTimeout(() => {
+      isSpinning = false;
+      botonJugar.disabled = false;
+      botonJugar.style.opacity = '1';
+
+      const categoria = determinarCategoria(grados % 360);
+
+      botonJugar.onclick = () => {
+        window.location.href = '/partida/pregunta';
+      };
+    }, 3000);
+  }
+
+  function determinarCategoria(grados) {
+    const angulo = (360 - grados + 30) % 360;
+    const sectores = ['Historia', 'Arte', 'Ciencia', 'Deporte', 'Geografía', 'Entretenimiento'];
+    const index = Math.floor(angulo / 60);
+    return sectores[index];
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    botonJugar.disabled = true;
+  });
 </script>
-

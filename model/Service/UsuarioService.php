@@ -18,6 +18,8 @@ class UsuarioService
       $this->repository = $usuarioRepository;
 
    }
+
+
    public function save(Usuario $usuario): DataResponse
    {
       try {
@@ -146,5 +148,55 @@ class UsuarioService
 
    public function getRanking(){
        return $this->repository->getRanking();
+   }
+
+   public function getHistorialDePartidas($userId) {
+       return $this->repository->getHistorialDePartidas($userId);
+   }
+
+   public function findById(int $idUsuario):DataResponse{
+      try {
+         $usuario = $this->repository->findById($idUsuario);
+         if ($usuario === null) {
+            return new DataResponse(false, "Usuario no encontrado.");
+         }
+         return new DataResponse(true, "Usuario encontrado.", $usuario);
+      } catch (\Exception $e) {
+         return new DataResponse(false, "Error al buscar el usuario: " . $e->getMessage());
+      }
+   }
+
+   //duda si dejarlo o no, porque podria usarse cuando
+   // solo tenemos el id y no queremos el usuario directamente;
+   public function obtenerNivelUsuario(int $idUsuario): float
+   {
+      $response = $this->findById($idUsuario);
+      if (!$response->success) {
+         return 0.0;
+      }
+      $usuario = $response->data;
+      return $usuario->getNivel();
+   }
+   public function sumarPreguntaEntregada(Usuario $usuario): DataResponse
+   {
+      try {
+         $usuario->setPreguntasEntregadas($usuario->getPreguntasEntregadas() + 1);
+         $this->repository->incrementarPreguntaEntregada($usuario);
+         return new DataResponse(true, "Pregunta entregada correctamente.", $usuario);
+      } catch (\Exception $e) {
+         return new DataResponse(false, "Error al incrementar la pregunta del usuario: " . $e->getMessage());
+      }
+   }
+
+   public function sumarRespuestaCorrecta(Usuario $usuario):DataResponse
+   {
+      try {
+
+      $this->repository->sumarRespuestaCorrecta($usuario);
+      return new DataResponse(true, "Respuesta enviada correctamente.", $usuario);
+
+      }catch( \Exception $e) {
+         return new DataResponse(false, "Error al sumar respuesta correcta: " . $e->getMessage());
+      }
    }
 }

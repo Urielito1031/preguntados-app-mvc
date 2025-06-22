@@ -93,6 +93,37 @@ class UsuarioRepository
 
    }
 
+  public function incrementarPreguntaEntregada(Usuario $usuario): void
+   {
+      $sql = "UPDATE usuario
+                SET preguntas_entregadas = preguntas_entregadas + 1 
+                WHERE id_usuario = :id";
+      try{
+         $stmt = $this->conn->prepare($sql);
+         $stmt->bindValue(':id', $usuario->getId(), PDO::PARAM_INT);
+         $stmt->execute();
+         $usuario->setPreguntasEntregadas($usuario->getPreguntasEntregadas() + 1);
+
+      }catch(PDOException $e){
+         throw new PDOException("Error al incrementar preguntas entregadas: ".$e->getMessage());
+      }
+   }
+   public function sumarRespuestaCorrecta(Usuario $usuario): void
+   {
+      $sql = "UPDATE usuario
+                SET respondidas_correctamente = respondidas_correctamente + 1 
+                WHERE id_usuario = :id";
+      try{
+         $stmt = $this->conn->prepare($sql);
+         $stmt->bindValue(':id', $usuario->getId(), PDO::PARAM_INT);
+         $stmt->execute();
+         $usuario->setRespondidasCorrectamente($usuario->getRespondidasCorrectamente() + 1);
+
+      }catch(PDOException $e){
+         throw new PDOException("Error al sumar respuesta correcta: ".$e->getMessage());
+      }
+   }
+
    public function findById(int $id_usuario): ?Usuario
    {
       $query = "SELECT * FROM usuario WHERE id_usuario = :id";
@@ -104,7 +135,7 @@ class UsuarioRepository
          $data = $stmt->fetch(PDO::FETCH_ASSOC);
 
          if (!$data) {
-            return null;
+             return null;
          }
 
          return new Usuario($data);
@@ -131,6 +162,48 @@ class UsuarioRepository
         }
 
     }
+
+    public function getHistorialDePartidas($userId) {
+        $sql = "SELECT puntaje AS puntaje
+                    FROM partida p
+                    WHERE id_usuario = :id_usuario
+                    ORDER BY creado_en DESC";
+        try{
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bindValue(':id_usuario', $userId, PDO::PARAM_INT);
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        }catch(PDOException $e){
+            throw new PDOException("Error al cargar historial: ".$e->getMessage());
+        }
+
+    }
+
+    public function calcularNivel($userId)
+    {
+        $query = "SELECT respondidas_correctamente / preguntas_entregadas  AS ratio, preguntas_entregadas
+                    FROM usuario
+                    WHERE id_usuario = :id";
+
+        try {
+            $stmt = $this->conn->prepare($query);
+            $stmt->bindValue(':id', $userId, PDO::PARAM_INT);
+            $stmt->execute();
+            $data = $stmt->fetch(PDO::FETCH_ASSOC);
+            if (!$data) {
+                return null;
+            }
+
+            if ($data['preguntas_entregadas'] == 0) {
+                return 1; // RETORNA NIVEL FACIL
+            }
+
+            return $data['ratio'];
+        } catch (PDOException $e) {
+            throw new PDOException("Error al buscar nivel de usuario por ID: " . $e->getMessage());
+        }
+    }
+
 
 
 }

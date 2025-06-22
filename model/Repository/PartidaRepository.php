@@ -8,6 +8,7 @@ use Entity\Partida;
 use Entity\Usuario;
 use PDO;
 use PDOException;
+use Response\DataResponse;
 
 
 class PartidaRepository
@@ -26,15 +27,11 @@ class PartidaRepository
     public function saveGame(Partida $partida): void
     {
 
-        $sql = "INSERT INTO partida (id_usuario, puntaje,estado, preguntas_correctas ) 
-                VALUES (:id_usuario,:puntaje,:estado,:cantidad_de_preguntas_correctas)";
+        $sql = "INSERT INTO partida (id_usuario) 
+                VALUES (:id_usuario)";
         try{
            $stmt = $this->conn->prepare($sql);
            $stmt->bindValue(':id_usuario', $partida->getUsuario()->getId(), PDO::PARAM_INT);
-           $stmt->bindValue(':puntaje', $partida->getPuntaje());
-           $stmt->bindValue(':estado', $partida->getEstado());
-           $stmt->bindValue(':cantidad_de_preguntas_correctas',$partida->getCantidadPreguntasCorrectas());
-
            $stmt->execute();
            $partida->setId($this->conn->lastInsertId());
 
@@ -44,6 +41,7 @@ class PartidaRepository
         }
 
     }
+
 
     public function arrayGamesByIdUser(int $id_usuario): array
     {
@@ -80,6 +78,34 @@ class PartidaRepository
          throw new \Exception("Usuario no encontrado para la partida ID: $getId");
       }
       return new Partida($data,$usuario);
+   }
+
+   public function sumarPuntaje(int $getPuntaje,Partida $partida)
+   {
+      $sql = "UPDATE partida SET puntaje = puntaje + :puntaje WHERE id = :id";
+      try{
+
+      $stmt = $this->conn->prepare($sql);
+      $stmt->bindParam(':puntaje', $getPuntaje, PDO::PARAM_INT);
+      $stmt->bindValue(':id', $partida->getId(), PDO::PARAM_INT);
+      $stmt->execute();
+      }catch (PDOException $e){
+         throw new PDOException("No se pudo sumar el puntaje: " . $e->getMessage());
+      }
+   }
+
+   public function updatePartida(Partida $partida)
+   {
+      $sql = "UPDATE partida SET estado = :estado, puntaje = :puntaje WHERE id = :id";
+      try{
+         $stmt = $this->conn->prepare($sql);
+         $stmt->bindValue(':estado', $partida->getEstado(), PDO::PARAM_STR);
+         $stmt->bindValue(':puntaje', $partida->getPuntaje(), PDO::PARAM_INT);
+         $stmt->bindValue(':id', $partida->getId(), PDO::PARAM_INT);
+         $stmt->execute();
+      }catch (PDOException $e){
+         throw new PDOException("No se pudo actualizar la partida: " . $e->getMessage());
+      }
    }
 }
 

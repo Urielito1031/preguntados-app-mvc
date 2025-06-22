@@ -12,6 +12,8 @@ class Pregunta
    private int $cantidadAciertos;
    private int $cantidadReportes;
    private array $respuestasIncorrectas;
+   public const SUMAR_PUNTAJE = 1;
+   public const SUMAR_ACIERTOS = 1;
 
 
 
@@ -39,6 +41,15 @@ class Pregunta
    public function getCantidadReportes(): int
    {
       return $this->cantidadReportes;
+   }
+
+
+   //atributo calculado///
+   public function getRatioPregunta(): float{
+      if ($this->cantidadJugada === 0) {
+         return 0.0; // Evitar división por cero
+      }
+      return round($this->cantidadAciertos / $this->cantidadJugada,2);
    }
 
    public function setCantidadJugada(int $cantidadJugada): void
