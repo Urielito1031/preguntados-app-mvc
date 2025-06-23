@@ -19,8 +19,7 @@ class HomeController
             'logo_url' => '/public/img/LogoQuizCode.png',
             'foto_perfil' => $_SESSION['foto_perfil']
         ];
-        $this->view->render("home", $viewData); //
-        var_dump($_SESSION["id_rol"]);
+        $this->view->render("home", $viewData);
     }
 
     public function showAdmin()
@@ -30,8 +29,7 @@ class HomeController
             'logo_url' => '/public/img/LogoQuizCode.png',
             'foto_perfil' => $_SESSION['foto_perfil']
         ];
-        $this->view->render("admin", $viewData); //
-        var_dump($_SESSION["id_rol"]);
+        $this->view->render("admin", $viewData);
     }
 
     public function showEditor()
@@ -41,8 +39,7 @@ class HomeController
             'logo_url' => '/public/img/LogoQuizCode.png',
             'foto_perfil' => $_SESSION['foto_perfil']
         ];
-        $this->view->render("editor", $viewData); //
-        var_dump($_SESSION["id_rol"]);
+        $this->view->render("editor", $viewData);
     }
 
     public function playGame(){

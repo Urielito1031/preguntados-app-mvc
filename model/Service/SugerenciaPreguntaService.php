@@ -26,6 +26,7 @@ class SugerenciaPreguntaService
 
     private function guardarPregunta (PreguntaSugerida $pregunta) {
         $this->sugerenciaPreguntaRepository->save($pregunta);
+        $this->view->render("home");
     }
 
 }

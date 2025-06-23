@@ -1,5 +1,11 @@
 <link href="/public/css/pregunta.css" rel="stylesheet">
-
+<div id="modal-confirmacion" class="modal-container " style="display:none;">
+    <div class="modal-content w3-card-4 w3-display-middle" id="modal-contenido">
+        <h2 class="w3-container w3-purple w3-center w3-padding-large">¡Pregunta enviada con éxito!</h2>
+        <p>Serás redirigido en unos segundos...</p>
+        <button onclick="cerrarModal()" class="cerrar-modal w-10 m-1 bg-color-violet text-white" style="align-self: flex-end;">Cerrar</button>
+    </div>
+</div>
 <form method="POST" action="/home/requestSubmit" class="m-auto d-flex flex-column align-items-center"
       style="width: 90%; max-width: 550px">
     <div class="w-100">
@@ -43,3 +49,40 @@
         </button>
     </div>
 </form>
+
+<script>
+    function mostrarModalDePreguntaSugeridaSatisfactoriamente() {
+        document.getElementById("modal-confirmacion").style.display = "flex";
+        document.getElementById("modal-contenido").style.display ="flex";
+
+        // Espera 10 segundos y luego redirecciona
+        setTimeout(() => {
+            window.location.href = "/home"; // Cambiá la ruta según adónde quieras ir
+        }, 8000);
+    }
+
+    function cerrarModal() {
+        document.getElementById("modal-confirmacion").style.display = "none";
+        document.getElementById("modal-contenido").style.display ="none";
+    }
+
+    document.querySelector("form").addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        const form = this;
+        fetch(form.action, {
+            method: "POST",
+            body: new FormData(form)
+        }).then(response => {
+            if (response.ok) {
+                mostrarModalDePreguntaSugeridaSatisfactoriamente();
+                form.reset();
+            } else {
+                alert("Hubo un problema al enviar la pregunta.");
+            }
+        }).catch(() => {
+            alert("Error de red al enviar la pregunta.");
+        });
+    });
+</script>
+

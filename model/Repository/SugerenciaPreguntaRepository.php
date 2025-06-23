@@ -25,6 +25,8 @@ class SugerenciaPreguntaRepository
 
         $queryTwo = "INSERT INTO respuesta_sugerida (respuesta, id_pregunta, es_correcta) 
                 VALUES (:respuesta, :id_pregunta, :es_correcta)";
+
+
         try {
 
             $stmt = $this->conn->prepare($query);
@@ -50,7 +52,8 @@ class SugerenciaPreguntaRepository
     private function getIdPreguntaByStatement (String $enunciado) {
         $query = "SELECT id FROM pregunta_sugerida WHERE enunciado = :enunciado";
         $stmt = $this->conn->prepare($query);
-        $idObtenido = $stmt->execute(['enunciado' => $enunciado]);
+        $stmt->execute(['enunciado' => $enunciado]);
+        $idObtenido = $stmt->fetchColumn();
 
         return $idObtenido;
     }
