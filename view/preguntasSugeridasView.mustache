@@ -1,0 +1,13 @@
+<section class="m-auto container my-5 p-4 w-75">
+    <h2 class="text-center mb-4">Preguntas Sugeridas</h2>
+    {{#preguntas}}
+        <h3>{{enunciado}}</h3>
+        <ul>
+            {{#respuestas}}
+                <li>{{.}}</li>
+            {{/respuestas}}
+        </ul>
+    {{/preguntas}}
+</section>
+
+

@@ -4,6 +4,7 @@ use Controller\AdminDashboardController;
 use Graph\JPGraphGenerador;
 use Repository\PartidaRepository;
 use Repository\PreguntaRepository;
+use Repository\SugerenciaPreguntaRepository;
 use Repository\UsuarioPreguntaRepository;
 use Repository\UsuarioRepository;
 use Repository\CategoriaRepository;
@@ -11,6 +12,7 @@ use Repository\CategoriaRepository;
 use Service\DashboardService;
 use Service\PartidaService;
 use Service\PreguntaService;
+use Service\SugerenciaPreguntaService;
 use Service\UsuarioPreguntaService;
 use Service\UsuarioService;
 use Service\CategoriaService;
@@ -28,6 +30,7 @@ require_once("controller/EditorController.php");
 require_once("controller/AdminDashboardController.php");
 
 require_once("model/Entity/Usuario.php");
+
 
 require_once("Model/Service/UsuarioService.php");
 require_once("Model/Service/PartidaService.php");
@@ -47,6 +50,9 @@ require_once("model/Service/DashboardService.php");
 require_once("model/Graph/JPGraphGenerador.php");
 
 
+require_once("model/repository/SugerenciaPreguntaRepository.php");
+require_once("model/Service/SugerenciaPreguntaService.php");
+require_once("model/Entity/PreguntaSugerida.php");
 
 include_once('vendor/mustache/src/Mustache/Autoloader.php');
 
@@ -75,7 +81,10 @@ class Configuration
 
     public function getHomeController()
     {
-        return new HomeController($this->getViewer());
+        $sugerenciaPreguntaRepository = new SugerenciaPreguntaRepository();
+        $sugerenciaPreguntaService = new SugerenciaPreguntaService($sugerenciaPreguntaRepository);
+        return new HomeController($sugerenciaPreguntaService, $this->getViewer());
+
     }
 
    public function getPartidaController() {

@@ -134,7 +134,31 @@ class EditorController{
     }
     public function verReportes(){}
 
-    public function verSugeridas(){}
+    public function verSugeridas(){
+
+        $preguntas = $this->preguntaService->getPreguntasSugeridas();
+
+        foreach ($preguntas as &$pregunta) {
+            $pregunta['respuestas'] = [];
+
+            // Traemos las respuestas de la pregunta actual
+            $respuestas = $this->preguntaService->getRespuestasSugeridas($pregunta['id']);
+
+            // Recorremos las respuestas y las agregamos al array de la pregunta
+            foreach ($respuestas as $respuesta) {
+                if($pregunta['id'] == $respuesta['id_pregunta'])
+                    $pregunta['respuestas'][] = $respuesta['respuesta'];
+
+            }
+        }
+        unset($pregunta);
+
+        $viewData = [
+            'preguntas' => $preguntas
+        ];
+
+        $this->view->render("preguntasSugeridas", $viewData);
+    }
 
     public function haySessionDeEdicionActiva(): bool{
         return isset($_SESSION['mensajedeEdicion']);

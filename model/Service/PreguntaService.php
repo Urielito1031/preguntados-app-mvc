@@ -182,6 +182,10 @@ class PreguntaService
         return $resultado;
     }
 
-
-
+    public function getPreguntasSugeridas(): array{
+        return $this->repository->getPreguntasSugeridas();
+    }
+    public function getRespuestasSugeridas($idPregunta): array{
+        return $this->repository->getRespuestasSugeridas($idPregunta);
+    }
 }
