@@ -1,21 +1,13 @@
 <section class="m-auto container my-5 p-4 w-75">
     <h2 class="text-center mb-4">Preguntas Sugeridas</h2>
-
     {{#preguntas}}
-        <article class="card mb-4 shadow-sm">
-            <div class="card-body">
-                <h3 class="card-title text-primary">{{enunciado}}</h3>
-                <ul class="list-group list-group-flush mt-3">
-                    {{#respuestas}}
-                        <li class="list-group-item">{{.}}</li>
-                    {{/respuestas}}
-                </ul>
-            </div>
-        </article>
+        <h3>{{enunciado}}</h3>
+        <ul>
+            {{#respuestas}}
+                <li>{{.}}</li>
+            {{/respuestas}}
+        </ul>
     {{/preguntas}}
-
 </section>
 
-<script>
-    const =
-</script>
+

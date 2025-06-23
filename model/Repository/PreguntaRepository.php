@@ -427,32 +427,21 @@ class PreguntaRepository
     }
 
     public function getPreguntasSugeridas(){
-        $query = "
-        SELECT r.id AS respuesta_id, r.id_pregunta, r.respuesta, p.enunciado 
-        FROM pregunta_sugerida p
-        JOIN respuesta_sugerida r on p.id = r.id_pregunta
-        ";
-
-        $stmt = $this->conn->prepare($query);
+        $stmt = $this->conn->prepare("SELECT * FROM pregunta_sugerida");
         $stmt->execute();
-        $datos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 
-        $resultado = [];
-        foreach ($datos as $dato) {
-            $preguntaId = $dato['id_pregunta'];
-            if (!isset($resultado[$preguntaId])) {
-                $resultado[$preguntaId] = [
-                    'enunciado' => $dato['enunciado'],
-                    'respuestas' => []
-                ];
-            }
-            if ($dato['respuesta_id']) {
-                $resultado[$preguntaId]['respuestas'][] = $dato['respuesta'];
-            }
+    public function getRespuestasSugeridas(int $idPregunta){
+        $stmt = $this->conn->prepare("
+        SELECT respuesta, id_pregunta
+        FROM respuesta_sugerida
+        WHERE id_pregunta = :idPregunta
+         ");
+        $stmt->bindParam(':idPregunta', $idPregunta);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+
         }
-
-        return  $resultado;
-   }
-
 
 }

@@ -10,7 +10,7 @@ use Repository\UsuarioRepository;
 class PreguntaService
 {
     private  PreguntaRepository $repository;
-    private  const  CANTIDAD_MINIMA_PARA_CALCULAR = 10;
+    private const CANTIDAD_MINIMA_PARA_CALCULAR = 10;
 
 
     public function __construct(PreguntaRepository $preguntaRepository, UsuarioRepository $usuarioRepository){
@@ -181,8 +181,10 @@ class PreguntaService
         return $resultado;
     }
 
-    public function getPreguntasSugeridas(): array
-    {
+    public function getPreguntasSugeridas(): array{
         return $this->repository->getPreguntasSugeridas();
+    }
+    public function getRespuestasSugeridas($idPregunta): array{
+        return $this->repository->getRespuestasSugeridas($idPregunta);
     }
 }
