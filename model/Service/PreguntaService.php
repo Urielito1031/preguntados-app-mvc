@@ -180,4 +180,9 @@ class PreguntaService
         $resultado = $this->repository->guardarNuevaPregunta($pregunta);
         return $resultado;
     }
+
+    public function getPreguntasSugeridas(): array
+    {
+        return $this->repository->getPreguntasSugeridas();
+    }
 }

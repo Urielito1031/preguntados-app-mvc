@@ -179,7 +179,6 @@ class UsuarioController
             'display' => isset($_SESSION['user_name']) ? "display: block" : "display: none"
         ];
 
-
         $response = $this->usuarioService->save($user);
 
         if ($response->success) {

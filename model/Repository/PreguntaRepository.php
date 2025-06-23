@@ -426,5 +426,33 @@ class PreguntaRepository
         }
     }
 
+    public function getPreguntasSugeridas(){
+        $query = "
+        SELECT r.id AS respuesta_id, r.id_pregunta, r.respuesta, p.enunciado 
+        FROM pregunta_sugerida p
+        JOIN respuesta_sugerida r on p.id = r.id_pregunta
+        ";
+
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute();
+        $datos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $resultado = [];
+        foreach ($datos as $dato) {
+            $preguntaId = $dato['id_pregunta'];
+            if (!isset($resultado[$preguntaId])) {
+                $resultado[$preguntaId] = [
+                    'enunciado' => $dato['enunciado'],
+                    'respuestas' => []
+                ];
+            }
+            if ($dato['respuesta_id']) {
+                $resultado[$preguntaId]['respuestas'][] = $dato['respuesta'];
+            }
+        }
+
+        return  $resultado;
+   }
+
 
 }

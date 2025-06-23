@@ -134,7 +134,15 @@ class EditorController{
     }
     public function verReportes(){}
 
-    public function verSugeridas(){}
+    public function verSugeridas(){
+        $preguntasSugeridas = $this->preguntaService->getPreguntasSugeridas();
+        var_dump($preguntasSugeridas);
+        $viewData = [
+            "preguntas" => array_values($preguntasSugeridas)
+        ];
+
+        $this->view->render("preguntasSugeridas", $viewData);
+    }
 
     public function haySessionDeEdicionActiva(): bool{
         return isset($_SESSION['mensajedeEdicion']);
