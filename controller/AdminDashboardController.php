@@ -26,7 +26,7 @@ class AdminDashboardController
          'foto_perfil' => $_SESSION['foto_perfil']
       ];
    }
-   public function showDashboard():void
+   public function show():void
    {
       $results = $this->dashboardService->generateDashboardData();
 

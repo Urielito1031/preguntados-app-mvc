@@ -29,12 +29,13 @@ class HomeController
       var_dump($_SESSION["id_rol"]);
    }
 
-   public function showAdmin(): void
-   {
-      $viewData = $this->getBaseViewData();
-      $this->view->render("admin", $viewData);
-      var_dump($_SESSION["id_rol"]);
-   }
+   //NO SIRVE, YA ESTOY ACCEDIENDO MEDIENTE EL CONTROLLER AdminDashboardController
+//   public function showAdmin(): void
+//   {
+//      $viewData = $this->getBaseViewData();
+//      $this->view->render("admin", $viewData);
+//      var_dump($_SESSION["id_rol"]);
+//   }
 
    public function showEditor(): void
    {

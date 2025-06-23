@@ -12,42 +12,44 @@ try {
    $configuration = new Configuration($pdo, $viewer);
    $router = $configuration->getRouter();
 
-   $controller = (isset($_GET["controller"])) ? $_GET["controller"] : null;
-   $method = (isset($_GET["method"])) ? $_GET["method"] : null;
+   $controller = $_GET["controller"] ?? null;
+   $method = $_GET["method"] ?? null;
+
+   $user = $_SESSION["user_name"] ?? null;
+   $rol = $_SESSION["id_rol"] ?? null;
 
     //Si no esta logueado o no se esta registrando se tiene que loguear
-    if(!isset($_SESSION["user_name"]) && $_GET["controller"] !== 'usuario'){
+    if(!$user && $controller !== 'usuario'){
         $controller = "usuario";
         $method = "showLoginForm";
     }
 
-    /* Control de rol*/
+   // Asignar ruta por defecto según el rol
+   if (!$controller && !$method) {
+      switch ($rol) {
+         case 1:
+            $controller = "adminDashboard";
+            $method     = "show";
+            break;
+         case 2:
+            $controller = "home";
+            $method     = "showEditor";
+            break;
+         case 3:
+            $controller = "home";
+            $method     = "show";
+            break;
+      }
+   }
+   if ($controller === 'home') {
+      if ($method === 'showEditor' && $rol !== 2) {
+         $method = 'show';
+      }
 
-    //Roles: 1 Admin, 2 Editor , 3 Jugador
-    $rol = (isset($_SESSION["id_rol"])) ? $_SESSION["id_rol"] : null;
-
-
-    //a ver si sale
-    if($rol == 1){
-       $controller = 'AdminDashboard';
-         $method = 'showDashboard';
-
-    }
-
-
-    //Admin, editor y jugar tienen sus propias vistas show
-    if($controller == 'home' && $method == 'showAdmin' && $rol != 1){
-        $method = $rol == 2 ? 'showEditor' : 'show';
-    }
-
-    if($controller == 'home' && $method == 'showEditor' && $rol != 2){
-        $method = $rol == 1 ? 'showAdmin' : 'show';
-    }
-
-    if($controller == 'home' && $method == 'show' && $rol != 3){
-        $method = $rol == 1 ? 'showAdmin' : 'showEditor';
-    }
-
+      if ($method === 'show' && $rol !== 3) {
+         $method = 'showEditor';
+      }
+   }
 
     /* Fin de Control de rol */
 
