@@ -13,28 +13,21 @@ use PieGraph;
 use PiePlot;
 
 
-//ni idea chichos pregunten a chatGPT jajaj
 class JPGraphGenerador
 {
 
    //crea el grafico de barras (bar chart) con los datos proporcionados,
    // retorna una imagen como cadena base64
-   //
+
    public function generateBarChart(array $data, string $title): string
    {
-      // Validar datos
-      if (!isset($data['values']) || !is_array($data['values']) || empty($data['values'])) {
-         error_log("Error en generateBarChart: Datos inválidos para '$title': " . print_r($data, true));
-         return ''; // Devolver cadena vacía si los datos son inválidos
-      }
 
-      // Verificar que todos los valores sean numéricos
-      $values = array_values($data['values']);
-      $labels = array_keys($data['values']);
-      if (array_filter($values, fn($v) => !is_numeric($v) || $v < 0)) {
-         error_log("Error en generateBarChart: Valores no numéricos o negativos para '$title': " . print_r($values, true));
+      if (!is_array($data['values']) || empty($data['values'])) {
          return '';
       }
+
+      $values = array_values($data['values']);
+
 
       try {
          $graph = new Graph(400, 300);
