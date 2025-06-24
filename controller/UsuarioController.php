@@ -194,8 +194,15 @@ class UsuarioController
 
     public function showProfile()
     {
+
+        var_dump($_SESSION['user_id']);
         $pais = 'Argentina';
         $ciudad = 'Villa Celina';
+        // REALIZAR ESTOS METODOS
+        $idCiudad = $this->usuarioService->obtenerIdCiudadDeUsuario($_SESSION['user_id']);
+        $this->ubicacionService->obtenerPaisYCiudadDelUsuario($idCiudad);
+        // REALIZAR ESTOS METODOS
+
 
         $ubicacion = urlencode($ciudad . ', ' . $pais);
 
