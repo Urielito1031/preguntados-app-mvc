@@ -111,7 +111,7 @@ CREATE TABLE `pais` (
 
 INSERT INTO `pais` (`id`, `nombre`) VALUES
                                         (1, 'Argentina'),
-                                        (2, 'Peru'),
+                                        (2, 'Ecuador'),
                                         (3, 'Estados Unidos'),
                                         (4, 'Chile'),
                                         (5, 'Inglaterra'),
@@ -135,10 +135,10 @@ CREATE TABLE `partida` (
 -- --------------------------------------------------------
 -- Estructura de tabla para la tabla 'pregunta-sugerida'
 CREATE TABLE `pregunta_sugerida` (
-                            `id` int(11) NOT NULL AUTO_INCREMENT,
-                            `id_categoria` int(11) NOT NULL,
-                            `enunciado` varchar(255) NOT NULL,
-                            PRIMARY KEY (`id`)
+                                     `id` int(11) NOT NULL AUTO_INCREMENT,
+                                     `id_categoria` int(11) NOT NULL,
+                                     `enunciado` varchar(255) NOT NULL,
+                                     PRIMARY KEY (`id`)
 
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 -- --------------------------------------------------------
@@ -482,8 +482,8 @@ CREATE TABLE `usuario` (
 --
 
 INSERT INTO `usuario` (`id_usuario`, `nombre`, `apellido`, `fecha_nacimiento`, `sexo`, `correo`, `contrasenia`, `nombre_usuario`, `url_foto_perfil`, `url_qr`, `id_rol`, `id_ciudad`, `id_nivel`, `puntaje_total`, `cuenta_validada`, `preguntas_entregadas`, `respondidas_correctamente`) VALUES
-                                                                                                                                                                                                                                                                                               (9, NULL, NULL, NULL, NULL, 'admin123@gmail.com', '$2y$10$OCA/OjkHJQa2uOoF/aNMKeyoEgqeNh.a9S08XTE4hZl4j.c3A/GOW', 'usuarioAdmin123', 'public/img/photo-admin.jpg', '/qr/usuarioAdmin123.png', 1, NULL, 1, 0, 1, 0, 0),
-                                                                                                                                                                                                                                                                                               (10, NULL, NULL, NULL, NULL, 'editor123@gmail.com', '$2y$10$oX6fGeN2dnaI0En7EWuhAubVO6gFgSJuC0uG9qZY3uJEAM9pQDJsy', 'usuarioEditor123', 'public/img/photo-editor.jpg', '/qr/usuarioEditor123.png', 2, NULL, 1, 0, 1, 0, 0);
+                                                                                                                                                                                                                                                                                               (9, NULL, NULL, NULL, NULL, 'admin123@gmail.com', '$2y$10$OCA/OjkHJQa2uOoF/aNMKeyoEgqeNh.a9S08XTE4hZl4j.c3A/GOW', 'usuarioAdmin123', 'public/img/photo-admin.jpg', '/qr/usuarioAdmin123.png', 1, 1, 1, 0, 1, 0, 0),
+                                                                                                                                                                                                                                                                                               (10, NULL, NULL, NULL, NULL, 'editor123@gmail.com', '$2y$10$oX6fGeN2dnaI0En7EWuhAubVO6gFgSJuC0uG9qZY3uJEAM9pQDJsy', 'usuarioEditor123', 'public/img/photo-editor.jpg', '/qr/usuarioEditor123.png', 2, 2, 1, 0, 1, 0, 0);
 
 -- --------------------------------------------------------
 

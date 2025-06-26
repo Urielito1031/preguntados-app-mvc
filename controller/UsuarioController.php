@@ -1,6 +1,7 @@
 <?php
 
 use Entity\Usuario;
+use Entity\Ubicacion;
 use Service\ImageService;
 use Service\UsuarioService;
 
@@ -195,19 +196,18 @@ class UsuarioController
     public function showProfile()
     {
 
-        var_dump($_SESSION['user_id']);
-        $pais = 'Argentina';
-        $ciudad = 'Villa Celina';
         // REALIZAR ESTOS METODOS
         $idCiudad = $this->usuarioService->obtenerIdCiudadDeUsuario($_SESSION['user_id']);
-        $this->ubicacionService->obtenerPaisYCiudadDelUsuario($idCiudad);
+
+        $ubicacionObtenida = $this->ubicacionService->obtenerPaisYCiudadDelUsuario($idCiudad);
         // REALIZAR ESTOS METODOS
+        var_dump($ubicacionObtenida->getCiudad()->getNombre());
+        var_dump($ubicacionObtenida->getPais()->getNombre());
 
+        $ubicacionUrl = urlencode($ubicacionObtenida->getCiudad()->getNombre() . ', ' . $ubicacionObtenida->getPais()->getNombre());
 
-        $ubicacion = urlencode($ciudad . ', ' . $pais);
-
-        $url = "https://maps.google.com/maps?q={$ubicacion}&output=embed";
-
+        $url = "https://maps.google.com/maps?q={$ubicacionUrl}&output=embed";
+        var_dump($url);
         $viewData = ['usuario' => $_SESSION['user_name'] ?? '',
             'foto_perfil' => $_SESSION['foto_perfil'] ?? '',
             'puntaje_total' => $_SESSION['puntaje_total'] ?? '',

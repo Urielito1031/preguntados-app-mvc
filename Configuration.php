@@ -47,6 +47,8 @@ require_once("model/repository/PartidaRepository.php");
 require_once("model/repository/SugerenciaPreguntaRepository.php");
 require_once("model/Service/SugerenciaPreguntaService.php");
 require_once("model/Entity/PreguntaSugerida.php");
+require_once ("model/Entity/Ubicacion.php");
+
 
 include_once('vendor/mustache/src/Mustache/Autoloader.php');
 

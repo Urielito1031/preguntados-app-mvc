@@ -199,4 +199,9 @@ class UsuarioService
          return new DataResponse(false, "Error al sumar respuesta correcta: " . $e->getMessage());
       }
    }
+
+    public function obtenerIdCiudadDeUsuario(int $idUsuario): int
+    {
+        return $this->repository->obtenerIdCiudadDeusuario($idUsuario);
+    }
 }
