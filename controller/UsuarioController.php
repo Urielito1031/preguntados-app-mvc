@@ -109,8 +109,7 @@ class UsuarioController
         } else {
             $viewData['display'] = "display: none";
         }
-        $token = random_int(100000, 999999);
-        var_dump($token);
+
         $this->view->render("register", $viewData);
     }
 
@@ -133,7 +132,7 @@ class UsuarioController
         $repetirContrasenia = $_POST['repetir_contrasenia'] ?? '';
         $pais = $_POST['pais'] ?? '';
         $ciudad = $_POST['ciudad'] ?? '';
-        $estado = $_POST['estado'] ?? '';
+        //$estado = $_POST['estado'] ?? ''; COMENTO EL INPUT DE ESTADO PORQUE LO ANULE EN EL FORM
 
         $id_ciudad = $this->ubicacionService->processUbication($pais, $ciudad)->getId();
 
@@ -156,7 +155,7 @@ class UsuarioController
                 'contrasenia' => $contraseniaHash,
                 'url_foto_perfil' => $url_foto_perfil,
                 'id_ciudad' => $id_ciudad,
-                'cuenta_validada' => $estado
+                //'cuenta_validada' => $estado COMENTO EL INPUT DE ESTADO PORQUE LO ANULE EN EL FORM
             ]
         );
 

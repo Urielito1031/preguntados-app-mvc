@@ -3,10 +3,12 @@
 namespace Service;
 
 use Entity\Usuario;
+use MailerService;
 use Service\ImageService;
 use Repository\UsuarioRepository;
 use Response\DataResponse;
 
+require_once ('core/MailerService.php');
 require_once __DIR__ . '/../Response/DataResponse.php';
 class UsuarioService
 {
@@ -90,6 +92,10 @@ class UsuarioService
          }
 
           $this->repository->save($usuario);
+          $tokenParaValidar = $this->generarToken();
+          $mailer = new MailerService();
+          $mailer->enviarValidacion($usuario->getCorreo(), $tokenParaValidar);
+
          return new DataResponse(true, "Usuario guardado correctamente", $usuario);
       } catch (\Exception $e) {
          return new DataResponse(false, "Error al guardar el usuario: " . $e->getMessage());
@@ -203,5 +209,11 @@ class UsuarioService
     public function obtenerIdCiudadDeUsuario(int $idUsuario): int
     {
         return $this->repository->obtenerIdCiudadDeusuario($idUsuario);
+    }
+
+    private function generarToken() : int
+    {
+        return random_int(100000, 999999);
+
     }
 }
