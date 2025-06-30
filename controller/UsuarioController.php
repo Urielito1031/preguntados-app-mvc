@@ -109,7 +109,8 @@ class UsuarioController
         } else {
             $viewData['display'] = "display: none";
         }
-
+        $token = random_int(100000, 999999);
+        var_dump($token);
         $this->view->render("register", $viewData);
     }
 
