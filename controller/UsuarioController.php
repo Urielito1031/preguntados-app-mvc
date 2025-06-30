@@ -4,6 +4,10 @@ use Entity\Usuario;
 use Entity\Ubicacion;
 use Service\ImageService;
 use Service\UsuarioService;
+use Repository\PaisRepository;
+use Repository\CiudadRepository;
+
+
 
 class UsuarioController
 {
@@ -18,7 +22,7 @@ class UsuarioController
         $this->usuarioService = $usuarioService;
         $this->view = $view;
         $this->imageService = new ImageService();
-        $this->ubicacionService = new UbicacionService(new \Repository\PaisRepository(), new \Repository\CiudadRepository());
+        $this->ubicacionService = new UbicacionService(new PaisRepository(), new CiudadRepository());
     }
 
     public function showLoginForm()
@@ -195,23 +199,74 @@ class UsuarioController
 
     public function showProfile()
     {
+        $userId = $_SESSION['user_id'] ?? null;
+        if (!$userId) {
+            header('Location: /usuario/showLoginForm');
+            exit();
+        }
+        $this->showProfileById($userId, true);
+    }
 
-        // REALIZAR ESTOS METODOS
-        $idCiudad = $this->usuarioService->obtenerIdCiudadDeUsuario($_SESSION['user_id']);
+    public function showProfileById($userId = null, $isMyProfile = false)
+    {
+        if ($userId === null) {
+            $userId = $_GET['id'] ?? null;
+            if (!$userId) {
+                header('Location: /ranking/show');
+                exit();
+            }
+        }
 
-        $ubicacionObtenida = $this->ubicacionService->obtenerPaisYCiudadDelUsuario($idCiudad);
-        // REALIZAR ESTOS METODOS
-        var_dump($ubicacionObtenida->getCiudad()->getNombre());
-        var_dump($ubicacionObtenida->getPais()->getNombre());
+        $userResponse = $this->usuarioService->findById((int)$userId);
+        if (!$userResponse->success) {
+            $viewData = [
+                'error' => $userResponse->message,
+                'usuario' => $_SESSION['user_name'] ?? '',
+                'foto_perfil' => $_SESSION['foto_perfil'] ?? ''
+            ];
+            $this->view->render("error", $viewData);
+            return;
+        }
 
-        $ubicacionUrl = urlencode($ubicacionObtenida->getCiudad()->getNombre() . ', ' . $ubicacionObtenida->getPais()->getNombre());
+        $userProfile = $userResponse->data;
 
-        $url = "https://maps.google.com/maps?q={$ubicacionUrl}&output=embed";
-        var_dump($url);
-        $viewData = ['usuario' => $_SESSION['user_name'] ?? '',
+        $historialDePartidas = $this->usuarioService->getHistorialDePartidas($userId);
+
+        foreach ($historialDePartidas as $posicionPartidas => &$orden) {
+            $orden['numero'] = $posicionPartidas + 1;
+        }
+
+        $ciudadNombre = '';
+        $paisNombre = '';
+        if ($userProfile->getIdCiudad()) {
+            $ciudadEntity = $this->ubicacionService->getCiudadRepository()->findById($userProfile->getIdCiudad());
+            if ($ciudadEntity) {
+                $ciudadNombre = $ciudadEntity->getNombre();
+                $paisEntity = $this->ubicacionService->getPaisRepository()->findById($ciudadEntity->getIdPais());
+                if ($paisEntity) {
+                    $paisNombre = $paisEntity->getNombre();
+                }
+            }
+        }
+
+        $ubicacion = urlencode($ciudadNombre . ', ' . $paisNombre);
+        $mapUrl = "https://maps.google.com/maps?q={$ubicacion}&output=embed";
+
+        $viewData = [
+            'usuario' => $_SESSION['user_name'] ?? '',
             'foto_perfil' => $_SESSION['foto_perfil'] ?? '',
-            'puntaje_total' => $_SESSION['puntaje_total'] ?? '',
-            'mapa_url' => $url
+            'nombre_perfil' => $userProfile->getNombreUsuario(),
+            'apellido_perfil' => $userProfile->getApellido(),
+            'correo_perfil' => $userProfile->getCorreo(),
+            'fecha_nacimiento_perfil' => $userProfile->getFechaNacimiento() ? $userProfile->getFechaNacimiento()->format('Y-m-d') : 'N/A',
+            'sexo_perfil' => $userProfile->getSexo() ?? 'N/A',
+            'ciudad_perfil' => $ciudadNombre,
+            'pais_perfil' => $paisNombre,
+            'foto_perfil_visitado' => $userProfile->getUrlFotoPerfil(),
+            'puntaje_total_visitado' => $userProfile->getPuntajeTotal(),
+            'mapa_url' => $mapUrl,
+            'historial_partidas_visitado' => $historialDePartidas,
+            'es_mi_perfil' => $isMyProfile
         ];
 
         $this->view->render("profile", $viewData);
