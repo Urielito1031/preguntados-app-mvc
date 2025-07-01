@@ -41,7 +41,3 @@ class MailerService
     }
 }
 
-/* PARA USARLO
- * $mailer = new \Core\MailerService();
-    $mailer->enviarValidacion($email, $token);
- * */

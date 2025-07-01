@@ -44,6 +44,10 @@ class UsuarioController
         $email = $_POST['correo'] ?? '';
         $password = $_POST['contrasenia'] ?? '';
 
+        // BUSCAR USUARIO POR EMAIL Y CHEQUEAR EL CAMPO "cuenta_validada"
+        // Existe un "findByEmail" en el UsuarioRepository
+        // CONFORME AL BOOLEAN DEL CAMPO, DERIVAR A UN LOGIN SATISFACTORIO O RENDERIZAR UN MODAL PARA QUE INGRESE EL INPUT CON EL TOKEN
+
         // Delegar TODA la validación al servicio
         $response = $this->usuarioService->login($email, $password);
 

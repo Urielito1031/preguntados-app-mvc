@@ -150,8 +150,6 @@ class UsuarioService
       return filter_var($email, FILTER_VALIDATE_EMAIL) !== false;
    }
 
-
-
    public function getRanking(){
        return $this->repository->getRanking();
    }
