@@ -10,6 +10,7 @@ use Repository\UsuarioRepository;
 use Repository\CategoriaRepository;
 
 use Service\DashboardService;
+use Service\ExportarPdfService;
 use Service\PartidaService;
 use Service\PreguntaService;
 use Service\SugerenciaPreguntaService;
@@ -28,7 +29,7 @@ require_once("controller/PartidaController.php");
 require_once("controller/RankingController.php");
 require_once("controller/EditorController.php");
 require_once("controller/AdminDashboardController.php");
-
+require_once("model/Service/ExportarPdfService.php");
 require_once("model/Entity/Usuario.php");
 
 
@@ -146,6 +147,11 @@ class Configuration
       );
    }
 
+   public function getExportarPdfService(): ExportarPdfService
+   {
+      return new ExportarPdfService();
+   }
+
    public function getGraphGenerator(): JPGraphGenerador
    {
       return new JPGraphGenerador();
@@ -153,12 +159,16 @@ class Configuration
    public function getAdminDashboardController()
    {
       $dashboardService = $this->getDashboardService();
-      return new AdminDashboardController($this->getViewer(), $dashboardService);
+      $exportarPdfService = $this->getExportarPdfService();
+
+      return new AdminDashboardController($this->getViewer(), $dashboardService, $exportarPdfService);
    }
 
 
 
-    public function getRouter()
+
+
+   public function getRouter()
     {
         return new Router("getHomeController", "show", $this);
     }
