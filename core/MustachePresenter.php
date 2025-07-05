@@ -24,4 +24,10 @@ class MustachePresenter
         $contentAsString .= file_get_contents($this->partialsPathLoader . '/footer.mustache');
         return $this->mustache->render($contentAsString, $data);
     }
+
+   public function soloParaPdf($contentFile, $data = array()) {
+     // $contentAsString = file_get_contents($this->partialsPathLoader . '/header.mustache');
+      $contentAsString = file_get_contents($this->partialsPathLoader . '/' . $contentFile . 'View.mustache');
+      return $this->mustache->render($contentAsString, $data);
+   }
 }

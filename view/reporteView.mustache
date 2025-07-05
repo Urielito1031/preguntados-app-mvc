@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+
+  <title>{{title}}</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      font-size: 11px;
+      color: #333;
+      margin: 15px;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 20px;
+      margin-bottom: 5px;
+      color: #2c3e50;
+    }
+
+    .subtitle {
+      text-align: center;
+      font-size: 12px;
+      margin-bottom: 20px;
+      color: #555;
+    }
+
+    .date-stamp {
+      text-align: right;
+      font-size: 10px;
+      color: #666;
+      margin-bottom: 15px;
+    }
+
+    h2 {
+      text-align: center;
+      font-size: 16px;
+      margin: 25px 0 15px;
+      color: #2c3e50;
+      border-bottom: 1px solid #ccc;
+      padding-bottom: 5px;
+    }
+
+    .graficos-grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 30px;
+    }
+
+    .grafico-card {
+      width: 280px;
+      border: 1px solid #ccc;
+      padding: 8px;
+      text-align: center;
+      background: #fdfdfd;
+    }
+
+    .grafico-card img {
+      width: 100%;
+      height: auto;
+      margin-bottom: 5px;
+    }
+
+    .grafico-card p {
+      font-size: 10px;
+      margin: 0;
+      color: #444;
+    }
+
+    .estadisticas-container {
+      margin-top: 20px;
+    }
+
+    .stats-grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    .stat-card {
+      width: 160px;
+      border: 1px solid #ccc;
+      padding: 12px;
+      text-align: center;
+      background: #f8f8f8;
+    }
+
+    .stat-value {
+      font-size: 18px;
+      font-weight: bold;
+      margin: 8px 0;
+      color: #2c3e50;
+    }
+
+    .stat-label {
+      font-size: 10px;
+      color: #666;
+    }
+
+    .footer {
+      text-align: center;
+      font-size: 9px;
+      color: #999;
+      margin-top: 40px;
+    }
+
+    @page {
+      margin: 12mm;
+    }
+
+    @media print {
+      .grafico-card, .stat-card {
+        page-break-inside: avoid;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<h1>{{title}}</h1>
+<div class="subtitle">Reporte de Análisis Estadístico</div>
+<div class="date-stamp">Generado el: {{fecha}}</div>
+
+<h2>Análisis Visual</h2>
+<div class="graficos-grid">
+  {{#graficos}}
+    <div class="grafico-card">
+      <img src="data:image/png;base64,{{src}}" alt="{{alt}}">
+      <p>{{alt}}</p>
+    </div>
+  {{/graficos}}
+</div>
+
+<div class="estadisticas-container">
+  <h2>Estadísticas Generales</h2>
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-value">{{data.jugadores}}</div>
+      <div class="stat-label">Jugadores Totales</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">{{data.partidas}}</div>
+      <div class="stat-label">Partidas Jugadas</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">{{data.preguntas}}</div>
+      <div class="stat-label">Preguntas Totales</div>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  Reporte generado automáticamente • {{title}}
+</div>
+
+</body>
+</html>

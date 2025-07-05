@@ -48,19 +48,20 @@ class AdminDashboardController
    public function exportarDashboardPdf(): void
    {
       $results = $this->dashboardService->generateDashboardData();
-      $graficos = $results['graficos'];
 
-      $html = '<h1 style="text-align: center;">Reporte generado</h1>';
+      $userData = $this->getUserSessionData();
+      $viewData = array_merge($userData, [
+         'title' => 'Reporte Estadístico',
+         'data' => $results['data'],
+         'graficos' => $results['graficos'],
+         'fecha' => date('d/m/Y'),
+      ]);
 
-      foreach ($graficos as $grafico) {
-         $html .= '<div style="text-align: center; margin-bottom: 30px;">';
-         $html .= '<img src="data:image/png;base64,' . $grafico['src'] . '" alt="' . $grafico['alt'] . '" style="width: 400px; height: auto;">';
-         $html .= '<p>' . $grafico['alt'] . '</p>';
-         $html .= '</div>';
-      }
+      $html = $this->view->soloParaPdf("reporte", $viewData);
 
-      $this->exportarPdfService->exportar($html, 'dashboard.pdf');
+      $this->exportarPdfService->exportar($html, 'Reporte-estadistico.pdf');
    }
+
 
 
 }
