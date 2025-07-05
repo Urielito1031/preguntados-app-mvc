@@ -14,14 +14,14 @@ class QrService
     }
     public static function generarQrCode($nombreUsuario) : String {
         // Nombre de la carpeta
-        $dir = 'temp/';
+        $dir = 'public/qr/';
 
         if (!file_exists($dir)){
-            mkdir($dir);
+            mkdir($dir, 0777, true); // 0777 le da permisos de escritura y 'true' permite crear subcarpetas
         }
 
         // Modificar esto para que cada qr sea diferente segun el usuario
-        $nombreArchivo = $dir . 'qr.png';
+        $nombreArchivo = $dir . $nombreUsuario . '.png';
 
         $tamanio = 10;
         $level = 'M';
@@ -32,6 +32,6 @@ class QrService
 
         QRcode::png($contenido, $nombreArchivo, $level, $tamanio, $frameSize);
 
-        return $nombreArchivo;
+        return '/public/qr/' . $nombreUsuario . '.png';
     }
 }

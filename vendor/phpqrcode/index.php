@@ -24,15 +24,15 @@
     
     echo "<h1>PHP QR Code</h1><hr/>";
     
-    //set it to writable location, a place for temp generated PNG files
-    $PNG_TEMP_DIR = dirname(__FILE__).DIRECTORY_SEPARATOR.'temp'.DIRECTORY_SEPARATOR;
+    //set it to writable location, a place for qr generated PNG files
+    $PNG_TEMP_DIR = dirname(__FILE__).DIRECTORY_SEPARATOR.'qr'.DIRECTORY_SEPARATOR;
     
     //html PNG location prefix
-    $PNG_WEB_DIR = 'temp/';
+    $PNG_WEB_DIR = 'qr/';
 
     include "qrlib.php";    
     
-    //ofcourse we need rights to create temp dir
+    //ofcourse we need rights to create qr dir
     if (!file_exists($PNG_TEMP_DIR))
         mkdir($PNG_TEMP_DIR);
     

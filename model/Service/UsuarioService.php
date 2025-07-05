@@ -3,7 +3,6 @@
 namespace Service;
 
 use Entity\Usuario;
-use Service\ImageService;
 use Repository\UsuarioRepository;
 use Response\DataResponse;
 
@@ -199,4 +198,6 @@ class UsuarioService
          return new DataResponse(false, "Error al sumar respuesta correcta: " . $e->getMessage());
       }
    }
+
+//   public get
 }

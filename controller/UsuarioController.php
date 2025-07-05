@@ -201,9 +201,6 @@ class UsuarioController
         $pais = 'Argentina';
         $ciudad = 'Villa Celina';
 
-
-
-
         $ubicacion = urlencode($ciudad . ', ' . $pais);
 
         $url = "https://maps.google.com/maps?q={$ubicacion}&output=embed";
@@ -212,7 +209,7 @@ class UsuarioController
             'foto_perfil' => $_SESSION['foto_perfil'] ?? '',
             'puntaje_total' => $_SESSION['puntaje_total'] ?? '',
             'mapa_url' => $url,
-            'url_qr' => $this->qrService->generarQrCode('diegomolv3r')
+            'url_qr' => $this->qrService->generarQrCode($_SESSION['user_name'])
         ];
 
         $this->view->render("profile", $viewData);
