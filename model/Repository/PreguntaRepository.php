@@ -426,22 +426,4 @@ class PreguntaRepository
         }
     }
 
-    public function getPreguntasSugeridas(){
-        $stmt = $this->conn->prepare("SELECT * FROM pregunta_sugerida");
-        $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
-
-    public function getRespuestasSugeridas(int $idPregunta){
-        $stmt = $this->conn->prepare("
-        SELECT respuesta, id_pregunta
-        FROM respuesta_sugerida
-        WHERE id_pregunta = :idPregunta
-         ");
-        $stmt->bindParam(':idPregunta', $idPregunta);
-        $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-        }
-
 }

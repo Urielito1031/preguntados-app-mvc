@@ -3,7 +3,7 @@
 use Service\PreguntaService;
 use Registry\CategoriaRegistry;
 use Service\CategoriaService;
-
+use Service\SugerenciaPreguntaService;
 require_once __DIR__ . '/../Model/Registry/CategoriaRegistry.php';
 class EditorController{
 
@@ -11,10 +11,13 @@ class EditorController{
 
     private PreguntaService $preguntaService;
     private CategoriaService $categoriaService;
-    public function __construct(MustachePresenter $view, PreguntaService $preguntaService,CategoriaService $categoriaService)
+    private SugerenciaPreguntaService $sugerenciaPreguntaService;
+    public function __construct(MustachePresenter $view, PreguntaService $preguntaService,CategoriaService $categoriaService,
+                                SugerenciaPreguntaService $sugerenciaPreguntaService)
     {
         $this->preguntaService = $preguntaService;
         $this->categoriaService = $categoriaService;
+        $this->sugerenciaPreguntaService = $sugerenciaPreguntaService;
         $this->view = $view;
     }
 
@@ -29,8 +32,8 @@ class EditorController{
         $preguntas = $this->preguntaService->getPreguntas();
 
         $viewData =  array_merge($this->getUserSessionData(), [
-            'texto' => 'Estamos funcionando',
-            'preguntas' => $preguntas
+            'preguntas' => $preguntas,
+            'titulo' => 'Administrador de preguntas'
         ]);
 
         $this->view->render("administradorpreguntas", $viewData);
@@ -137,13 +140,13 @@ class EditorController{
 
     public function verSugeridas(){
 
-        $preguntas = $this->preguntaService->getPreguntasSugeridas();
+        $preguntas = $this->sugerenciaPreguntaService->getPreguntasSugeridas();
 
         foreach ($preguntas as &$pregunta) {
             $pregunta['respuestas'] = [];
 
             // Traemos las respuestas de la pregunta actual
-            $respuestas = $this->preguntaService->getRespuestasSugeridas($pregunta['id']);
+            $respuestas = $this->sugerenciaPreguntaService->getRespuestasSugeridas($pregunta['id']);
 
             // Recorremos las respuestas y las agregamos al array de la pregunta
             foreach ($respuestas as $respuesta) {
@@ -152,13 +155,13 @@ class EditorController{
 
             }
         }
-        unset($pregunta);
 
-        $viewData = [
-            'preguntas' => $preguntas
-        ];
+        $viewData =  array_merge($this->getUserSessionData(), [
+            'preguntas' => $preguntas,
+            'titulo' => 'Administrador de preguntas sugeridas'
+        ]);
 
-        $this->view->render("preguntasSugeridas", $viewData);
+        $this->view->render("administradorpreguntassugeridas", $viewData);
     }
 
     public function haySessionDeEdicionActiva(): bool{
@@ -180,6 +183,65 @@ class EditorController{
         if($this->haySessionDeEdicionActiva()){
             return $_SESSION['mensajedeEdicion'];
         }
+    }
+
+    public function editarSugerencia(){
+
+        if (empty($_POST['id'])){
+            header('Location: ../editor/verSugeridas');
+        }
+        $pregunta = $this->sugerenciaPreguntaService->findByIdParaEditor($_POST['id']);
+        $categorias = $this->categoriaService->getCategorias();
+
+        $respuestasIncorrectas = $pregunta->data['respuestasincorrectas'];
+
+        for ($i = 0; $i < count($respuestasIncorrectas); $i++) {
+            $indiceDeseado = $i +1;
+            $respuestasIncorrectas[$i]["name"] = "respuesta$indiceDeseado";
+            $respuestasIncorrectas[$i]["indice"] = "$indiceDeseado";
+        }
+
+        $viewData = array_merge($this->getUserSessionData(), [
+            'id' => $pregunta->data['data']['id'],
+            'enunciado' => $pregunta->data['data']['enunciado'],
+            'respuesta_correcta' => $pregunta->data['data']['respuesta_correcta'][0]['respuesta'],
+            'idRespuestaCorrecta'=> $pregunta->data['data']['respuesta_correcta'][0]['idRespuestaCorrecta'],
+            'respuestas' => $respuestasIncorrectas,
+            'categoriaActual' => [
+                'id' => $pregunta->data['categoria']->getId(),
+                'descripcion' => $pregunta->data['categoria']->getDescripcion(),
+                'color' => $pregunta->data['categoria']->getColor()
+            ],
+            'categorias' => $categorias
+        ]);
+
+        $this->view->render("editarsugerencia", $viewData);
+    }
+
+    public function aceptarSugerencia(){
+        $pregunta['enunciado'] = $_POST['enunciado'];
+        $pregunta['idCategoria'] = $_POST['idCategoria'];
+        $pregunta['respuestaCorrecta'] = $_POST['respuesta_correcta'];
+
+        $respuesta1 = array( 'respuesta' => $_POST['respuesta1']);
+        $respuesta2 = array( 'respuesta' => $_POST['respuesta2']);
+        $respuesta3 = array( 'respuesta' => $_POST['respuesta3']);
+
+        $pregunta['respuestas'] =array($respuesta1,$respuesta2,$respuesta3);
+
+        $resultado = $this->preguntaService->guardarNuevaPregunta($pregunta);
+        if( str_contains($resultado, "La pregunta se ha guardado correctamente, con id="))
+        {
+            $this->sugerenciaPreguntaService->eliminarPregunta($_POST['idPregunta']);
+        }
+        $this->setMensajeSession($resultado);
+        header('Location: ../editor/edicionRealizada');
+    }
+
+    public function descartarSugerencia(){
+        $resultado = $this->sugerenciaPreguntaService->eliminarPregunta($_POST['id']);
+        $this->setMensajeSession("Se ha descartado la sugerencia");
+        header('Location: ../editor/edicionRealizada');
     }
 
 }

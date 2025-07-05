@@ -122,7 +122,9 @@ class Configuration
         $preguntaService = new PreguntaService($preguntaRepository,$usuarioRepository);
         $categoriaRepository = new CategoriaRepository();
         $categoriaService = new CategoriaService($categoriaRepository);
-        return new EditorController($this->getViewer(),$preguntaService,$categoriaService);
+        $sugerenciaPreguntaRepository = new SugerenciaPreguntaRepository();
+        $sugerenciaPreguntaService = new SugerenciaPreguntaService($sugerenciaPreguntaRepository);
+        return new EditorController($this->getViewer(),$preguntaService,$categoriaService,$sugerenciaPreguntaService);
     }
 
     public function getRouter()

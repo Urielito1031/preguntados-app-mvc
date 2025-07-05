@@ -3,7 +3,7 @@
 
 <link href="/public/css/pregunta.css" rel="stylesheet">
 
-<form action="/editor/processEdit" method="POST" enctype="multipart/form-data" id="formulario-registro" class="m-auto d-flex flex-column align-items-center"
+<form action="/editor/aceptarSugerencia" method="POST" enctype="multipart/form-data" id="formulario-registro" class="m-auto d-flex flex-column align-items-center"
       style="width: 90%; max-width: 550px">
     <div class="w-100">
         <select name="idCategoria" class="text-center bg-color-violet w-100"
@@ -41,11 +41,14 @@
 
 
         <button type="submit" class="d-flex justify-content-center align-self-center w-25 mt-4 bg-color-pink"
-                style="text-decoration: none;text-align: center;">Guardar cambios
+                style="text-decoration: none;text-align: center;">Aceptar Pregunta
         </button>
       <input type="hidden" name="idPregunta" value="{{id}}">
     </div>
 </form>
 
+<form method="POST" action="/editor/descartarSugerencia" class="m-auto d-flex flex-column align-items-center">
+    <button type="submit" name="id" value="{{id}}" class="w-100 mt-4 bg-color-pink" style="text-decoration: none;text-align: center;">Descartar Sugerencia</button>
+</form>
 
 
