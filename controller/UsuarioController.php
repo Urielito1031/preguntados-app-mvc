@@ -2,6 +2,7 @@
 
 use Entity\Usuario;
 use Service\ImageService;
+use Service\QrService;
 use Service\UsuarioService;
 
 class UsuarioController
@@ -11,13 +12,16 @@ class UsuarioController
     private ImageService $imageService;
     private UbicacionService $ubicacionService;
 
+    private QrService $qrService;
 
-    public function __construct(UsuarioService $usuarioService, MustachePresenter $view)
+
+    public function __construct(UsuarioService $usuarioService, QrService $qrService, MustachePresenter $view)
     {
         $this->usuarioService = $usuarioService;
         $this->view = $view;
         $this->imageService = new ImageService();
         $this->ubicacionService = new UbicacionService(new \Repository\PaisRepository(), new \Repository\CiudadRepository());
+        $this->qrService = $qrService;
     }
 
     public function showLoginForm()
@@ -197,6 +201,9 @@ class UsuarioController
         $pais = 'Argentina';
         $ciudad = 'Villa Celina';
 
+
+
+
         $ubicacion = urlencode($ciudad . ', ' . $pais);
 
         $url = "https://maps.google.com/maps?q={$ubicacion}&output=embed";
@@ -204,7 +211,8 @@ class UsuarioController
         $viewData = ['usuario' => $_SESSION['user_name'] ?? '',
             'foto_perfil' => $_SESSION['foto_perfil'] ?? '',
             'puntaje_total' => $_SESSION['puntaje_total'] ?? '',
-            'mapa_url' => $url
+            'mapa_url' => $url,
+            'url_qr' => $this->qrService->generarQrCode('diegomolv3r')
         ];
 
         $this->view->render("profile", $viewData);
