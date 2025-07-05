@@ -45,13 +45,24 @@ class UsuarioController
         $password = $_POST['contrasenia'] ?? '';
 
         // BUSCAR USUARIO POR EMAIL Y CHEQUEAR EL CAMPO "cuenta_validada"
-        // Existe un "findByEmail" en el UsuarioRepository
-        // CONFORME AL BOOLEAN DEL CAMPO, DERIVAR A UN LOGIN SATISFACTORIO O RENDERIZAR UN MODAL PARA QUE INGRESE EL INPUT CON EL TOKEN
+        $id_usuario = $this->usuarioService->findIdUserByEmail($email);
+        $validacion = $this->usuarioService->validateAccountRequestByUserId($id_usuario);
 
-        // Delegar TODA la validación al servicio
+        if (!$validacion) {
+            if (isset($_SESSION['user_name'])) {
+                $viewData['display'] = "display: block";
+            } else {
+                $viewData['display'] = "display: none";
+            }
+            $this->view->render("validarCuenta", $viewData);
+            exit;
+
+        }
+
+
         $response = $this->usuarioService->login($email, $password);
 
-        $viewData = ['error' => $response->message, 'logo_url' => '/public/img/LogoQuizCode.png'];
+        $viewData = ['error' => $response->message, 'logo_url' => '/public/img/LogoQuizCode.png', 'foto_perfil' => 'public/img/person-fill.svg'];
 
         if (isset($_SESSION['user_name'])) {
             $viewData['display'] = "display: block";
@@ -75,6 +86,40 @@ class UsuarioController
 
         } else {
             $this->view->render("login", $viewData); //
+        }
+    }
+
+    public function processValidation()
+    {
+        // PRIMERO COLOCA SU MAIL PARA BUSCAR SU ID Y LUEGO EL TOKEN
+        if (isset($_POST['token']) && isset($_POST['email'])) {
+            $tokenIngresado = $_POST['token'];
+            $emailUsuario = $_POST['email'];
+            $id_usuario = $this->usuarioService->findIdUserByEmail($emailUsuario);
+            $tokenGenerado = $this->usuarioService->findTokenByUserId($id_usuario);
+            var_dump($emailUsuario);
+            var_dump($tokenGenerado);
+            var_dump($id_usuario);
+            var_dump($tokenIngresado);
+
+            if ($tokenIngresado == $tokenGenerado) {
+                var_dump($tokenIngresado);
+                $this->usuarioService->validateAccountByUserId($id_usuario);
+                echo "<script>
+                        alert('Validación exitosa, podés loguearte');
+                        setTimeout(function() {
+                            window.location.href = '/';
+                        }, 3000);
+                    </script>";
+                header('Location: /');
+            }
+        } else {
+            echo "<script>alert('Token o email invalidos, intenta nuevamente desde el login');
+                          setTimeout(function() {
+                            window.location.href = '/';
+                          }, 3000);
+                  </script>";
+            header('Location: /');
         }
     }
 
@@ -220,4 +265,6 @@ class UsuarioController
 
         $this->view->render("profile", $viewData);
     }
+
+
 }

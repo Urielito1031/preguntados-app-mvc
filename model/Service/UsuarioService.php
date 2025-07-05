@@ -93,6 +93,7 @@ class UsuarioService
 
           $this->repository->save($usuario);
           $tokenParaValidar = $this->generarToken();
+          $this->repository->saveTokenForValidationByUser($tokenParaValidar,$usuario->getId());
           $mailer = new MailerService();
           $mailer->enviarValidacion($usuario->getCorreo(), $tokenParaValidar);
 
@@ -213,5 +214,22 @@ class UsuarioService
     {
         return random_int(100000, 999999);
 
+    }
+
+    public function findTokenByUserId(int $userId): int {
+       return $this->repository->findTokenByIdUser($userId);
+    }
+
+    public function findIdUserByEmail (String $email): int {
+        $user = $this->repository->findByEmail($email);
+        return $user->getId();
+    }
+
+    public function validateAccountByUserId (int $user_id) :void {
+       $this->repository->validateAccountByUserId($user_id);
+    }
+
+    public function validateAccountRequestByUserId (int $id_user) : bool {
+       return $this->repository->validateAccountRequestByUserId($id_user);
     }
 }

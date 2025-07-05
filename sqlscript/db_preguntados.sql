@@ -474,8 +474,10 @@ CREATE TABLE `usuario` (
                            `puntaje_total` int(11) NOT NULL DEFAULT 0,
                            `cuenta_validada` tinyint(1) NOT NULL DEFAULT 0,
                            `preguntas_entregadas` int(11) DEFAULT 0,
-                           `respondidas_correctamente` int(11) DEFAULT 0
+                           `respondidas_correctamente` int(11) DEFAULT 0,
+                           `token` INT UNSIGNED DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
 
 --
 -- Volcado de datos para la tabla `usuario`
