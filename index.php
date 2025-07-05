@@ -1,11 +1,13 @@
 <?php
 session_start();
 
+
 use Config\Database;
 
 require_once("Configuration.php");
 require_once("configuration/Database.php");
 
+$permisos = parse_ini_file("configuration/permisos.ini", true);
 try {
    $pdo = Database::connect();
    $viewer = new MustachePresenter("view");
@@ -13,47 +15,34 @@ try {
    $router = $configuration->getRouter();
 
    $controller = $_GET["controller"] ?? null;
-   $method = $_GET["method"] ?? null;
-
-   $user = $_SESSION["user_name"] ?? null;
-   $rol = $_SESSION["id_rol"] ?? null;
-
-    //Si no esta logueado o no se esta registrando se tiene que loguear
-    if(!$user && $controller !== 'usuario'){
-        $controller = "usuario";
-        $method = "showLoginForm";
-    }
-
-   // Asignar ruta por defecto según el rol
-   if (!$controller && !$method) {
-      switch ($rol) {
-         case 1:
-            $controller = "adminDashboard";
-            $method     = "show";
-            break;
-         case 2:
-            $controller = "home";
-            $method     = "showEditor";
-            break;
-         case 3:
-            $controller = "home";
-            $method     = "show";
-            break;
-      }
-   }
-   if ($controller === 'home') {
+   $method     = $_GET["method"] ?? null;
+   $user       = $_SESSION["user_name"] ?? null;
+   $rol        = $_SESSION["id_rol"] ?? null;
 
 
-      if ($method === 'showEditor' && $rol !== 2) {
-         $method = 'show';
-      }
 
-      if ($method === 'show' && $rol !== 3) {
-         $method = 'showEditor';
-      }
+   $rolNombre = match ($rol)
+   {
+      1 => "admin",
+      2 => "editor",
+      3 => "jugador",
+      default => 'no_logueado'
+   };
+   $rolPermisos = $permisos[$rolNombre] ?? [];
+
+   // Si no hay controlador ni método, usar los por defecto del rol
+   if (!$controller || !$method) {
+      $controller = $rolPermisos['defaultController'];
+      $method     = $rolPermisos['defaultMethod'];
    }
 
-    /* Fin de Control de rol */
+   //valido si el controlador está permitido para el rol
+   $controllersPermitidos = $rolPermisos['controllers'] ?? [];
+   if (!in_array($controller, $controllersPermitidos)) {
+      // Si el controlador no está permitido, redirigir al controlador por defecto
+      $controller = $rolPermisos['defaultController'];
+      $method = $rolPermisos['defaultMethod'];
+   }
 
     $router->go($controller, $method);
 

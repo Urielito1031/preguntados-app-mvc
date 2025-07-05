@@ -32,7 +32,6 @@ class HomeController
    {
       $viewData = $this->getBaseViewData();
       $this->view->render("editor", $viewData);
-      var_dump($_SESSION["id_rol"]);
    }
 
     public function playGame(){
