@@ -29,4 +29,25 @@ class SugerenciaPreguntaService
         $this->view->render("home");
     }
 
+
+    public function getPreguntasSugeridas(): array{
+        return $this->sugerenciaPreguntaRepository->getPreguntasSugeridas();
+    }
+    public function getRespuestasSugeridas($idPregunta): array{
+        return $this->sugerenciaPreguntaRepository->getRespuestasSugeridas($idPregunta);
+    }
+
+    public function findByIdParaEditor(int $idPregunta): DataResponse{
+        $pregunta = $this->sugerenciaPreguntaRepository->findByIdParaEditor($idPregunta);
+        if ($pregunta === null) {
+            return new DataResponse(false, "Pregunta no encontrada por id");
+        }
+        return new DataResponse(true, "Pregunta por id encontrada", $pregunta);
+    }
+
+    public function eliminarPregunta(int $idPregunta){
+        $resultado = $this->sugerenciaPreguntaRepository->eliminarPregunta($idPregunta);
+        return $resultado;
+    }
+
 }

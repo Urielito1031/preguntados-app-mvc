@@ -79,7 +79,7 @@ class PartidaController
          }
 
          $this->clearSession();
-
+         unset($_SESSION['pregunta_reportada']);
          $this->view->render("finpartida", $viewData);
       } catch (\Exception $e) {
          $viewData = [
@@ -93,7 +93,8 @@ class PartidaController
    }
     public function pregunta(): void {
         try {
-
+            //Borro flag de reportes
+            unset($_SESSION['pregunta_reportada']);
            // Verificar si hay una pregunta activa para evitar recarga
            if (isset($_SESSION['pregunta']) && !empty($_SESSION['pregunta']['id'])) {
               // El usuario recargó la página con una pregunta activa, lo consideramos trampa
@@ -252,7 +253,21 @@ class PartidaController
       return count($preguntasCorrectas) > 0 ? 'GANADA' : 'PERDIDA';
    }
 
+    public function reportarPregunta(){
+        if(isset($_SESSION['pregunta_reportada'])) {
+            echo json_encode(["available" => true,"resultado" => "Ya ha sido reportada"]);
+        }else {
+        if (!isset($_GET['id'])) {
+            echo json_encode(["error" => "Falta el parámetro id"]);
+            exit;
+        }
+        $idPregunta =$_GET['id'];
+        $resultado = $this->preguntaService->reportarPregunta($idPregunta);
+        $_SESSION['pregunta_reportada']= true;
 
+        echo json_encode(["available" => true,"recibido" => $_GET['id'] ,"resultado" => $resultado]);
+        }
+    }
 
    public function clearSession(): void
    {
@@ -261,7 +276,8 @@ class PartidaController
          $_SESSION['preguntas_correctas'],
          $_SESSION['preguntas_realizadas'],
          $_SESSION['pregunta'],
-         $_SESSION['respuesta_usuario']
+         $_SESSION['respuesta_usuario'],
+         $_SESSION['pregunta_reportada']
       );
    }
 }

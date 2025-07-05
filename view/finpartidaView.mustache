@@ -1,5 +1,13 @@
 <link href="/public/css/pregunta.css" rel="stylesheet">
 <section class="d-flex flex-column align-items-center m-auto" style="width: 600px;">
+
+    <dialog id="modal" class="w3-modal>
+          <div class="w3-container">
+            <p>La pregunta ha sido reportada correctamente</p>
+          </div>
+        <a href="/home/playGame" class="bg-color-violet p-2 mt-4 w-100 text-center">Crear nueva partida</a>
+    </dialog>
+
     <h1>Partida finalizada</h1>
     <h2> Hiciste {{puntaje}} puntos</h2>
     <p class="text-center p-4 w-100" style="background: #ab8dd3;color: white;">
@@ -9,7 +17,7 @@
     {{#pregunta.respuestas}}
         <button disabled type="submit" name="respuesta" value="{{.}}" class="w-100 mt-4 bg-color-pink" style="text-decoration: none;text-align: center;">{{.}}</button>
     {{/pregunta.respuestas}}
-
+    <button id="js_btn_report" onclick="reportarPregunta({{pregunta.id}})" class="bg-color-violet p-2 mt-4 w-100 text-center">Reportar pregunta</button>
     <a href="/home/playGame" class="bg-color-violet p-2 mt-4 w-100 text-center">Crear nueva partida</a>
 
 </section>
@@ -27,4 +35,23 @@
             respuesta.classList.add('bg-danger', 'text-white')
         }
     })
+
+    ///Modal para reporte
+    const modal= document.getElementById('modal');
+
+    ///Reporte de pregunta
+
+    const reportarPregunta = (preguntaAReportar) =>{
+        const botonReportar= document.getElementById('js_btn_report');
+        botonReportar.disabled = true;
+                fetch(`/partida/reportarPregunta?id=${preguntaAReportar}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.available) {
+                            modal.show()
+                        } else {
+                            console.log(`Not available`);
+                        }
+                    });
+    }
 </script>

@@ -182,10 +182,15 @@ class PreguntaService
         return $resultado;
     }
 
-    public function getPreguntasSugeridas(): array{
-        return $this->repository->getPreguntasSugeridas();
+    public function reportarPregunta($idPregunta){
+        $resultado = $this->repository->reportarPregunta($idPregunta);
+        return $resultado;
     }
-    public function getRespuestasSugeridas($idPregunta): array{
-        return $this->repository->getRespuestasSugeridas($idPregunta);
+
+    public function getPreguntasReportadas(){
+        $preguntasReportadas = $this->repository->traerTodasLaspreguntasReportadas();
+
+        return $preguntasReportadas;
     }
+
 }
