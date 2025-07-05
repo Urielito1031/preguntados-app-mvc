@@ -99,7 +99,7 @@ class EditorController{
 
         $resultado = $this->preguntaService->eliminarPregunta($_POST['id']);
 
-        $this->setMensajeSession($resultado);
+        $this->setMensajeSession("Pregunta eliminada correctamente");
         header('Location: ../editor/edicionRealizada');
     }
 
@@ -136,7 +136,16 @@ class EditorController{
         header('Location: ../editor/edicionRealizada');
     }
 
-    public function verReportes(){}
+    public function verReportes(){
+        $preguntasReportadas = $this->preguntaService->getPreguntasReportadas();
+
+        $viewData =  array_merge($this->getUserSessionData(), [
+            'preguntas' => $preguntasReportadas,
+            'titulo' => 'Administrador de preguntas reportadas'
+        ]);
+
+        $this->view->render("administradorpreguntasreportadas", $viewData);
+    }
 
     public function verSugeridas(){
 

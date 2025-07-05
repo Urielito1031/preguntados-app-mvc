@@ -181,4 +181,15 @@ class PreguntaService
         return $resultado;
     }
 
+    public function reportarPregunta($idPregunta){
+        $resultado = $this->repository->reportarPregunta($idPregunta);
+        return $resultado;
+    }
+
+    public function getPreguntasReportadas(){
+        $preguntasReportadas = $this->repository->traerTodasLaspreguntasReportadas();
+
+        return $preguntasReportadas;
+    }
+
 }

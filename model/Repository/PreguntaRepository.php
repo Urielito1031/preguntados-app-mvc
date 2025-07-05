@@ -426,4 +426,23 @@ class PreguntaRepository
         }
     }
 
+    public function reportarPregunta($idPregunta){
+        $query = "UPDATE pregunta SET cantidad_reportes = cantidad_reportes + 1 WHERE id = :id";
+        try {
+            $stmt = $this->conn->prepare($query);
+            $stmt->bindValue(':id', $idPregunta, PDO::PARAM_INT);
+            $stmt->execute();
+            return "Pregunta reportada correctamente";
+        } catch (PDOException $e) {
+            throw new PDOException("No se pudo reportar pregunta: " . $e->getMessage());
+        }
+    }
+
+    public function traerTodasLaspreguntasReportadas(){
+        $query = "SELECT * FROM pregunta where cantidad_reportes > 0 order by cantidad_reportes DESC";
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute();
+        $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $data;
+    }
 }
