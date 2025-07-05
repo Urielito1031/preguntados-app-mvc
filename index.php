@@ -42,6 +42,8 @@ try {
       }
    }
    if ($controller === 'home') {
+
+
       if ($method === 'showEditor' && $rol !== 2) {
          $method = 'show';
       }

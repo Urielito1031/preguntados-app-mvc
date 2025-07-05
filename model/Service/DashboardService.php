@@ -40,39 +40,24 @@ class DashboardService
    public function generateDashboardData(): array
    {
       $data = [
+         //sin graficos para jugadores, partidas y preguntas.
          'jugadores' => $this->usuarioRepository->getAllPlayers(),
          'partidas' => $this->partidaRepository->getCantidadPartidasJugadas(),
          'preguntas' => $this->preguntaRepository->getCantidadPreguntas(),
+
          'usuarios_pais' => $this->usuarioRepository->getPlayersByCountry(),
          'usuarios_sexo' => $this->usuarioRepository->getPlayersByGender(),
          'usuarios_edad' => $this->usuarioRepository->getPlayersByGroupAge(),
          'porcentaje_aciertos' => $this->usuarioRepository->getPorcentajeAciertosByPlayer()
       ];
 
-      // Validar y preparar datos para gráficos
-      $jugadores = is_numeric($data['jugadores']) && $data['jugadores'] >= 0 ? (int)$data['jugadores'] : 0;
-      $partidas = is_numeric($data['partidas']) && $data['partidas'] >= 0 ? (int)$data['partidas'] : 0;
-      $preguntas = is_numeric($data['preguntas']) && $data['preguntas'] >= 0 ? (int)$data['preguntas'] : 0;
-      $usuarios_pais = !empty($data['usuarios_pais']) ? array_column($data['usuarios_pais'], 'total', 'nombre') : ['Sin datos' => 1];
-      $usuarios_sexo = !empty($data['usuarios_sexo']) ? array_column($data['usuarios_sexo'], 'total', 'sexo') : ['Sin datos' => 1];
-      $usuarios_edad = !empty($data['usuarios_edad']) ? array_column($data['usuarios_edad'], 'total', 'grupo_edad') : ['Sin datos' => 1];
 
+      $usuarios_pais =  array_column($data['usuarios_pais'], 'total', 'nombre');
+      $usuarios_sexo =  array_column($data['usuarios_sexo'], 'total', 'sexo');
+      $usuarios_edad =  array_column($data['usuarios_edad'], 'total', 'grupo_edad');
+      $porcentaje_aciertos =  array_column($data['porcentaje_aciertos'], 'porcentaje_aciertos', 'nombre_usuario');
 
       $graficos = [
-         ['src' => $this->graphGenerator->generateBarChart(
-            ['values' => ['Jugadores' => $jugadores]],
-            'Jugadores (Total)'
-         ), 'alt' => 'Gráfico de jugadores'],
-
-         ['src' => $this->graphGenerator->generateBarChart(
-            ['values' => ['Partidas' => $partidas]],
-            'Partidas Jugadas'
-         ), 'alt' => 'Gráfico de partidas'],
-
-         ['src' => $this->graphGenerator->generateBarChart(
-            ['values' => ['Preguntas' => $preguntas]],
-            'Preguntas Totales'
-         ), 'alt' => 'Gráfico de preguntas'],
 
          ['src' => $this->graphGenerator->generatePieChart(
             ['values' => $usuarios_pais],
@@ -87,7 +72,11 @@ class DashboardService
          ['src' => $this->graphGenerator->generatePieChart(
             ['values' => $usuarios_edad],
             'Usuarios por Grupo de Edad'
-         ), 'alt' => 'Gráfico por edad']
+         ), 'alt' => 'Gráfico por edad'],
+         ['src' => $this->graphGenerator->generateBarChart(
+            ['values' => $porcentaje_aciertos],
+            'Cantidad de Aciertos por Jugador'
+         ), 'alt' => 'Gráfico de porcentaje de aciertos']
       ];
 
 
