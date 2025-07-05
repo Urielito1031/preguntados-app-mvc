@@ -132,6 +132,7 @@ class EditorController{
         $this->setMensajeSession($resultado);
         header('Location: ../editor/edicionRealizada');
     }
+
     public function verReportes(){}
 
     public function verSugeridas(){

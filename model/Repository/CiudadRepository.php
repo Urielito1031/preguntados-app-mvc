@@ -60,4 +60,32 @@ class CiudadRepository
          'id_pais' => $idPais
       ]);
    }
+
+   public function obtenerIdPais(int $idCiudad) {
+       $sql = "SELECT id_pais FROM ciudad 
+               WHERE id= :id_ciudad";
+
+       $stmt = $this->conn->prepare($sql);
+       $stmt->bindValue(':id_ciudad', $idCiudad, PDO::PARAM_INT);
+       $stmt->execute();
+
+       $idPais = (int) $stmt->fetchColumn();
+
+       return $idPais;
+   }
+   public function buscarCiudadPorIDPais(int $idPais): ?Ciudad
+    {
+        $sql = "SELECT * FROM ciudad 
+               WHERE id_pais = :id_pais";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindValue(':id_pais', $idPais, PDO::PARAM_INT);
+        $stmt->execute();
+
+        $data = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return $data ? new Ciudad($data) : null;
+    }
+
+
 }

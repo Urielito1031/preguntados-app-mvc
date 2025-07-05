@@ -333,6 +333,19 @@ class UsuarioRepository
    }
 
 
+    public function obtenerIdCiudadDeusuario(int $idUsuario) : int {
+        $sql = "SELECT id_ciudad FROM usuario 
+               WHERE id_usuario = :id_usuario";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindValue(':id_usuario', $idUsuario, PDO::PARAM_INT);
+        $stmt->execute();
+
+        $idCiudadObtenido = (int) $stmt->fetchColumn();
+
+        return $idCiudadObtenido;
+    }
+
 
 
 }

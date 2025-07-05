@@ -12,7 +12,6 @@ class HomeController
         $this->sugerenciaPreguntaService = $sugerenciaPreguntaService;
     }
 
-   //lo usamos en todos los metodos
    private function getBaseViewData(): array
    {
       return [
@@ -21,7 +20,6 @@ class HomeController
          'foto_perfil' => $_SESSION['foto_perfil'] ?? '',
       ];
    }
-
    public function show(): void
    {
       $viewData = $this->getBaseViewData();
@@ -29,13 +27,6 @@ class HomeController
       var_dump($_SESSION["id_rol"]);
    }
 
-   //NO SIRVE, YA ESTOY ACCEDIENDO MEDIENTE EL CONTROLLER AdminDashboardController
-//   public function showAdmin(): void
-//   {
-//      $viewData = $this->getBaseViewData();
-//      $this->view->render("admin", $viewData);
-//      var_dump($_SESSION["id_rol"]);
-//   }
 
    public function showEditor(): void
    {

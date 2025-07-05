@@ -53,8 +53,13 @@ require_once("model/Graph/JPGraphGenerador.php");
 require_once("model/repository/SugerenciaPreguntaRepository.php");
 require_once("model/Service/SugerenciaPreguntaService.php");
 require_once("model/Entity/PreguntaSugerida.php");
+require_once ("model/Entity/Ubicacion.php");
+
 
 include_once('vendor/mustache/src/Mustache/Autoloader.php');
+include_once('vendor/phpmailer/Exception.php');
+include_once('vendor/phpmailer/PHPMailer.php');
+include_once('vendor/phpmailer/SMTP.php');
 
 class Configuration
 {

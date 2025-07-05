@@ -1,6 +1,7 @@
 <?php
 
 use Entity\Usuario;
+use Entity\Ubicacion;
 use Service\ImageService;
 use Service\UsuarioService;
 
@@ -42,6 +43,10 @@ class UsuarioController
 
         $email = $_POST['correo'] ?? '';
         $password = $_POST['contrasenia'] ?? '';
+
+        // BUSCAR USUARIO POR EMAIL Y CHEQUEAR EL CAMPO "cuenta_validada"
+        // Existe un "findByEmail" en el UsuarioRepository
+        // CONFORME AL BOOLEAN DEL CAMPO, DERIVAR A UN LOGIN SATISFACTORIO O RENDERIZAR UN MODAL PARA QUE INGRESE EL INPUT CON EL TOKEN
 
         // Delegar TODA la validación al servicio
         $response = $this->usuarioService->login($email, $password);
@@ -131,7 +136,7 @@ class UsuarioController
         $repetirContrasenia = $_POST['repetir_contrasenia'] ?? '';
         $pais = $_POST['pais'] ?? '';
         $ciudad = $_POST['ciudad'] ?? '';
-        $estado = $_POST['estado'] ?? '';
+        //$estado = $_POST['estado'] ?? ''; COMENTO EL INPUT DE ESTADO PORQUE LO ANULE EN EL FORM
 
         $id_ciudad = $this->ubicacionService->processUbication($pais, $ciudad)->getId();
 
@@ -154,7 +159,7 @@ class UsuarioController
                 'contrasenia' => $contraseniaHash,
                 'url_foto_perfil' => $url_foto_perfil,
                 'id_ciudad' => $id_ciudad,
-                'cuenta_validada' => $estado
+                //'cuenta_validada' => $estado COMENTO EL INPUT DE ESTADO PORQUE LO ANULE EN EL FORM
             ]
         );
 
@@ -194,13 +199,19 @@ class UsuarioController
 
     public function showProfile()
     {
-        $pais = 'Argentina';
-        $ciudad = 'Villa Celina';
 
-        $ubicacion = urlencode($ciudad . ', ' . $pais);
+        // REALIZAR ESTOS METODOS
+        $idCiudad = $this->usuarioService->obtenerIdCiudadDeUsuario($_SESSION['user_id']);
 
-        $url = "https://maps.google.com/maps?q={$ubicacion}&output=embed";
+        $ubicacionObtenida = $this->ubicacionService->obtenerPaisYCiudadDelUsuario($idCiudad);
+        // REALIZAR ESTOS METODOS
+        var_dump($ubicacionObtenida->getCiudad()->getNombre());
+        var_dump($ubicacionObtenida->getPais()->getNombre());
 
+        $ubicacionUrl = urlencode($ubicacionObtenida->getCiudad()->getNombre() . ', ' . $ubicacionObtenida->getPais()->getNombre());
+
+        $url = "https://maps.google.com/maps?q={$ubicacionUrl}&output=embed";
+        var_dump($url);
         $viewData = ['usuario' => $_SESSION['user_name'] ?? '',
             'foto_perfil' => $_SESSION['foto_perfil'] ?? '',
             'puntaje_total' => $_SESSION['puntaje_total'] ?? '',
