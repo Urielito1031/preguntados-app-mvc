@@ -468,4 +468,17 @@ class PreguntaRepository
         $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
         return $data;
     }
+
+    public function marcarComoResuelto($idPregunta)
+    {
+        $query = "UPDATE pregunta SET cantidad_reportes = 0 WHERE id = :id";
+        try {
+            $stmt = $this->conn->prepare($query);
+            $stmt->bindValue(':id', $idPregunta, PDO::PARAM_INT);
+            $stmt->execute();
+            return "Pregunta marcada como resuelta";
+        } catch (PDOException $e) {
+            throw new PDOException("No se pudo resolver reporte de pregunta: " . $e->getMessage());
+        }
+    }
 }

@@ -192,5 +192,10 @@ class PreguntaService
 
         return $preguntasReportadas;
     }
+    public function marcarComoResuelto(int $idPregunta){
+        $resultado = $this->repository->marcarComoResuelto($idPregunta);
+        return $resultado;
+    }
+
 
 }

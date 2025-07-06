@@ -256,9 +256,14 @@ class EditorController{
         header('Location: ../editor/edicionRealizada');
     }
 
-    public function descartarSugerencia(){
-        $resultado = $this->sugerenciaPreguntaService->eliminarPregunta($_POST['id']);
-        $this->setMensajeSession("Se ha descartado la sugerencia");
+    public function marcarComoResuelto(){
+        if (empty($_POST['id'])){
+            header('Location: ../editor/verPreguntas');
+        }
+
+        $resultado = $this->preguntaService->marcarComoResuelto($_POST['id']);
+
+        $this->setMensajeSession("Reporte realizado correctamente");
         header('Location: ../editor/edicionRealizada');
     }
 
