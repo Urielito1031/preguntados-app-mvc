@@ -1,7 +1,6 @@
 <?php
 
 namespace Repository;
-
 use Config\Database;
 use Entity\Usuario;
 use PDO;

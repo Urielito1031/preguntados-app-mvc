@@ -5,6 +5,10 @@ use Entity\Ubicacion;
 use Service\ImageService;
 use Service\QrService;
 use Service\UsuarioService;
+use Repository\PaisRepository;
+use Repository\CiudadRepository;
+
+
 
 class UsuarioController
 {
@@ -335,6 +339,4 @@ class UsuarioController
 
         $this->view->render("profile", $viewData);
     }
-
-
 }

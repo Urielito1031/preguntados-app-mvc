@@ -2,15 +2,15 @@
     <h2 class="text-center text-violet">{{titulo_ranking}}</h2>
     <table class="table table-striped">
         <thead>
-        <tr>
-            <th>Posición</th>
+            <tr>
+                <th>Posición</th>
 
-            <th>Jugador</th>
-            <th>Mejor Puntaje</th>
-        </tr>
+                <th>Jugador</th>
+                <th>Mejor Puntaje</th>
+            </tr>
         </thead>
         <tbody>
-        {{#jugadores}}
+            {{#jugadores}}
             <tr>
                 <td>{{posicion}}</td>
 
@@ -19,12 +19,12 @@
                 </td>
                 <td>{{puntaje_maximo}}</td>
             </tr>
-        {{/jugadores}}
-        {{^jugadores}}
+            {{/jugadores}}
+            {{^jugadores}}
             <tr>
                 <td colspan="4" class="text-center">El ranking está vacío. ¡Juega para aparecer aquí!</td>
             </tr>
-        {{/jugadores}}
+            {{/jugadores}}
         </tbody>
     </table>
 </section>
@@ -33,13 +33,13 @@
     <h3 class="text-center text-pink">Mi Historial de Partidas</h3>
     <ul class="list-group">
         {{#partidas}}
-            <li class="list-group-item d-flex justify-content-between align-items-center">
-                Partida {{numero}}
-                <strong>{{puntaje}} puntos</strong>
-            </li>
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            Partida {{numero}}
+            <strong>{{puntaje}} puntos</strong>
+        </li>
         {{/partidas}}
         {{^partidas}}
-            <li class="list-group-item">Aún no has jugado ninguna partida.</li>
+        <li class="list-group-item">Aún no has jugado ninguna partida.</li>
         {{/partidas}}
     </ul>
 </section>
