@@ -271,5 +271,21 @@ class UsuarioController
         $this->view->render("profile", $viewData);
     }
 
+    public function verificarDisponibilidad()
+    {
+        if (!isset($_GET['email'])) {
+            echo json_encode(["error" => "Falta el parámetro email"]);
+            exit;
+        }
+        $email = $_GET['email'];
+        $resultado = $this->usuarioService->verificarDisponibilidad($email);
+        if(empty($resultado)){
+            $_SESSION['email_disponible'] = true;
+        }else{
+            $_SESSION['email_disponible'] = false;
+        }
 
+        echo json_encode(["available" => true, "resultado" => $resultado]);
+
+    }
 }
