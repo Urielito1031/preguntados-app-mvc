@@ -77,7 +77,7 @@ class UsuarioController
                     header('Location: /admin/show');
                     exit;
                 case 2:
-                    header('Location: /home/showEditor');
+                    header('Location: /editor/show');
                     exit;
                 default:
                     header('Location: /home/show');

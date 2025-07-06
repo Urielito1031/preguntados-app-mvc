@@ -87,9 +87,8 @@ class Configuration
 
     public function getHomeController()
     {
-        $sugerenciaPreguntaRepository = new SugerenciaPreguntaRepository();
-        $sugerenciaPreguntaService = new SugerenciaPreguntaService($sugerenciaPreguntaRepository);
-        return new HomeController($sugerenciaPreguntaService, $this->getViewer());
+
+        return new HomeController($this->getViewer());
 
     }
 
@@ -127,6 +126,10 @@ class Configuration
     }
 
     public function getEditorController(){
+       $sugerenciaPreguntaRepository = new SugerenciaPreguntaRepository();
+       $sugerenciaPreguntaService = new SugerenciaPreguntaService($sugerenciaPreguntaRepository);
+
+
         $preguntaRepository = new PreguntaRepository();
         $usuarioRepository = new UsuarioRepository();
         $preguntaService = new PreguntaService($preguntaRepository,$usuarioRepository);
