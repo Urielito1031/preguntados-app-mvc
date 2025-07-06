@@ -13,11 +13,8 @@
             {{#jugadores}}
             <tr>
                 <td>{{posicion}}</td>
-
-                <td>
-                    <a href="/usuario/showProfileById?id={{id_usuario}}">{{nombre_usuario}}</a>
-                </td>
-                <td>{{puntaje_maximo}}</td>
+                <td><a href="/usuario/showProfileById?id={{id_usuario}}">{{nombre_usuario}}</a></td>
+                <td class="text-center">{{puntaje_maximo}}</td>
             </tr>
             {{/jugadores}}
             {{^jugadores}}
@@ -32,12 +29,13 @@
 <section class="container-historial mt-5">
     <h3 class="text-center text-pink">Mi Historial de Partidas</h3>
     <ul class="list-group">
-        {{#partidas}}
+        {{#partidas_jugadas}}
         <li class="list-group-item d-flex justify-content-between align-items-center">
             Partida {{numero}}
             <strong>{{puntaje}} puntos</strong>
         </li>
-        {{/partidas}}
+        {{/partidas_jugadas}}
+
         {{^partidas}}
         <li class="list-group-item">Aún no has jugado ninguna partida.</li>
         {{/partidas}}

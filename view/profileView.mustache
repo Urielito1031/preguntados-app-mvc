@@ -1,44 +1,39 @@
-<section class="container-fluid d-flex flex-column align-items-center justify-content-center my-4">
-    <h1 class="text-violet mb-4">Perfil de {{nombre_perfil}}</h1>
+<section class="container-fluid d-flex flex-column align-items-center justify-content-center mt-4">
+    <h1 class="text-violet my-4">Perfil de {{nombre_perfil}}</h1>
 
-    <article class="d-flex flex-column flex-md-row align-items-center justify-content-around w-100 mb-4">
+    <article class="d-flex flex-column flex-md-row align-items-center justify-content-around w-75 mb-4">
         <div class="d-flex flex-column align-items-center mb-3 mb-md-0">
-            <img src="{{foto_perfil_visitado}}" alt="Foto de Perfil" class="rounded-circle border border-5 border-violet img-fluid">
+            <img src="/{{foto_perfil_visitado}}" alt="Foto de Perfil" class="rounded-circle" style="height: 250px; width: 250px;">
             <p class="mt-2 text-violet fs-5">{{nombre_perfil}}</p>
             {{#es_mi_perfil}}
                 <p class="text-muted fst-italic">¡Este es tu perfil!</p>
             {{/es_mi_perfil}}
         </div>
-
-        <h2 class="text-violet">
-            <i class="bi bi-qr-code" id="boton-qr" style="cursor:pointer;" title="Ver QR"></i>
-            {{usuario}}
-        </h2>
-
-
-        <div class="text-center">
-            <h2 class="text-pink">Puntaje Total: {{puntaje_total_visitado}}</h2>
+        <div>
+            <h2 class="text-violet"><i class="bi bi-qr-code" id="boton-qr" style="cursor:pointer;" title="Ver QR"></i>{{nombre_perfil}}</h2>
             <p><strong>Correo:</strong> {{correo_perfil}}</p>
-            <p><strong>Nombre Completo:</strong> {{nombre_perfil}} {{apellido_perfil}}</p>
+            <p><strong>Nombre Completo:</strong> {{apellido_perfil}}, {{nombre}}</p>
             <p><strong>Fecha de Nacimiento:</strong> {{fecha_nacimiento_perfil}}</p>
             <p><strong>Sexo:</strong> {{sexo_perfil}}</p>
             <p><strong>Ubicación:</strong> {{ciudad_perfil}}, {{pais_perfil}}</p>
         </div>
     </article>
 
+
     <h2 class="text-violet mb-3">Historial de Partidas</h2>
     {{^historial_partidas_visitado}}
         <p>Este usuario aún no ha jugado ninguna partida.</p>
     {{/historial_partidas_visitado}}
-    {{#historial_partidas_visitado}}
         <div class="table-responsive">
             <table class="table table-striped table-hover">
+
                 <thead>
                     <tr>
-                        <th scope="col">#</th>
+                        <th scope="col">Partida</th>
                         <th scope="col">Puntaje</th>
                     </tr>
                 </thead>
+                {{#historial_partidas_visitado}}
                 <tbody>
                     {{#.}}
                     <tr>
@@ -47,9 +42,9 @@
                     </tr>
                     {{/.}}
                 </tbody>
+                {{/historial_partidas_visitado}}
             </table>
         </div>
-    {{/historial_partidas_visitado}}
 
     <div class="mt-4">
         <h2 class="text-violet">Ubicación en el mapa</h2>

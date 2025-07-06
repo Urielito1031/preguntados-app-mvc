@@ -307,16 +307,17 @@ class UsuarioController
 
         $ciudadNombre = '';
         $paisNombre = '';
-//        if ($userProfile->getIdCiudad()) {
-//            $ciudadEntity = $this->ubicacionService->getCiudadRepository()->findById($userProfile->getIdCiudad());
-//            if ($ciudadEntity) {
-//                $ciudadNombre = $ciudadEntity->getNombre();
-//                $paisEntity = $this->ubicacionService->getPaisRepository()->findById($ciudadEntity->getIdPais());
-//                if ($paisEntity) {
-//                    $paisNombre = $paisEntity->getNombre();
-//                }
-//            }
-//        }
+
+        if ($userProfile->getIdCiudad()) {
+            $ciudadEntity = $this->ubicacionService->getCiudadRepository()->findById($userProfile->getIdCiudad());
+            if ($ciudadEntity) {
+                $ciudadNombre = $ciudadEntity->getNombre();
+                $paisEntity = $this->ubicacionService->getPaisRepository()->findById($ciudadEntity->getIdPais());
+                if ($paisEntity) {
+                    $paisNombre = $paisEntity->getNombre();
+                }
+            }
+        }
 
         $ubicacion = urlencode($ciudadNombre . ', ' . $paisNombre);
         $mapUrl = "https://maps.google.com/maps?q={$ubicacion}&output=embed";
@@ -325,6 +326,7 @@ class UsuarioController
             'usuario' => $_SESSION['user_name'] ?? '',
             'foto_perfil' => $_SESSION['foto_perfil'] ?? '',
             'nombre_perfil' => $userProfile->getNombreUsuario(),
+            'nombre' => $userProfile->getNombre(),
             'apellido_perfil' => $userProfile->getApellido(),
             'correo_perfil' => $userProfile->getCorreo(),
             'fecha_nacimiento_perfil' => $userProfile->getFechaNacimiento() ? $userProfile->getFechaNacimiento()->format('Y-m-d') : 'N/A',

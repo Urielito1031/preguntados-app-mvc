@@ -8,9 +8,8 @@ require "vendor/phpqrcode/qrlib.php";
 
 class QrService
 {
-    public function __construct(){
+    public function __construct(){}
 
-    }
     public static function generarQrCode($nombreUsuario, $id_usuario) : String {
         $dir = 'public/qr/';
 
