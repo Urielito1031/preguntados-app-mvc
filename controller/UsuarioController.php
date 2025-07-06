@@ -139,6 +139,7 @@ class UsuarioController
         $_SESSION['foto_perfil'] = $usuario->getUrlFotoPerfil();
         $_SESSION['puntaje_total'] = $usuario->getPuntajeTotal();
         $_SESSION['id_rol'] = $usuario->getIdRol();
+        $_SESSION['id_usuario'] = $usuario->getId();
     }
 
     public function logout()
@@ -269,7 +270,7 @@ class UsuarioController
             'foto_perfil' => $_SESSION['foto_perfil'] ?? '',
             'puntaje_total' => $_SESSION['puntaje_total'] ?? '',
             'mapa_url' => $url,
-            'url_qr' => $this->qrService->generarQrCode($_SESSION['user_name'])
+            'url_qr' => $this->qrService->generarQrCode($_SESSION['user_name'] ,$_SESSION['id_usuario'])
         ];
 
         $this->view->render("profile", $viewData);
@@ -306,16 +307,16 @@ class UsuarioController
 
         $ciudadNombre = '';
         $paisNombre = '';
-        if ($userProfile->getIdCiudad()) {
-            $ciudadEntity = $this->ubicacionService->getCiudadRepository()->findById($userProfile->getIdCiudad());
-            if ($ciudadEntity) {
-                $ciudadNombre = $ciudadEntity->getNombre();
-                $paisEntity = $this->ubicacionService->getPaisRepository()->findById($ciudadEntity->getIdPais());
-                if ($paisEntity) {
-                    $paisNombre = $paisEntity->getNombre();
-                }
-            }
-        }
+//        if ($userProfile->getIdCiudad()) {
+//            $ciudadEntity = $this->ubicacionService->getCiudadRepository()->findById($userProfile->getIdCiudad());
+//            if ($ciudadEntity) {
+//                $ciudadNombre = $ciudadEntity->getNombre();
+//                $paisEntity = $this->ubicacionService->getPaisRepository()->findById($ciudadEntity->getIdPais());
+//                if ($paisEntity) {
+//                    $paisNombre = $paisEntity->getNombre();
+//                }
+//            }
+//        }
 
         $ubicacion = urlencode($ciudadNombre . ', ' . $paisNombre);
         $mapUrl = "https://maps.google.com/maps?q={$ubicacion}&output=embed";
@@ -334,7 +335,8 @@ class UsuarioController
             'puntaje_total_visitado' => $userProfile->getPuntajeTotal(),
             'mapa_url' => $mapUrl,
             'historial_partidas_visitado' => $historialDePartidas,
-            'es_mi_perfil' => $isMyProfile
+            'es_mi_perfil' => $isMyProfile,
+            'url_qr' => $this->qrService->generarQrCode($userProfile->getNombreUsuario() , $userProfile->getId())
         ];
 
         $this->view->render("profile", $viewData);

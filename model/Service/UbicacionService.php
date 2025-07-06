@@ -1,6 +1,5 @@
 <?php
 
-
 use Entity\Ciudad;
 use Entity\Ubicacion;
 use Repository\CiudadRepository;
