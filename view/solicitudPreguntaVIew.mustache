@@ -10,7 +10,7 @@
       style="width: 90%; max-width: 550px">
     <div class="w-100">
         <select name="categoria" class="text-center bg-color-violet w-100"
-                style="border-radius: 25px 25px 0 0; cursor: pointer">
+                style="border-radius: 25px 25px 0 0; cursor: pointer" required>
             <option value="1">Historia</option>
             <option value="2">Deportes</option>
             <option value="3">Arte</option>
@@ -20,27 +20,31 @@
         </select>
 
         <input type="text" name="enunciado" id="enunciado" placeholder="Ingrese la pregunta"
-               class="text-center p-4 w-100" style="background: #ab8dd3; color:white; border:none;">
+               class="text-center p-4 w-100" style="background: #ab8dd3; color:white; border:none;" required>
+
+        <div class="d-flex justify-content-evenly" style="margin-right: 4%; margin-top: 3%; justify-self: end; inline-size: min-content;">
+            <p style=" margin: 0%; text-align: center;}">Opcion correcta</p>
+        </div>
     </div>
     <br>
     <div class="w-100 d-flex flex-column">
         <div class="d-flex justify-content-evenly">
-            <input type="text" name="respuestas[]" placeholder="Opción 1" class="w-75 bg-color-pink">
-            <input type="radio" name="repuesta_correcta" value="0"></div>
+            <input type="text" name="respuestas[]" placeholder="Opción 1" class="w-75 bg-color-pink" required>
+            <input type="radio" name="repuesta_correcta" value="0" checked></div>
         <br>
 
         <div class="d-flex justify-content-evenly">
-            <input type="text" name="respuestas[]" placeholder="Opción 2" class="w-75 bg-color-pink">
+            <input type="text" name="respuestas[]" placeholder="Opción 2" class="w-75 bg-color-pink" required>
             <input type="radio" name="repuesta_correcta" value="1"></div>
         <br>
 
         <div class="d-flex justify-content-evenly">
-            <input type="text" name="respuestas[]" placeholder="Opción 3" class="w-75 bg-color-pink">
+            <input type="text" name="respuestas[]" placeholder="Opción 3" class="w-75 bg-color-pink" required>
             <input type="radio" name="repuesta_correcta" value="2"></div>
         <br>
 
         <div class="d-flex justify-content-evenly">
-            <input type="text" name="respuestas[]" placeholder="Opción 4" class="w-75 bg-color-pink">
+            <input type="text" name="respuestas[]" placeholder="Opción 4" class="w-75 bg-color-pink" required>
             <input type="radio" name="repuesta_correcta" value="3"></div>
         <br>
 
