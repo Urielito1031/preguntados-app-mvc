@@ -2,6 +2,8 @@
 
 use Controller\AdminController;
 use Graph\JPGraphGenerador;
+use Repository\CiudadRepository;
+use Repository\PaisRepository;
 use Repository\PartidaRepository;
 use Repository\PreguntaRepository;
 use Repository\SugerenciaPreguntaRepository;
@@ -26,6 +28,8 @@ require_once("model/Response/DataResponse.php");
 
 require_once("controller/UsuarioController.php");
 require_once("controller/HomeController.php");
+
+require_once("controller/ProfileController.php");
 require_once("controller/PartidaController.php");
 require_once("controller/RankingController.php");
 require_once("controller/EditorController.php");
@@ -63,10 +67,8 @@ include_once('vendor/phpmailer/Exception.php');
 include_once('vendor/phpmailer/PHPMailer.php');
 include_once('vendor/phpmailer/SMTP.php');
 include_once 'model/Service/QrService.php';
-
 class Configuration
 {
-
    private PDO $database;
    private $viewer;
 
@@ -75,37 +77,71 @@ class Configuration
       $this->database = $database;
       $this->viewer = $viewer;
    }
+
+
    public function getDatabase(): PDO
    {
       return $this->database;
    }
 
-   public function getUsuarioController()
+   public function getViewer()
    {
-      $repository = new UsuarioRepository();
-      $service = new UsuarioService($repository);
-      $qrService = new QrService();
-      return new UsuarioController($service, $qrService ,$this->getViewer());
+      return new MustachePresenter("view");
    }
 
-    public function getHomeController()
-    {
-        $sugerenciaPreguntaRepository = new SugerenciaPreguntaRepository();
-        $sugerenciaPreguntaService = new SugerenciaPreguntaService($sugerenciaPreguntaRepository);
-        return new HomeController($sugerenciaPreguntaService, $this->getViewer());
+   public function getRouter()
+   {
+      return new Router("getHomeController", "show", $this);
+   }
 
-    }
+   public function getGraphGenerator(): JPGraphGenerador
+   {
+      return new JPGraphGenerador();
+   }
 
-   public function getPartidaController() {
-      // Repositorios
+   public function getExportarPdfService(): ExportarPdfService
+   {
+      return new ExportarPdfService();
+   }
+
+   public function getDashboardService(): DashboardService
+   {
+      return new DashboardService(
+         new PartidaRepository(),
+         new PreguntaRepository(),
+         new UsuarioRepository(),
+         $this->getGraphGenerator()
+      );
+   }
+
+   //TODOS LOS CONTROLLERS
+
+   public function getUsuarioController()
+   {
+      $usuarioRepository = new UsuarioRepository();
+      $usuarioService = new UsuarioService($usuarioRepository);
+      $qrService = new QrService();
+
+      return new UsuarioController($usuarioService, $qrService, $this->getViewer());
+   }
+
+   public function getHomeController()
+   {
+      $sugerenciaRepository = new SugerenciaPreguntaRepository();
+      $sugerenciaService = new SugerenciaPreguntaService($sugerenciaRepository);
+
+      return new HomeController($sugerenciaService, $this->getViewer());
+   }
+
+   public function getPartidaController()
+   {
+      $usuarioRepository = new UsuarioRepository();
       $preguntaRepository = new PreguntaRepository();
       $partidaRepository = new PartidaRepository();
       $usuarioPreguntaRepository = new UsuarioPreguntaRepository();
-      $usuarioRepository = new UsuarioRepository();
 
-      // Servicios
       $usuarioService = new UsuarioService($usuarioRepository);
-      $preguntaService = new PreguntaService($preguntaRepository,$usuarioRepository);
+      $preguntaService = new PreguntaService($preguntaRepository, $usuarioRepository);
       $partidaService = new PartidaService($partidaRepository);
       $usuarioPreguntaService = new UsuarioPreguntaService(
          $usuarioPreguntaRepository,
@@ -122,67 +158,58 @@ class Configuration
       );
    }
 
-
-   public function getRankingController(){
-       $repository = new UsuarioRepository();
-       $service = new UsuarioService($repository);
-       return new RankingController($service, $this->getViewer());
-    }
-
-    public function getEditorController(){
-
-        $preguntaRepository = new PreguntaRepository();
-        $usuarioRepository = new UsuarioRepository();
-        $preguntaService = new PreguntaService($preguntaRepository,$usuarioRepository);
-        $categoriaRepository = new CategoriaRepository();
-        $categoriaService = new CategoriaService($categoriaRepository);
-        $sugerenciaPreguntaRepository = new SugerenciaPreguntaRepository();
-        $sugerenciaPreguntaService = new SugerenciaPreguntaService($sugerenciaPreguntaRepository);
-        return new EditorController($this->getViewer(),$preguntaService,$categoriaService,$sugerenciaPreguntaService);
-    }
-
-
-
-   public function getDashboardService(): DashboardService
+   public function getRankingController()
    {
-      return new DashboardService(
-         new PartidaRepository(),
-         new PreguntaRepository(),
-         new UsuarioRepository(),
-         $this->getGraphGenerator()
+      $usuarioRepository = new UsuarioRepository();
+      $usuarioService = new UsuarioService($usuarioRepository);
+
+      return new RankingController($usuarioService, $this->getViewer());
+   }
+
+   public function getEditorController()
+   {
+      $preguntaRepository = new PreguntaRepository();
+      $usuarioRepository = new UsuarioRepository();
+      $categoriaRepository = new CategoriaRepository();
+      $sugerenciaRepository = new SugerenciaPreguntaRepository();
+
+      $preguntaService = new PreguntaService($preguntaRepository, $usuarioRepository);
+      $categoriaService = new CategoriaService($categoriaRepository);
+      $sugerenciaService = new SugerenciaPreguntaService($sugerenciaRepository);
+
+      return new EditorController(
+         $this->getViewer(),
+         $preguntaService,
+         $categoriaService,
+         $sugerenciaService
       );
    }
 
-   public function getExportarPdfService(): ExportarPdfService
-   {
-      return new ExportarPdfService();
-   }
-
-   public function getGraphGenerator(): JPGraphGenerador
-   {
-      return new JPGraphGenerador();
-   }
    public function getAdminController()
    {
-      $dashboardService = $this->getDashboardService();
-      $exportarPdfService = $this->getExportarPdfService();
-
-      return new AdminController($this->getViewer(), $dashboardService, $exportarPdfService);
+      return new AdminController(
+         $this->getViewer(),
+         $this->getDashboardService(),
+         $this->getExportarPdfService()
+      );
    }
 
+   public function getProfileController()
+   {
+      $usuarioRepository = new UsuarioRepository();
+      $usuarioService = new UsuarioService($usuarioRepository);
+      $qrService = new QrService();
 
+      $paisRepository = new PaisRepository();
+      $ciudadRepository = new CiudadRepository();
+      $ubicacionService = new UbicacionService($paisRepository, $ciudadRepository);
 
-
-
-   public function getRouter()
-    {
-        return new Router("getHomeController", "show", $this);
-    }
-
-    public function getViewer()
-    {
-        //return new FileView();
-        return new MustachePresenter("view");
-    }
+      return new ProfileController(
+         $usuarioService,
+         $qrService,
+         $ubicacionService,
+         $this->getViewer()
+      );
+   }
 
 }

@@ -13,7 +13,6 @@ class UsuarioController
     private ImageService $imageService;
     private UbicacionService $ubicacionService;
 
-    private QrService $qrService;
 
 
     public function __construct(UsuarioService $usuarioService, QrService $qrService, MustachePresenter $view)
@@ -22,7 +21,6 @@ class UsuarioController
         $this->view = $view;
         $this->imageService = new ImageService();
         $this->ubicacionService = new UbicacionService(new \Repository\PaisRepository(), new \Repository\CiudadRepository());
-        $this->qrService = $qrService;
     }
 
     public function showLoginForm()
@@ -246,30 +244,6 @@ class UsuarioController
     }
 
 
-    public function showProfile()
-    {
-
-        // REALIZAR ESTOS METODOS
-        $idCiudad = $this->usuarioService->obtenerIdCiudadDeUsuario($_SESSION['user_id']);
-
-        $ubicacionObtenida = $this->ubicacionService->obtenerPaisYCiudadDelUsuario($idCiudad);
-        // REALIZAR ESTOS METODOS
-        var_dump($ubicacionObtenida->getCiudad()->getNombre());
-        var_dump($ubicacionObtenida->getPais()->getNombre());
-
-        $ubicacionUrl = urlencode($ubicacionObtenida->getCiudad()->getNombre() . ', ' . $ubicacionObtenida->getPais()->getNombre());
-
-        $url = "https://maps.google.com/maps?q={$ubicacionUrl}&output=embed";
-        var_dump($url);
-        $viewData = ['usuario' => $_SESSION['user_name'] ?? '',
-            'foto_perfil' => $_SESSION['foto_perfil'] ?? '',
-            'puntaje_total' => $_SESSION['puntaje_total'] ?? '',
-            'mapa_url' => $url,
-            'url_qr' => $this->qrService->generarQrCode($_SESSION['user_name'])
-        ];
-
-        $this->view->render("profile", $viewData);
-    }
 
 
 }
