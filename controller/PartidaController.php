@@ -141,14 +141,11 @@ class PartidaController
             }
             $pregunta = $responsePregunta->data;
             $_SESSION['tiempo_de_entrega'] = time();
-            //debemos calcular si el nivel de la pregunta es adecuada para el usuario
-           //preguntaService-> calcularNivelPregunta($pregunta):DataResponse;
             if (!$pregunta) {$this->endGame();return;}
 
 
             $respuestas = $pregunta->getRespuestasIncorrectas();
             $respuestas[] = $pregunta->getRespuestaCorrecta();
-            //si responde correctamente usar acumularAciertoPregunta(Pregunta $pregunta)
             shuffle($respuestas);
 
             $_SESSION['pregunta'] = [
@@ -162,8 +159,6 @@ class PartidaController
                     'color' => $pregunta->getCategoria()->getColor()
                 ]
             ];
-
-            //registrar la pregunta en la base de datos del usuario_pregunta
 
            $response = $this->usuarioPreguntaService->registrarUsuarioPregunta($_SESSION['user_id'],$pregunta->getId());
 
@@ -207,7 +202,6 @@ class PartidaController
 
             $this->preguntaService->acumularAciertoPregunta($preguntaEntity);
 
-            //posible error no catcheado
             $usuario = $this->usuarioService->findById($_SESSION['user_id']);
             $this->usuarioService->sumarRespuestaCorrecta($usuario->data);
             $this->usuarioService->sumarPreguntaEntregada($usuario->data);
