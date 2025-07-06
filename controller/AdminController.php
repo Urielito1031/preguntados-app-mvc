@@ -11,7 +11,7 @@ use Service\ExportarPdfService;
 require_once __DIR__. '/../model/Service/DashboardService.php';
 require_once __DIR__. '/../model/Service/ExportarPdfService.php';
 
-class AdminDashboardController
+class AdminController
 {
    private $view;
    private DashboardService $dashboardService;

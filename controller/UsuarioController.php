@@ -74,7 +74,7 @@ class UsuarioController
             $this->handleLoginSuccess($response->data);
             switch ($_SESSION['id_rol']) {
                 case 1:
-                    header('Location: /adminDashboard/show');
+                    header('Location: /admin/show');
                     exit;
                 case 2:
                     header('Location: /home/showEditor');

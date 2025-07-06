@@ -1,6 +1,6 @@
 <?php
 
-use Controller\AdminDashboardController;
+use Controller\AdminController;
 use Graph\JPGraphGenerador;
 use Repository\PartidaRepository;
 use Repository\PreguntaRepository;
@@ -28,7 +28,7 @@ require_once("controller/HomeController.php");
 require_once("controller/PartidaController.php");
 require_once("controller/RankingController.php");
 require_once("controller/EditorController.php");
-require_once("controller/AdminDashboardController.php");
+require_once("controller/AdminController.php");
 require_once("model/Service/ExportarPdfService.php");
 require_once("model/Entity/Usuario.php");
 
@@ -158,12 +158,12 @@ class Configuration
    {
       return new JPGraphGenerador();
    }
-   public function getAdminDashboardController()
+   public function getAdminController()
    {
       $dashboardService = $this->getDashboardService();
       $exportarPdfService = $this->getExportarPdfService();
 
-      return new AdminDashboardController($this->getViewer(), $dashboardService, $exportarPdfService);
+      return new AdminController($this->getViewer(), $dashboardService, $exportarPdfService);
    }
 
 
