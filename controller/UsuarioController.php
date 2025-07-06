@@ -271,5 +271,70 @@ class UsuarioController
         $this->view->render("profile", $viewData);
     }
 
+    public function showProfileById($userId = null, $isMyProfile = false)
+    {
+        if ($userId === null) {
+            $userId = $_GET['id'] ?? null;
+            if (!$userId) {
+                header('Location: /ranking/show');
+                exit();
+            }
+        }
+
+        $userResponse = $this->usuarioService->findById((int)$userId);
+        if (!$userResponse->success) {
+            $viewData = [
+                'error' => $userResponse->message,
+                'usuario' => $_SESSION['user_name'] ?? '',
+                'foto_perfil' => $_SESSION['foto_perfil'] ?? ''
+            ];
+            $this->view->render("error", $viewData);
+            return;
+        }
+
+        $userProfile = $userResponse->data;
+
+        $historialDePartidas = $this->usuarioService->getHistorialDePartidas($userId);
+
+        foreach ($historialDePartidas as $posicionPartidas => &$orden) {
+            $orden['numero'] = $posicionPartidas + 1;
+        }
+
+        $ciudadNombre = '';
+        $paisNombre = '';
+        if ($userProfile->getIdCiudad()) {
+            $ciudadEntity = $this->ubicacionService->getCiudadRepository()->findById($userProfile->getIdCiudad());
+            if ($ciudadEntity) {
+                $ciudadNombre = $ciudadEntity->getNombre();
+                $paisEntity = $this->ubicacionService->getPaisRepository()->findById($ciudadEntity->getIdPais());
+                if ($paisEntity) {
+                    $paisNombre = $paisEntity->getNombre();
+                }
+            }
+        }
+
+        $ubicacion = urlencode($ciudadNombre . ', ' . $paisNombre);
+        $mapUrl = "https://maps.google.com/maps?q={$ubicacion}&output=embed";
+
+        $viewData = [
+            'usuario' => $_SESSION['user_name'] ?? '',
+            'foto_perfil' => $_SESSION['foto_perfil'] ?? '',
+            'nombre_perfil' => $userProfile->getNombreUsuario(),
+            'apellido_perfil' => $userProfile->getApellido(),
+            'correo_perfil' => $userProfile->getCorreo(),
+            'fecha_nacimiento_perfil' => $userProfile->getFechaNacimiento() ? $userProfile->getFechaNacimiento()->format('Y-m-d') : 'N/A',
+            'sexo_perfil' => $userProfile->getSexo() ?? 'N/A',
+            'ciudad_perfil' => $ciudadNombre,
+            'pais_perfil' => $paisNombre,
+            'foto_perfil_visitado' => $userProfile->getUrlFotoPerfil(),
+            'puntaje_total_visitado' => $userProfile->getPuntajeTotal(),
+            'mapa_url' => $mapUrl,
+            'historial_partidas_visitado' => $historialDePartidas,
+            'es_mi_perfil' => $isMyProfile
+        ];
+
+        $this->view->render("profile", $viewData);
+    }
+
 
 }
