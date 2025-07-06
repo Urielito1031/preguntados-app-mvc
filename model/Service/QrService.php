@@ -28,7 +28,7 @@ class QrService
         $frameSize = 3;
 
         // Modificar la url para mostrar el perfil segun el usuario
-        $contenido = 'http://localhost/usuario/showProfile?usuario=' . $nombreUsuario ;
+        $contenido = 'http://localhost/profile/show?usuario=' . $nombreUsuario ;
 
         QRcode::png($contenido, $nombreArchivo, $level, $tamanio, $frameSize);
 

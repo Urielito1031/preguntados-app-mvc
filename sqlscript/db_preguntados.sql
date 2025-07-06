@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 21-06-2025 a las 02:45:01
+-- Tiempo de generación: 06-07-2025 a las 17:24:07
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -69,7 +69,9 @@ INSERT INTO `ciudad` (`id`, `nombre`, `id_pais`) VALUES
 (3, 'New York', 3),
 (4, 'Puente Alto', 4),
 (5, 'Manchester', 5),
-(6, '', 6);
+(6, '', 6),
+(7, 'Haile', 7),
+(8, 'Montreal', 8);
 
 -- --------------------------------------------------------
 
@@ -114,7 +116,9 @@ INSERT INTO `pais` (`id`, `nombre`) VALUES
 (3, 'Estados Unidos'),
 (4, 'Chile'),
 (5, 'Inglaterra'),
-(6, '');
+(6, ''),
+(7, 'Alemania'),
+(8, 'Canada');
 
 -- --------------------------------------------------------
 
@@ -131,27 +135,6 @@ CREATE TABLE `partida` (
   `creado_en` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- --------------------------------------------------------
--- Estructura de tabla para la tabla 'pregunta-sugerida'
-CREATE TABLE `pregunta_sugerida` (
-                                     `id` int(11) NOT NULL,
-                                     `id_categoria` int(11) NOT NULL,
-                                     `enunciado` varchar(255) NOT NULL
-
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
-INSERT INTO `pregunta_sugerida` (`id`,`id_categoria`, `enunciado`) VALUES
-       (1, 1, '¿2+2?'),
-       (2, 1, '¿3+3?');
--- --------------------------------------------------------
--- Estructura de tabla para la tabla 'respuesta-sugerida'
-
-CREATE TABLE `respuesta_sugerida` (
-                                      `id` int(11) NOT NULL,
-                                      `respuesta` varchar(255) NOT NULL,
-                                      `id_pregunta` int(11) NOT NULL,
-                                      `es_correcta` TINYINT(1) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 --
 -- Volcado de datos para la tabla `partida`
 --
@@ -171,18 +154,38 @@ INSERT INTO `partida` (`id`, `id_usuario`, `puntaje`, `estado`, `preguntas_corre
 (91, 27, 900, 'GANADA', 8, '2025-06-16 16:00:00'),
 (92, 27, 750, 'GANADA', 7, '2025-06-17 11:00:00'),
 (93, 27, 400, 'PERDIDA', 3, '2025-06-18 18:00:00'),
-(94, 27, 800, 'GANADA', 7, '2025-06-19 13:30:00');
+(94, 27, 800, 'GANADA', 7, '2025-06-19 13:30:00'),
+(95, 28, 720, 'GANADA', 7, '2025-06-15 11:00:00'),
+(96, 28, 480, 'PERDIDA', 4, '2025-06-16 13:20:00'),
+(97, 28, 850, 'GANADA', 8, '2025-06-17 10:45:00'),
+(98, 28, 650, 'GANADA', 6, '2025-06-18 15:30:00'),
+(99, 29, 910, 'GANADA', 9, '2025-06-15 12:30:00'),
+(100, 29, 350, 'PERDIDA', 3, '2025-06-16 14:00:00'),
+(101, 29, 780, 'GANADA', 7, '2025-06-17 09:00:00'),
+(102, 29, 520, 'PERDIDA', 5, '2025-06-18 16:10:00'),
+(103, 29, 880, 'GANADA', 8, '2025-06-19 11:45:00'),
+(104, 30, 600, 'GANADA', 6, '2025-06-15 14:15:00'),
+(105, 30, 420, 'PERDIDA', 4, '2025-06-17 12:00:00'),
+(106, 30, 790, 'GANADA', 7, '2025-06-19 10:30:00'),
+(107, 31, 820, 'GANADA', 8, '2025-06-15 15:00:00'),
+(108, 31, 510, 'PERDIDA', 5, '2025-06-16 11:30:00'),
+(109, 31, 940, 'GANADA', 9, '2025-06-17 13:45:00'),
+(110, 31, 670, 'GANADA', 6, '2025-06-18 17:20:00'),
+(111, 32, 760, 'GANADA', 7, '2025-06-15 16:00:00'),
+(112, 32, 390, 'PERDIDA', 4, '2025-06-16 12:15:00'),
+(113, 32, 870, 'GANADA', 8, '2025-06-17 14:30:00'),
+(114, 32, 550, 'PERDIDA', 5, '2025-06-18 18:00:00'),
+(115, 32, 920, 'GANADA', 9, '2025-06-19 12:00:00'),
+(116, 33, 680, 'GANADA', 6, '2025-06-15 17:00:00'),
+(117, 33, 470, 'PERDIDA', 4, '2025-06-17 15:15:00'),
+(118, 33, 830, 'GANADA', 8, '2025-06-19 13:00:00'),
+(119, 35, 0, 'PERDIDA', 0, '2025-07-05 17:53:44'),
+(120, 35, 0, 'PERDIDA', 0, '2025-07-05 17:53:46'),
+(121, 35, 0, 'PERDIDA', 0, '2025-07-05 17:53:47'),
+(122, 35, 1, 'GANADA', 0, '2025-07-05 17:53:48');
 
-INSERT INTO `respuesta_sugerida` (`id`, `respuesta`, `id_pregunta`, `es_correcta`) VALUES
-    (1, '4', 1, 1),
-    (2, '5', 1, 0),
-    (3, '6', 1, 0),
-    (4, '7', 1, 0),
-    (5, '6', 2, 1),
-    (6, '9', 2, 0),
-    (7, '12', 2, 0),
-    (8, '3.14', 2, 0);
 -- --------------------------------------------------------
+
 --
 -- Estructura de tabla para la tabla `pregunta`
 --
@@ -212,14 +215,14 @@ INSERT INTO `pregunta` (`id`, `id_categoria`, `enunciado`, `cantidad_jugada`, `c
 (9, 3, '¿Cuál es el nombre de la obra famosa de Vincent van Gogh?', 0, 0, 0),
 (10, 4, '¿Quién formuló las leyes del movimiento?', 0, 0, 0),
 (11, 4, '¿Qué elemento es el más abundante en la atmósfera terrestre?', 0, 0, 0),
-(12, 4, '¿Qué molécula porta la información genética?', 0, 0, 0),
+(12, 4, '¿Qué molécula porta la información genética?', 1, 0, 0),
 (13, 5, '¿Cuál es la capital de Francia?', 0, 0, 0),
 (14, 5, '¿Qué río es el más largo de Sudamérica?', 0, 0, 0),
 (15, 5, '¿En qué continente está Egipto?', 0, 0, 0),
 (16, 6, '¿Qué actor ganó un Oscar por \"El Renacido\"?', 0, 0, 0),
-(17, 6, '¿Qué banda escribió \"Hey Jude\"?', 0, 0, 0),
+(17, 6, '¿Qué banda escribió \"Hey Jude\"?', 1, 0, 0),
 (18, 6, '¿Qué saga incluye a un personaje llamado Harry Potter?', 0, 0, 0),
-(21, 1, '¿En qué año cayó el Muro de Berlín?', 0, 0, 0),
+(21, 1, '¿En qué año cayó el Muro de Berlín?', 1, 0, 0),
 (22, 1, '¿Quién fue el líder de la Revolución Rusa de 1917?', 0, 0, 0),
 (23, 1, '¿Qué emperador romano construyó el Coliseo?', 0, 0, 0),
 (24, 2, '¿En qué deporte se utiliza un bate y una pelota?', 0, 0, 0),
@@ -230,10 +233,10 @@ INSERT INTO `pregunta` (`id`, `id_categoria`, `enunciado`, `cantidad_jugada`, `c
 (29, 3, '¿Qué arquitecto diseñó el Museo Guggenheim de Bilbao?', 0, 0, 0),
 (30, 4, '¿Qué planeta es conocido como el planeta rojo?', 0, 0, 0),
 (31, 4, '¿Qué científico propuso la teoría de la relatividad?', 0, 0, 0),
-(32, 4, '¿Qué partícula subatómica tiene carga positiva?', 0, 0, 0),
+(32, 4, '¿Qué partícula subatómica tiene carga positiva?', 1, 0, 0),
 (33, 5, '¿Cuál es el país más grande del mundo por área?', 0, 0, 0),
 (34, 5, '¿Qué montaña es la más alta del mundo?', 0, 0, 0),
-(35, 5, '¿Qué país tiene la mayor cantidad de husos horarios?', 0, 0, 0),
+(35, 5, '¿Qué país tiene la mayor cantidad de husos horarios?', 1, 1, 0),
 (36, 6, '¿Qué actor interpretó a Iron Man en el Universo Cinematográfico de Marvel?', 0, 0, 0),
 (37, 6, '¿Qué serie de TV es conocida por el lema \"Winter is Coming\"?', 0, 0, 0),
 (38, 6, '¿Qué director de cine es conocido por películas como \"Pulp Fiction\" y \"Kill Bill\"?', 0, 0, 0),
@@ -249,6 +252,18 @@ INSERT INTO `pregunta` (`id`, `id_categoria`, `enunciado`, `cantidad_jugada`, `c
 (48, 7, '¿Qué principio SOLID indica que una clase debe tener una única responsabilidad?', 0, 0, 0),
 (49, 7, '¿Qué comando de Docker se usa para construir una imagen desde un Dockerfile?', 0, 0, 0),
 (50, 4, '¿Qué protocolo asegura la comunicación encriptada en la web?', 0, 0, 0);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `pregunta_sugerida`
+--
+
+CREATE TABLE `pregunta_sugerida` (
+  `id` int(11) NOT NULL,
+  `id_categoria` int(11) NOT NULL,
+  `enunciado` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -464,6 +479,19 @@ INSERT INTO `respuesta` (`id`, `respuesta`, `id_pregunta`, `es_correcta`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `respuesta_sugerida`
+--
+
+CREATE TABLE `respuesta_sugerida` (
+  `id` int(11) NOT NULL,
+  `respuesta` varchar(255) NOT NULL,
+  `id_pregunta` int(11) NOT NULL,
+  `es_correcta` tinyint(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `rol`
 --
 
@@ -505,19 +533,27 @@ CREATE TABLE `usuario` (
   `cuenta_validada` tinyint(1) NOT NULL DEFAULT 0,
   `preguntas_entregadas` int(11) DEFAULT 0,
   `respondidas_correctamente` int(11) DEFAULT 0,
-  `token` INT UNSIGNED DEFAULT NULL
+  `token` int(10) UNSIGNED DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `usuario`
 --
 
-INSERT INTO `usuario` (`id_usuario`, `nombre`, `apellido`, `fecha_nacimiento`, `sexo`, `correo`, `contrasenia`, `nombre_usuario`, `url_foto_perfil`, `url_qr`, `id_rol`, `id_ciudad`, `id_nivel`, `puntaje_total`, `cuenta_validada`, `preguntas_entregadas`, `respondidas_correctamente`) VALUES
-(9, NULL, NULL, NULL, NULL, 'admin123@gmail.com', '$2y$10$OCA/OjkHJQa2uOoF/aNMKeyoEgqeNh.a9S08XTE4hZl4j.c3A/GOW', 'usuarioAdmin123', 'public/img/photo-admin.jpg', '/qr/usuarioAdmin123.png', 1, NULL, 1, 0, 1, 0, 0),
-(10, NULL, NULL, NULL, NULL, 'editor123@gmail.com', '$2y$10$oX6fGeN2dnaI0En7EWuhAubVO6gFgSJuC0uG9qZY3uJEAM9pQDJsy', 'usuarioEditor123', 'public/img/photo-editor.jpg', '/qr/usuarioEditor123.png', 2, NULL, 1, 0, 1, 0, 0),
-(25, 'Juan', 'Pérez', '1995-03-15', 'Masculino', 'juan.perez@gmail.com', '$2y$10$OCA/OjkHJQa2uOoF/aNMKeyoEgqeNh.a9S08XTE4hZl4j.c3A/GOW', 'juanperez95', 'public/img/photo-juan.jpg', '/qr/juanperez95.png', 3, 1, 1, 0, 1, 0, 0),
-(26, 'María', 'Gómez', '1998-07-22', 'Femenino', 'maria.gomez@gmail.com', '$2y$10$oX6fGeN2dnaI0En7EWuhAubVO6gFgSJuC0uG9qZY3uJEAM9pQDJsy', 'mariagomez98', 'public/img/photo-maria.jpg', '/qr/mariagomez98.png', 3, 2, 1, 0, 1, 0, 0),
-(27, 'Carlos', 'López', '1990-11-10', 'Masculino', 'carlos.lopez@gmail.com', '$2y$10$oX6fGeN2dnaI0En7EWuhAubVO6gFgSJuC0uG9qZY3uJEAM9pQDJsy', 'carloslopez90', 'public/img/photo-carlos.jpg', '/qr/carloslopez90.png', 3, 3, 1, 0, 1, 0, 0);
+INSERT INTO `usuario` (`id_usuario`, `nombre`, `apellido`, `fecha_nacimiento`, `sexo`, `correo`, `contrasenia`, `nombre_usuario`, `url_foto_perfil`, `url_qr`, `id_rol`, `id_ciudad`, `id_nivel`, `puntaje_total`, `cuenta_validada`, `preguntas_entregadas`, `respondidas_correctamente`, `token`) VALUES
+(9, NULL, NULL, NULL, NULL, 'admin123@gmail.com', '$2y$10$OCA/OjkHJQa2uOoF/aNMKeyoEgqeNh.a9S08XTE4hZl4j.c3A/GOW', 'usuarioAdmin123', 'public/img/photo-admin.jpg', '/qr/usuarioAdmin123.png', 1, NULL, 1, 0, 1, 0, 0, NULL),
+(10, NULL, NULL, NULL, NULL, 'editor123@gmail.com', '$2y$10$oX6fGeN2dnaI0En7EWuhAubVO6gFgSJuC0uG9qZY3uJEAM9pQDJsy', 'usuarioEditor123', 'public/img/photo-editor.jpg', '/qr/usuarioEditor123.png', 2, NULL, 1, 0, 1, 0, 0, NULL),
+(25, 'Juan', 'Pérez', '1950-03-15', 'Masculino', 'juan.perez@gmail.com', '$2y$10$OCA/OjkHJQa2uOoF/aNMKeyoEgqeNh.a9S08XTE4hZl4j.c3A/GOW', 'juanperez95', 'public/img/photo-juan.jpg', '/qr/juanperez95.png', 3, 1, 1, 0, 1, 10, 9, NULL),
+(26, 'María', 'Gómez', '1998-07-22', 'Femenino', 'maria.gomez@gmail.com', '$2y$10$oX6fGeN2dnaI0En7EWuhAubVO6gFgSJuC0uG9qZY3uJEAM9pQDJsy', 'mariagomez98', 'public/img/photo-maria.jpg', '/qr/mariagomez98.png', 3, 2, 1, 0, 1, 59, 50, NULL),
+(27, 'Carlos', 'López', '1990-11-10', 'Masculino', 'carlos.lopez@gmail.com', '$2y$10$oX6fGeN2dnaI0En7EWuhAubVO6gFgSJuC0uG9qZY3uJEAM9pQDJsy', 'carloslopez90', 'public/img/photo-carlos.jpg', '/qr/carloslopez90.png', 3, 3, 1, 0, 1, 90, 5, NULL),
+(28, 'Ana', 'Martínez', '1992-04-12', 'Femenino', 'ana.martinez@gmail.com', '$2y$10$oX6fGeN2dnaI0En7EWuhAubVO6gFgSJuC0uG9qZY3uJEAM9pQDJsy', 'anamartinez92', 'public/img/photo-ana.jpg', '/qr/anamartinez92.png', 3, 4, 1, 0, 1, 0, 0, NULL),
+(29, 'Lucas', 'Rodríguez', '1988-09-05', 'Masculino', 'lucas.rodriguez@gmail.com', '$2y$10$oX6fGeN2dnaI0En7EWuhAubVO6gFgSJuC0uG9qZY3uJEAM9pQDJsy', 'lucasrod88', 'public/img/photo-lucas.jpg', '/qr/lucasrod88.png', 3, 5, 1, 0, 1, 47, 39, NULL),
+(30, 'Sofía', 'Fernández', '1996-12-30', 'Femenino', 'sofia.fernandez@gmail.com', '$2y$10$oX6fGeN2dnaI0En7EWuhAubVO6gFgSJuC0uG9qZY3uJEAM9pQDJsy', 'sofiafer96', 'public/img/photo-sofia.jpg', '/qr/sofiafer96.png', 3, 1, 1, 0, 1, 5, 3, NULL),
+(31, 'Diego', 'García', '1990-06-25', 'Masculino', 'diego.garcia@gmail.com', '$2y$10$oX6fGeN2dnaI0En7EWuhAubVO6gFgSJuC0uG9qZY3uJEAM9pQDJsy', 'diegogarcia90', 'public/img/photo-diego.jpg', '/qr/diegogarcia90.png', 3, 2, 1, 0, 1, 110, 90, NULL),
+(32, 'Valentina', 'Díaz', '1994-02-18', 'Femenino', 'valentina.diaz@gmail.com', '$2y$10$oX6fGeN2dnaI0En7EWuhAubVO6gFgSJuC0uG9qZY3uJEAM9pQDJsy', 'valentinad94', 'public/img/photo-valentina.jpg', '/qr/valentinad94.png', 3, 3, 1, 0, 1, 27, 24, NULL),
+(33, 'Mateo', 'Sánchez', '2010-08-14', 'Masculino', 'mateo.sanchez@gmail.com', '$2y$10$oX6fGeN2dnaI0En7EWuhAubVO6gFgSJuC0uG9qZY3uJEAM9pQDJsy', 'mateosan87', 'public/img/photo-mateo.jpg', '/qr/mateosan87.png', 3, 4, 1, 0, 1, 0, 0, NULL),
+(34, 'Mariano ', 'Perez', '2012-11-21', 'Masculino', 'marito@gmail.com', '$2y$10$W0CoJxJytubfI8GOfLXVUOLdeEybqQTo/bwgpGzYzurtES9KpwTKK', 'Chuki90', 'public/img/68688f4c17702-especialista4.jpg', '/qr/Chuki90.png', 3, 7, 1, 0, 0, 2, 2, NULL),
+(35, 'Facundo', 'Garfiel', '2008-01-31', 'Masculino', 'cufa@gmail.com', '$2y$10$arELCT2QFZm1GCqZzsods.LWtXLi6cHxeHZ5GmL0xvwr3mSDWWNH.', 'cufitanai2', 'public/img/686990630138f-entrenamiento.jpg', '/qr/cufitanai2.png', 3, 8, 1, 0, 1, 2, 1, NULL);
 
 -- --------------------------------------------------------
 
@@ -529,6 +565,17 @@ CREATE TABLE `usuario_pregunta` (
   `id_usuario` int(11) NOT NULL,
   `id_pregunta` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `usuario_pregunta`
+--
+
+INSERT INTO `usuario_pregunta` (`id_usuario`, `id_pregunta`) VALUES
+(35, 12),
+(35, 17),
+(35, 21),
+(35, 32),
+(35, 35);
 
 --
 -- Índices para tablas volcadas
@@ -574,6 +621,13 @@ ALTER TABLE `pregunta`
   ADD KEY `id_categoria` (`id_categoria`);
 
 --
+-- Indices de la tabla `pregunta_sugerida`
+--
+ALTER TABLE `pregunta_sugerida`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `id_categoria` (`id_categoria`);
+
+--
 -- Indices de la tabla `respuesta`
 --
 ALTER TABLE `respuesta`
@@ -581,18 +635,12 @@ ALTER TABLE `respuesta`
   ADD KEY `id_pregunta` (`id_pregunta`);
 
 --
--- Indices de la tabla `pregunta`
---
-ALTER TABLE `pregunta_sugerida`
-    ADD PRIMARY KEY (`id`),
-    ADD KEY `id_categoria` (`id_categoria`);
-
---
 -- Indices de la tabla `respuesta_sugerida`
 --
 ALTER TABLE `respuesta_sugerida`
-    ADD PRIMARY KEY (`id`),
-    ADD KEY `id_pregunta` (`id_pregunta`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `id_pregunta` (`id_pregunta`);
+
 --
 -- Indices de la tabla `rol`
 --
@@ -632,7 +680,7 @@ ALTER TABLE `categoria`
 -- AUTO_INCREMENT de la tabla `ciudad`
 --
 ALTER TABLE `ciudad`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT de la tabla `nivel`
@@ -644,13 +692,13 @@ ALTER TABLE `nivel`
 -- AUTO_INCREMENT de la tabla `pais`
 --
 ALTER TABLE `pais`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT de la tabla `partida`
 --
 ALTER TABLE `partida`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=95;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=123;
 
 --
 -- AUTO_INCREMENT de la tabla `pregunta`
@@ -659,22 +707,22 @@ ALTER TABLE `pregunta`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
 
 --
+-- AUTO_INCREMENT de la tabla `pregunta_sugerida`
+--
+ALTER TABLE `pregunta_sugerida`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT de la tabla `respuesta`
 --
 ALTER TABLE `respuesta`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=198;
 
-
--- AUTO_INCREMENT de la tabla `pregunta`
 --
-ALTER TABLE `pregunta_sugerida`
-    MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
-
---
--- AUTO_INCREMENT de la tabla `respuesta_incorrecta`
+-- AUTO_INCREMENT de la tabla `respuesta_sugerida`
 --
 ALTER TABLE `respuesta_sugerida`
-    MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=150;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `rol`
@@ -686,7 +734,7 @@ ALTER TABLE `rol`
 -- AUTO_INCREMENT de la tabla `usuario`
 --
 ALTER TABLE `usuario`
-  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
 
 --
 -- Restricciones para tablas volcadas
@@ -711,11 +759,22 @@ ALTER TABLE `pregunta`
   ADD CONSTRAINT `pregunta_ibfk_1` FOREIGN KEY (`id_categoria`) REFERENCES `categoria` (`id`);
 
 --
+-- Filtros para la tabla `pregunta_sugerida`
+--
+ALTER TABLE `pregunta_sugerida`
+  ADD CONSTRAINT `pregunta_sugerida_ibfk_1` FOREIGN KEY (`id_categoria`) REFERENCES `categoria` (`id`);
+
+--
 -- Filtros para la tabla `respuesta`
 --
 ALTER TABLE `respuesta`
-    ADD CONSTRAINT `respuesta_ibfk_1` FOREIGN KEY (`id_pregunta`) REFERENCES `pregunta` (`id`)
-        ON DELETE CASCADE;
+  ADD CONSTRAINT `respuesta_ibfk_1` FOREIGN KEY (`id_pregunta`) REFERENCES `pregunta` (`id`);
+
+--
+-- Filtros para la tabla `respuesta_sugerida`
+--
+ALTER TABLE `respuesta_sugerida`
+  ADD CONSTRAINT `respuesta_sugerida_ibfk_1` FOREIGN KEY (`id_pregunta`) REFERENCES `pregunta_sugerida` (`id`) ON DELETE CASCADE;
 
 --
 -- Filtros para la tabla `usuario`
@@ -726,25 +785,12 @@ ALTER TABLE `usuario`
   ADD CONSTRAINT `usuario_ibfk_3` FOREIGN KEY (`id_nivel`) REFERENCES `nivel` (`id_nivel`);
 
 --
--- Filtros para la tabla `pregunta_sugerida`
---
-ALTER TABLE `pregunta_sugerida`
-    ADD CONSTRAINT pregunta_sugerida_ibfk_1 FOREIGN KEY (`id_categoria`) REFERENCES `categoria` (`id`);
-
---
--- Filtros para la tabla `respuesta_sugerida`
---
-ALTER TABLE `respuesta_sugerida`
-    ADD CONSTRAINT `respuesta_sugerida_ibfk_1` FOREIGN KEY (`id_pregunta`) REFERENCES `pregunta_sugerida` (`id`)
-        ON DELETE CASCADE;
---
 -- Filtros para la tabla `usuario_pregunta`
 --
 ALTER TABLE `usuario_pregunta`
   ADD CONSTRAINT `usuario_pregunta_ibfk_1` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`),
   ADD CONSTRAINT `usuario_pregunta_ibfk_2` FOREIGN KEY (`id_pregunta`) REFERENCES `pregunta` (`id`);
 COMMIT;
-
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

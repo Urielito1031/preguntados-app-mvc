@@ -50,7 +50,7 @@ class EditorController{
 
     public function edicionRealizada(){
         if(!$this->haySessionDeEdicionActiva()){
-            header('Location: ../home/showEditor');
+            header('Location: ../editor/show');
         }
         $viewData =array_merge($this->getUserSessionData(), [
             'mensaje' => $this->getMensajeSession(),
