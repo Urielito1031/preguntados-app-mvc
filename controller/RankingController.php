@@ -34,8 +34,11 @@ class RankingController
 
         $viewData = array_merge($this->getUserSessionData(), [
             'jugadores' => $ranking,
-            'partidas' => $historialDePartidas
+            'partidas' => $historialDePartidas,
+            'titulo_ranking' => 'Mejores Partidas'
         ]);
+
+//        var_dump();
 
         $this->view->render("ranking", $viewData);
     }

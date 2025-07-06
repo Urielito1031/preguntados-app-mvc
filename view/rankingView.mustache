@@ -1,53 +1,50 @@
-<section class="d-flex flex-column align-items-center">
-
-
-    <h2>🔥 Top Jugadores 🔥</h2>
-
-
-    <table class="table table-striped w-50">
+<section class="container-ranking">
+    <h2 class="text-center text-violet">{{titulo_ranking}}</h2>
+    <table class="table table-striped">
         <thead>
-        <tr class="text-center">
-            <th>#</th>
-            <th>Nombre</th>
-            <th>Puntaje Total</th>
-            <th>Partidas Jugadas</th>
-        </tr>
-        </thead>
+            <tr>
+                <th>Posición</th>
 
-        <tbody>
-        {{#jugadores}}
-            <tr class="text-center">
-                <th>{{posicion}}</th>
-                <th>
-                    <a href="#">{{nombre}}</a>
-                </th>
-                <th>{{puntaje_total}}</th>
-                <th>{{partidas_jugadas}}</th>
+                <th>Jugador</th>
+                <th>Mejor Puntaje</th>
             </tr>
-        {{/jugadores}}
+        </thead>
+        <tbody>
+            {{#jugadores}}
+            <tr>
+                <td>{{posicion}}</td>
+                <td><a href="/usuario/showProfileById?id={{id_usuario}}">{{nombre_usuario}}</a></td>
+                <td class="text-center">{{puntaje_maximo}}</td>
+            </tr>
+            {{/jugadores}}
+            {{^jugadores}}
+            <tr>
+                <td colspan="4" class="text-center">El ranking está vacío. ¡Juega para aparecer aquí!</td>
+            </tr>
+            {{/jugadores}}
         </tbody>
     </table>
-
-
-    <h2>Historial</h2>
-    <table class="table table-striped w-50">
-        <thead>
-        <tr class="text-center">
-            <th>#</th>
-            <th>Puntaje</th>
-        </tr>
-        </thead>
-
-        <tbody>
-        {{#partidas}}
-            <tr class="text-center">
-                <th>Partida N°{{numero}}</th>
-                <th>{{puntaje}}</th>
-            </tr>
-        {{/partidas}}
-        </tbody>
-    </table>
-
-    <a href="/home/show">Volver</a>
-
 </section>
+
+<section class="container-historial mt-5">
+    <h3 class="text-center text-pink">Mi Historial de Partidas</h3>
+    <ul class="list-group">
+        {{#partidas_jugadas}}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            Partida {{numero}}
+            <strong>{{puntaje}} puntos</strong>
+        </li>
+        {{/partidas_jugadas}}
+
+        {{^partidas}}
+        <li class="list-group-item">Aún no has jugado ninguna partida.</li>
+        {{/partidas}}
+    </ul>
+</section>
+
+<style>
+    .container-ranking, .container-historial {
+        max-width: 800px;
+        margin: auto;
+    }
+</style>

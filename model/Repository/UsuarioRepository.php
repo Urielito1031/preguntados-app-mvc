@@ -1,7 +1,6 @@
 <?php
 
 namespace Repository;
-
 use Config\Database;
 use Entity\Usuario;
 use PDO;
@@ -152,11 +151,11 @@ class UsuarioRepository
 
     public function getRanking()
     {
-        $sql = "SELECT u.id_usuario AS id_usuario, u.nombre, SUM(p.puntaje) AS puntaje_total, COUNT(*) AS partidas_jugadas
-                FROM partida p
-                JOIN usuario u ON p.id_usuario = u.id_usuario
-                GROUP BY u.id_usuario, u.nombre
-                ORDER BY puntaje_total DESC; ";
+        $sql = "SELECT u.id_usuario, u.nombre_usuario, u.url_foto_perfil, MAX(p.puntaje) AS puntaje_maximo
+            FROM usuario u
+            JOIN partida p ON u.id_usuario = p.id_usuario
+            GROUP BY u.id_usuario, u.nombre_usuario, u.url_foto_perfil
+            ORDER BY puntaje_maximo DESC";
         try {
             $stmt = $this->conn->prepare($sql);
             $stmt->execute();

@@ -1,40 +1,65 @@
-<link rel="stylesheet" href="/public/css/profile.css">
+<section class="container-fluid d-flex flex-column align-items-center justify-content-center mt-4">
+    <h1 class="text-violet my-4">Perfil de {{nombre_perfil}}</h1>
 
-<section class="container d-flex flex-column align-items-center" style="width: 90%; max-width: 550px;">
-
-    <article class="d-flex  justify-content-between w-100">
-        <div class="d-flex flex-column align-items-center" style="width: 200px">
-            <img class="rounded-circle w-100" src="/{{foto_perfil}}" alt="Foto de perfil">
-            <a class="bg-color-violet w-100 text-center mt-4" href="#">EDITAR PERFIL</a>
+    <article class="d-flex flex-column flex-md-row align-items-center justify-content-around w-75 mb-4">
+        <div class="d-flex flex-column align-items-center mb-3 mb-md-0">
+            <img src="/{{foto_perfil_visitado}}" alt="Foto de Perfil" class="rounded-circle" style="height: 250px; width: 250px;">
+            <p class="mt-2 text-violet fs-5">{{nombre_perfil}}</p>
+            {{#es_mi_perfil}}
+                <p class="text-muted fst-italic">¡Este es tu perfil!</p>
+            {{/es_mi_perfil}}
         </div>
-
-        <div class="flex flex-column" style="width: 45%">
-            <h2 class="text-violet">
-                <i class="bi bi-qr-code" id="boton-qr" style="cursor:pointer;" title="Ver QR"></i>
-                {{usuario}}
-            </h2>
-            <ul class="list-group mt-4">
-                <li class="list-group-item"><span>#1</span> en el ranking</li>
-                <li class="list-group-item"><span>0</span> Partidas jugadas</li>
-                <li class="list-group-item"><span>0</span> Partidas ganadas</li>
-                <li class="list-group-item"><span>0</span> Partidas perdidas</li>
-                <li class="list-group-item"><span>0</span> Puntos totales</li>
-            </ul>
+        <div>
+            <h2 class="text-violet"><i class="bi bi-qr-code" id="boton-qr" style="cursor:pointer;" title="Ver QR"></i>{{nombre_perfil}}</h2>
+            <p><strong>Correo:</strong> {{correo_perfil}}</p>
+            <p><strong>Nombre Completo:</strong> {{apellido_perfil}}, {{nombre}}</p>
+            <p><strong>Fecha de Nacimiento:</strong> {{fecha_nacimiento_perfil}}</p>
+            <p><strong>Sexo:</strong> {{sexo_perfil}}</p>
+            <p><strong>Ubicación:</strong> {{ciudad_perfil}}, {{pais_perfil}}</p>
         </div>
     </article>
 
-    <article class="mt-4 w-100">
-        <h3><i class="bi bi-geo-alt-fill"></i></h3>
-        <iframe class="mt-2 mb-2 w-100 border border-4" style="height: 250px"
-                id="mapa"
+
+    <h2 class="text-violet mb-3">Historial de Partidas</h2>
+    {{^historial_partidas_visitado}}
+        <p>Este usuario aún no ha jugado ninguna partida.</p>
+    {{/historial_partidas_visitado}}
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+
+                <thead>
+                    <tr>
+                        <th scope="col">Partida</th>
+                        <th scope="col">Puntaje</th>
+                    </tr>
+                </thead>
+                {{#historial_partidas_visitado}}
+                <tbody>
+                    {{#.}}
+                    <tr>
+                        <td>{{numero}}</td>
+                        <td>{{puntaje}}</td>
+                    </tr>
+                    {{/.}}
+                </tbody>
+                {{/historial_partidas_visitado}}
+            </table>
+        </div>
+
+    <div class="mt-4">
+        <h2 class="text-violet">Ubicación en el mapa</h2>
+        <div class="map-container">
+            <iframe
+                width="600"
+                height="450"
+                style="border:0"
                 loading="lazy"
                 allowfullscreen
                 referrerpolicy="no-referrer-when-downgrade"
                 src="{{mapa_url}}">
-        </iframe>
-    </article>
-
-    <a href="/usuario/logout" class="btn btn-danger">Cerrar Sesión</a>
+            </iframe>
+        </div>
+    </div>
 </section>
 
 <dialog id="modal-qr">

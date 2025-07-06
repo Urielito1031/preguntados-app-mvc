@@ -87,5 +87,16 @@ class CiudadRepository
         return $data ? new Ciudad($data) : null;
     }
 
+    public function findById($getIdCiudad)
+    {
+        $sql = "SELECT * FROM ciudad WHERE id = :id";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindValue(':id', $getIdCiudad, PDO::PARAM_INT);
+        $stmt->execute();
+        $data = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return $data ? new Ciudad($data) : null;
+    }
+
 
 }
