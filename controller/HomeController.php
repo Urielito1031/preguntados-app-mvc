@@ -63,21 +63,16 @@ class HomeController
     }
 
     public function requestSubmit() {
-       $idCategoria =  $_POST['categoria'] ?? null;
-       $enunciado = $_POST['enunciado'] ?? null;
-       $posicionArrrayRespuestaCorrecta = $_POST['repuesta_correcta'] ?? null;
-       $respuestas = $_POST['respuestas'] ?? [];
+       $idCategoria =  $_POST['categoria'] ?? '';
+       $enunciado = $_POST['enunciado'] ?? '';
+       $posicionArrrayRespuestaCorrecta = $_POST['repuesta_correcta'] ?? '';
+       $respuestas = $_POST['respuestas'] ?? '';
 
-        //SE RECIBEN BIEN
-        var_dump($idCategoria);
-        var_dump($enunciado);
-        var_dump($posicionArrrayRespuestaCorrecta);
-        var_dump($respuestas);
 
-       // CREAR PREGUNTA EN EL SERVICIO
+
        $this->sugerenciaPreguntaService->crearPregunta($idCategoria,$enunciado,$respuestas,$posicionArrrayRespuestaCorrecta);
 
-       // RETORNAR UNA VISTA DE 'SE CREO SUGERENCIA DE PREGUNTA SATISFACTORIAMENTE'
+
 
 
     }
