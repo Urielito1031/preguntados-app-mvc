@@ -128,8 +128,6 @@ class Configuration
     }
 
     public function getEditorController(){
-       $sugerenciaPreguntaRepository = new SugerenciaPreguntaRepository();
-       $sugerenciaPreguntaService = new SugerenciaPreguntaService($sugerenciaPreguntaRepository);
 
 
         $preguntaRepository = new PreguntaRepository();
