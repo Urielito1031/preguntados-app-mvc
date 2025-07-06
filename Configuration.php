@@ -13,6 +13,7 @@ use Service\DashboardService;
 use Service\ExportarPdfService;
 use Service\PartidaService;
 use Service\PreguntaService;
+use Service\QrService;
 use Service\SugerenciaPreguntaService;
 use Service\UsuarioPreguntaService;
 use Service\UsuarioService;
@@ -61,6 +62,7 @@ include_once('vendor/mustache/src/Mustache/Autoloader.php');
 include_once('vendor/phpmailer/Exception.php');
 include_once('vendor/phpmailer/PHPMailer.php');
 include_once('vendor/phpmailer/SMTP.php');
+include_once 'model/Service/QrService.php';
 
 class Configuration
 {
@@ -82,7 +84,8 @@ class Configuration
    {
       $repository = new UsuarioRepository();
       $service = new UsuarioService($repository);
-      return new UsuarioController($service, $this->getViewer());
+      $qrService = new QrService();
+      return new UsuarioController($service, $qrService ,$this->getViewer());
    }
 
     public function getHomeController()

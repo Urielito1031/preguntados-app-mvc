@@ -10,7 +10,7 @@
 
         <div class="flex flex-column" style="width: 45%">
             <h2 class="text-violet">
-                <a href="#"><i class="bi bi-qr-code"></i></a>
+                <i class="bi bi-qr-code" id="boton-qr" style="cursor:pointer;" title="Ver QR"></i>
                 {{usuario}}
             </h2>
             <ul class="list-group mt-4">
@@ -36,3 +36,18 @@
 
     <a href="/usuario/logout" class="btn btn-danger">Cerrar Sesión</a>
 </section>
+
+<dialog id="modal-qr">
+    <i class="bi bi-x-lg" id="boton-cerrar-modal" style="position: absolute; top: 10px; right: 10px; cursor: pointer"></i>
+    <h3>Escaneame!</h3>
+    <img src="{{url_qr}}">
+</dialog>
+
+<script>
+    const modal_qr = document.querySelector('#modal-qr')
+    const boton_mostrar_qr = document.querySelector('#boton-qr')
+    const boton_cerrar_modal = document.querySelector('#boton-cerrar-modal')
+
+    boton_mostrar_qr.addEventListener('click', () =>{ modal_qr.showModal(); })
+    boton_cerrar_modal.addEventListener('click', () =>{ modal_qr.close(); })
+</script>
