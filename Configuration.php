@@ -88,7 +88,9 @@ class Configuration
     public function getHomeController()
     {
 
-        return new HomeController($this->getViewer());
+         $sugerenciaPreguntaRepository = new SugerenciaPreguntaRepository();
+         $sugerenciaPreguntaService = new SugerenciaPreguntaService($sugerenciaPreguntaRepository);
+        return new HomeController($sugerenciaPreguntaService,$this->getViewer());
 
     }
 
