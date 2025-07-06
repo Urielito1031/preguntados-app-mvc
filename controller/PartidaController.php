@@ -98,11 +98,8 @@ class PartidaController
            // Verificar si hay una pregunta activa para evitar recarga
            if (isset($_SESSION['pregunta']) && !empty($_SESSION['pregunta']['id'])) {
               // El usuario recargó la página con una pregunta activa, lo consideramos trampa
-              $viewData = array_merge($this->getUserSessionData(), [
-                 'error' => "¡No hagas trampa! No puedes recargar la página durante una partida."
-              ]);
-             $this->clearSession();
-              $this->view->render("tramposo", $viewData);
+               session_destroy();
+               header('Location: ../');
               return;
            }
 
