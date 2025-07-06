@@ -1,0 +1,30 @@
+<link href="/public/css/pregunta.css" rel="stylesheet">
+
+<h1 style="margin-top:4vw">{{titulo}}</h1>
+<table class="w3-table">
+<tr>
+  <th>ID</th>
+  <th>Enunciado</th>
+  <th>Cantidad De Reportes </th>
+  <th>Modificar</th>
+  <th>Borrar</th>
+</tr>
+{{#preguntas}}
+<tr>
+  <td>{{id}}</td>
+  <td>{{enunciado}}</td>
+  <td>{{cantidad_reportes}}</td>
+  <td>
+      <form method="POST" action="/editor/editarPregunta">
+         <button type="submit" name="id" value="{{id}}" class="w-100 mt-4 bg-color-pink" style="text-decoration: none;text-align: center;">Editar</button>
+      </form>
+  </td>
+  <td>
+        <form method="POST" action="/editor/borrarPregunta">
+           <button type="submit" name="id" value="{{id}}" class="w-100 mt-4 bg-color-pink" style="text-decoration: none;text-align: center;">Borrar</button>
+        </form>
+  </td>
+</tr>
+{{/preguntas}}
+</table>
+

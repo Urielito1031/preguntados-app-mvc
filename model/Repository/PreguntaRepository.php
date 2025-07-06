@@ -299,7 +299,13 @@ class PreguntaRepository
     }
 
     //ON DELETE -> CASCADE
+    //Al borrar una pregunta se elimina su referencia en usuario_pregunta
     public function eliminarPregunta($idPregunta){
+
+        $queryUsuarioPregunta = "DELETE FROM usuario_pregunta WHERE id_pregunta = :idPregunta";
+        $stmnt = $this->conn->prepare($queryUsuarioPregunta);
+        $stmnt->execute(['idPregunta' => $idPregunta]);
+
         $query = "DELETE FROM pregunta WHERE id = :idPregunta";
         $stmt = $this->conn->prepare($query);
         $resultado = $stmt->execute(['idPregunta' => $idPregunta]);
@@ -444,16 +450,22 @@ class PreguntaRepository
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function getRespuestasSugeridas(int $idPregunta){
-        $stmt = $this->conn->prepare("
-        SELECT respuesta, id_pregunta
-        FROM respuesta_sugerida
-        WHERE id_pregunta = :idPregunta
-         ");
-        $stmt->bindParam(':idPregunta', $idPregunta);
-        $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-
+    public function reportarPregunta($idPregunta){
+        $query = "UPDATE pregunta SET cantidad_reportes = cantidad_reportes + 1 WHERE id = :id";
+        try {
+            $stmt = $this->conn->prepare($query);
+            $stmt->bindValue(':id', $idPregunta, PDO::PARAM_INT);
+            $stmt->execute();
+            return "Pregunta reportada correctamente";
+        } catch (PDOException $e) {
+            throw new PDOException("No se pudo reportar pregunta: " . $e->getMessage());
         }
-
+    }
+    public function traerTodasLaspreguntasReportadas(){
+        $query = "SELECT * FROM pregunta where cantidad_reportes > 0 order by cantidad_reportes DESC";
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute();
+        $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $data;
+    }
 }

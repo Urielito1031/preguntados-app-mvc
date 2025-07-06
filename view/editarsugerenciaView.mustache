@@ -1,0 +1,52 @@
+<link href="/public/css/pregunta.css" rel="stylesheet">
+<h1>Editando: {{enunciado}}</h1>
+
+<form action="/editor/aceptarSugerencia" method="POST" enctype="multipart/form-data" id="formulario-registro" class="m-auto d-flex flex-column align-items-center"
+      style="width: 90%; max-width: 550px">
+    <div class="w-100">
+        <select name="idCategoria" class="text-center bg-color-violet w-100"
+                style="border-radius: 25px 25px 0 0; cursor: pointer">
+            <option value="{{categoriaActual.id}}">{{categoriaActual.id}}- {{categoriaActual.descripcion}}</option>
+            {{#categorias}}
+                <option value="{{id}}">{{id}}- {{descripcion}}</option>
+            {{/categorias}}
+        </select>
+
+        <input type="text" name="enunciado" placeholder="enunciado" aria-label="Nombre" value="{{enunciado}}"
+        class="text-center p-4 w-100" style="background: #ab8dd3; color:white; border:none;">
+
+    </div>
+
+    <div class="w-100 d-flex flex-column">
+        <div class="d-flex justify-content-evenly">
+            <label for="respuesta_correcta">Respuesta correcta</label>
+        </div>
+        <div class="d-flex justify-content-evenly">
+              <input type="text" name="respuesta_correcta" class="w-75 bg-color-pink"
+              placeholder="{{respuesta_correcta}}" aria-label="respuesta_correcta" value="{{respuesta_correcta}}">
+              <input type="hidden" name="IDRespuestaCorrecta"value="{{idRespuestaCorrecta}}">
+        </div>
+        {{#respuestas}}
+        <div class="d-flex justify-content-evenly">
+            <label for="name">Respuesta incorrecta #{{indice}}</label>
+        </div>
+        <div class="d-flex justify-content-evenly">
+            <input type="hidden" name="ID{{name}}"value="{{id}}" class="w-75 bg-color-pink" >
+            <input type="text" name="{{name}}" placeholder="{{respuesta}}" aria-label="respuesta_incorrecta" value="{{respuesta}}" class="w-75 bg-color-pink">
+        </div>
+
+        {{/respuestas}}
+
+
+        <button type="submit" class="d-flex justify-content-center align-self-center w-25 mt-4 bg-color-pink"
+                style="text-decoration: none;text-align: center;">Aceptar Pregunta
+        </button>
+      <input type="hidden" name="idPregunta" value="{{id}}">
+    </div>
+</form>
+
+<form method="POST" action="/editor/descartarSugerencia" class="m-auto d-flex flex-column align-items-center">
+    <button type="submit" name="id" value="{{id}}" class="w-100 mt-4 bg-color-pink" style="text-decoration: none;text-align: center;">Descartar Sugerencia</button>
+</form>
+
+

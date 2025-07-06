@@ -1,36 +1,51 @@
 <link href="/public/css/pregunta.css" rel="stylesheet">
-<h1>Editar pregunta {{enunciado}} {{id}}</h1>
-<div class="container">
-  <form class="col-12 col-sm-8 col-md-6 col-lg-4 d-flex flex-column align-items-center justify-content-center" action="/editor/processEdit" method="POST" enctype="multipart/form-data" id="formulario-registro">
+<h1>Editando: {{enunciado}}</h1>
 
-    {{#error}}
-      <div class="alert alert-danger" role="alert">
-        {{error}}
-      </div>
-    {{/error}}
-      <label for="enunciado">Enunciado</label>
-      <input type="text" name="enunciado" placeholder="enunciado" aria-label="Nombre" value="{{enunciado}}">
-      <label for="respuesta_correcta">Respuesta correcta</label>
+<link href="/public/css/pregunta.css" rel="stylesheet">
 
-      <input type="text" name="respuesta_correcta"
-      placeholder="{{respuesta_correcta}}" aria-label="respuesta_correcta" value="{{respuesta_correcta}}">
-      <input type="hidden" name="IDRespuestaCorrecta"value="{{idRespuestaCorrecta}}">
-
-        {{#respuestas}}
-        <label for="name">Respuesta incorrecta #{{indice}}</label>
-        <input type="hidden" name="ID{{name}}"value="{{id}}">
-        <input type="text" name="{{name}}" placeholder="{{respuesta}}" aria-label="respuesta_incorrecta" value="{{respuesta}}">
-        {{/respuestas}}
-
-        <select name="idCategoria">
+<form action="/editor/processEdit" method="POST" enctype="multipart/form-data" id="formulario-registro" class="m-auto d-flex flex-column align-items-center"
+      style="width: 90%; max-width: 550px">
+    <div class="w-100">
+        <select name="idCategoria" class="text-center bg-color-violet w-100"
+                style="border-radius: 25px 25px 0 0; cursor: pointer">
             <option value="{{categoriaActual.id}}">{{categoriaActual.id}}- {{categoriaActual.descripcion}}</option>
             {{#categorias}}
                 <option value="{{id}}">{{id}}- {{descripcion}}</option>
             {{/categorias}}
         </select>
 
-        <button type="submit">Guardar cambios</button>
+        <input type="text" name="enunciado" placeholder="enunciado" aria-label="Nombre" value="{{enunciado}}"
+        class="text-center p-4 w-100" style="background: #ab8dd3; color:white; border:none;">
 
+    </div>
+
+    <div class="w-100 d-flex flex-column">
+        <div class="d-flex justify-content-evenly">
+            <label for="respuesta_correcta">Respuesta correcta</label>
+        </div>
+        <div class="d-flex justify-content-evenly">
+              <input type="text" name="respuesta_correcta" class="w-75 bg-color-pink"
+              placeholder="{{respuesta_correcta}}" aria-label="respuesta_correcta" value="{{respuesta_correcta}}">
+              <input type="hidden" name="IDRespuestaCorrecta"value="{{idRespuestaCorrecta}}">
+        </div>
+        {{#respuestas}}
+        <div class="d-flex justify-content-evenly">
+            <label for="name">Respuesta incorrecta #{{indice}}</label>
+        </div>
+        <div class="d-flex justify-content-evenly">
+            <input type="hidden" name="ID{{name}}"value="{{id}}" class="w-75 bg-color-pink" >
+            <input type="text" name="{{name}}" placeholder="{{respuesta}}" aria-label="respuesta_incorrecta" value="{{respuesta}}" class="w-75 bg-color-pink">
+        </div>
+
+        {{/respuestas}}
+
+
+        <button type="submit" class="d-flex justify-content-center align-self-center w-25 mt-4 bg-color-pink"
+                style="text-decoration: none;text-align: center;">Guardar cambios
+        </button>
       <input type="hidden" name="idPregunta" value="{{id}}">
-      </form>
-</div>
+    </div>
+</form>
+
+
+

@@ -131,6 +131,27 @@ CREATE TABLE `partida` (
   `creado_en` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+-- --------------------------------------------------------
+-- Estructura de tabla para la tabla 'pregunta-sugerida'
+CREATE TABLE `pregunta_sugerida` (
+                                     `id` int(11) NOT NULL,
+                                     `id_categoria` int(11) NOT NULL,
+                                     `enunciado` varchar(255) NOT NULL
+
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+INSERT INTO `pregunta_sugerida` (`id`,`id_categoria`, `enunciado`) VALUES
+       (1, 1, '¿2+2?'),
+       (2, 1, '¿3+3?');
+-- --------------------------------------------------------
+-- Estructura de tabla para la tabla 'respuesta-sugerida'
+
+CREATE TABLE `respuesta_sugerida` (
+                                      `id` int(11) NOT NULL,
+                                      `respuesta` varchar(255) NOT NULL,
+                                      `id_pregunta` int(11) NOT NULL,
+                                      `es_correcta` TINYINT(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 --
 -- Volcado de datos para la tabla `partida`
 --
@@ -152,8 +173,16 @@ INSERT INTO `partida` (`id`, `id_usuario`, `puntaje`, `estado`, `preguntas_corre
 (93, 27, 400, 'PERDIDA', 3, '2025-06-18 18:00:00'),
 (94, 27, 800, 'GANADA', 7, '2025-06-19 13:30:00');
 
+INSERT INTO `respuesta_sugerida` (`id`, `respuesta`, `id_pregunta`, `es_correcta`) VALUES
+    (1, '4', 1, 1),
+    (2, '5', 1, 0),
+    (3, '6', 1, 0),
+    (4, '7', 1, 0),
+    (5, '6', 2, 1),
+    (6, '9', 2, 0),
+    (7, '12', 2, 0),
+    (8, '3.14', 2, 0);
 -- --------------------------------------------------------
-
 --
 -- Estructura de tabla para la tabla `pregunta`
 --
@@ -551,6 +580,19 @@ ALTER TABLE `respuesta`
   ADD KEY `id_pregunta` (`id_pregunta`);
 
 --
+-- Indices de la tabla `pregunta`
+--
+ALTER TABLE `pregunta_sugerida`
+    ADD PRIMARY KEY (`id`),
+    ADD KEY `id_categoria` (`id_categoria`);
+
+--
+-- Indices de la tabla `respuesta_sugerida`
+--
+ALTER TABLE `respuesta_sugerida`
+    ADD PRIMARY KEY (`id`),
+    ADD KEY `id_pregunta` (`id_pregunta`);
+--
 -- Indices de la tabla `rol`
 --
 ALTER TABLE `rol`
@@ -621,6 +663,18 @@ ALTER TABLE `pregunta`
 ALTER TABLE `respuesta`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=198;
 
+
+-- AUTO_INCREMENT de la tabla `pregunta`
+--
+ALTER TABLE `pregunta_sugerida`
+    MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
+
+--
+-- AUTO_INCREMENT de la tabla `respuesta_incorrecta`
+--
+ALTER TABLE `respuesta_sugerida`
+    MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=150;
+
 --
 -- AUTO_INCREMENT de la tabla `rol`
 --
@@ -659,7 +713,8 @@ ALTER TABLE `pregunta`
 -- Filtros para la tabla `respuesta`
 --
 ALTER TABLE `respuesta`
-  ADD CONSTRAINT `respuesta_ibfk_1` FOREIGN KEY (`id_pregunta`) REFERENCES `pregunta` (`id`);
+    ADD CONSTRAINT `respuesta_ibfk_1` FOREIGN KEY (`id_pregunta`) REFERENCES `pregunta` (`id`)
+        ON DELETE CASCADE;
 
 --
 -- Filtros para la tabla `usuario`
@@ -670,12 +725,25 @@ ALTER TABLE `usuario`
   ADD CONSTRAINT `usuario_ibfk_3` FOREIGN KEY (`id_nivel`) REFERENCES `nivel` (`id_nivel`);
 
 --
+-- Filtros para la tabla `pregunta_sugerida`
+--
+ALTER TABLE `pregunta_sugerida`
+    ADD CONSTRAINT pregunta_sugerida_ibfk_1 FOREIGN KEY (`id_categoria`) REFERENCES `categoria` (`id`);
+
+--
+-- Filtros para la tabla `respuesta_sugerida`
+--
+ALTER TABLE `respuesta_sugerida`
+    ADD CONSTRAINT `respuesta_sugerida_ibfk_1` FOREIGN KEY (`id_pregunta`) REFERENCES `pregunta_sugerida` (`id`)
+        ON DELETE CASCADE;
+--
 -- Filtros para la tabla `usuario_pregunta`
 --
 ALTER TABLE `usuario_pregunta`
   ADD CONSTRAINT `usuario_pregunta_ibfk_1` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`),
   ADD CONSTRAINT `usuario_pregunta_ibfk_2` FOREIGN KEY (`id_pregunta`) REFERENCES `pregunta` (`id`);
 COMMIT;
+
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
