@@ -299,7 +299,13 @@ class PreguntaRepository
     }
 
     //ON DELETE -> CASCADE
+    //Al borrar una pregunta se elimina su referencia en usuario_pregunta
     public function eliminarPregunta($idPregunta){
+
+        $queryUsuarioPregunta = "DELETE FROM usuario_pregunta WHERE id_pregunta = :idPregunta";
+        $stmnt = $this->conn->prepare($queryUsuarioPregunta);
+        $stmnt->execute(['idPregunta' => $idPregunta]);
+
         $query = "DELETE FROM pregunta WHERE id = :idPregunta";
         $stmt = $this->conn->prepare($query);
         $resultado = $stmt->execute(['idPregunta' => $idPregunta]);

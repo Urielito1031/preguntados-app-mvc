@@ -664,17 +664,16 @@ ALTER TABLE `respuesta`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=198;
 
 
--- AUTO_INCREMENT de la tabla `pregunta_sugerida`
+-- AUTO_INCREMENT de la tabla `pregunta`
 --
 ALTER TABLE `pregunta_sugerida`
     MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
 
 --
--- AUTO_INCREMENT de la tabla `respuesta_sugerida`
+-- AUTO_INCREMENT de la tabla `respuesta_incorrecta`
 --
 ALTER TABLE `respuesta_sugerida`
     MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=150;
-
 
 --
 -- AUTO_INCREMENT de la tabla `rol`
@@ -717,17 +716,6 @@ ALTER TABLE `respuesta`
     ADD CONSTRAINT `respuesta_ibfk_1` FOREIGN KEY (`id_pregunta`) REFERENCES `pregunta` (`id`)
         ON DELETE CASCADE;
 
-
-ALTER TABLE `pregunta_sugerida`
-    ADD CONSTRAINT pregunta_sugerida_ibfk_1 FOREIGN KEY (`id_categoria`) REFERENCES `categoria` (`id`);
-
---
--- Filtros para la tabla `respuesta_sugerida`
---
-ALTER TABLE `respuesta_sugerida`
-    ADD CONSTRAINT `respuesta_sugerida_ibfk_1` FOREIGN KEY (`id_pregunta`) REFERENCES `pregunta` (`id`)
-        ON DELETE CASCADE;
-
 --
 -- Filtros para la tabla `usuario`
 --
@@ -737,12 +725,25 @@ ALTER TABLE `usuario`
   ADD CONSTRAINT `usuario_ibfk_3` FOREIGN KEY (`id_nivel`) REFERENCES `nivel` (`id_nivel`);
 
 --
+-- Filtros para la tabla `pregunta_sugerida`
+--
+ALTER TABLE `pregunta_sugerida`
+    ADD CONSTRAINT pregunta_sugerida_ibfk_1 FOREIGN KEY (`id_categoria`) REFERENCES `categoria` (`id`);
+
+--
+-- Filtros para la tabla `respuesta_sugerida`
+--
+ALTER TABLE `respuesta_sugerida`
+    ADD CONSTRAINT `respuesta_sugerida_ibfk_1` FOREIGN KEY (`id_pregunta`) REFERENCES `pregunta_sugerida` (`id`)
+        ON DELETE CASCADE;
+--
 -- Filtros para la tabla `usuario_pregunta`
 --
 ALTER TABLE `usuario_pregunta`
   ADD CONSTRAINT `usuario_pregunta_ibfk_1` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`),
   ADD CONSTRAINT `usuario_pregunta_ibfk_2` FOREIGN KEY (`id_pregunta`) REFERENCES `pregunta` (`id`);
 COMMIT;
+
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
