@@ -9,6 +9,11 @@
     </dialog>
 
     <h1>Partida finalizada</h1>
+  {{#error}}
+    <div class="alert alert-danger w-100 text-center mt-3">
+      <h1>{{error}}</h1>
+    </div>
+  {{/error}}
     <h2> Hiciste {{puntaje}} puntos</h2>
     <p class="text-center p-4 w-100" style="background: #ab8dd3;color: white;">
         {{pregunta.enunciado}}
