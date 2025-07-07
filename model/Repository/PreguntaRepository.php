@@ -302,18 +302,20 @@ class PreguntaRepository
     //Al borrar una pregunta se elimina su referencia en usuario_pregunta
     public function eliminarPregunta($idPregunta){
 
-        $queryUsuarioPregunta = "DELETE FROM usuario_pregunta WHERE id_pregunta = :idPregunta";
-        $stmnt = $this->conn->prepare($queryUsuarioPregunta);
-        $stmnt->execute(['idPregunta' => $idPregunta]);
+       // Eliminar registros relacionados en usuario_pregunta
+       $sqlEliminarUsuarioPregunta = "DELETE FROM usuario_pregunta WHERE id_pregunta = :idPregunta";
+       $stmtUsuarioPregunta = $this->conn->prepare($sqlEliminarUsuarioPregunta);
+       $stmtUsuarioPregunta->execute(['idPregunta' => $idPregunta]);
 
-        $querySugerenciaPregunta = "DELETE FROM respuesta WHERE id_pregunta = :idPregunta";
-         $stmtSugerencia = $this->conn->prepare($querySugerenciaPregunta);
-         $stmtSugerencia->execute(['idPregunta' => $idPregunta]);
+       // Eliminar respuestas asociadas a la pregunta
+       $sqlEliminarRespuestas = "DELETE FROM respuesta WHERE id_pregunta = :idPregunta";
+       $stmtRespuestas = $this->conn->prepare($sqlEliminarRespuestas);
+       $stmtRespuestas->execute(['idPregunta' => $idPregunta]);
 
-        $query = "DELETE FROM pregunta WHERE id = :idPregunta";
-        $stmt = $this->conn->prepare($query);
-        $resultado = $stmt->execute(['idPregunta' => $idPregunta]);
-        return $resultado;
+       // Eliminar la pregunta
+       $sqlEliminarPregunta = "DELETE FROM pregunta WHERE id = :idPregunta";
+       $stmtPregunta = $this->conn->prepare($sqlEliminarPregunta);
+       return $stmtPregunta->execute(['idPregunta' => $idPregunta]);
     }
 
     public function findByIdParaEditor(int $id)
