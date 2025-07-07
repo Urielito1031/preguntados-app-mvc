@@ -72,6 +72,12 @@ class PartidaController
             'respuesta_usuario' => $_SESSION['respuesta_usuario'] ?? ''
          ]);
 
+         if (isset($_SESSION['error_tiempo'])) {
+            $viewData['error'] = $_SESSION['error_tiempo'];
+            unset($_SESSION['error_tiempo']);
+         }
+
+
          if (!$response->success) {
             $viewData['error'] = $response->message;
          } else {
@@ -213,9 +219,10 @@ class PartidaController
             $this->endGame();
          }
         } else {
-           //reveer esto, anda mal y no llega acá
-           echo "El tiempo de respuesta fue mayor a 10 segundos, la partida se ha finalizado.";
-            $this->endGame();
+           $_SESSION['respuesta_usuario'] = $_POST['respuesta'];
+           $_SESSION['error_tiempo'] = "El tiempo de respuesta fue mayor a 10 segundos.";
+           $this->endGame();
+           return;
         }
       } catch (\Exception $e) {
          $viewData = array_merge($this->getUserSessionData(), [
