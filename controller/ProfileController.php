@@ -48,10 +48,11 @@ class ProfileController
 
    public function showProfileById($userId = null, $isMyProfile = false)
    {
-
-
-      $id_cuenta= (isset($_GET['id'])) ? $_GET['id'] :  (int)$_SESSION['id_usuario'];
-
+       $id_cuenta= $_SESSION['id_usuario'];
+       if(!empty($_GET['id'])){
+           $id_cuenta=$_GET['id'];
+       }
+       
       $userResponse = $this->usuarioService->findById($id_cuenta);
       if (!$userResponse->success) {
          $viewData = [
