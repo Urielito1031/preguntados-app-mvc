@@ -23,6 +23,10 @@
       </div>
     {{/error}}
 
+      <div id="js_resultado_container" style="display:none" class="alert alert-success" role="alert">
+        <p  id="resultado"></p>
+      </div>
+
     <label class="container-file">
       <input class="input-file" type="file" name="imagen">
       <i class="bi bi-person-add" id="avatar-preview"></i>
@@ -34,8 +38,8 @@
       <input class="input-form m-2" type="text" name="apellido" placeholder="Apellido" aria-label="Apellido" value="{{apellido}}">
 
       <input class="input-form m-2" type="text" name="nombre_usuario" placeholder="Nombre de usuario" aria-label="usuario" value="{{nombre_usuario}}">
-      <input class="input-form m-2" type="email" name="correo" placeholder="Correo" aria-label="Correo" value="{{correo}}">
 
+      <input id="js_email" onchange="verificarDisponibilidad()" class="input-form m-2" type="email" name="correo" placeholder="Correo" aria-label="Correo" value="{{correo}}">
       <input class="input-form m-2" type="password" name="contrasenia" placeholder="Contraseña" aria-label="Contraseña">
       <input class="input-form m-2" type="password" name="repetir_contrasenia" placeholder="Repetir contraseña" aria-label="repetir_contraseña">
 
@@ -65,8 +69,8 @@
 
     <button class="bg-color-pink text-white my-2" type="button" onclick="actualizarMapa()">Verificar Ubicación</button>
 
-    <p class="text-center text-violet">¿No tienes una cuenta? <b><a href="/usuario/showLoginForm">Iniciar Sesión</a></b></p>
-    <button class="w-100 bg-color-violet text-white" type="submit">Registrarse</button>
+    <p class="text-center text-violet">¿Ya tienes una cuenta? <b><a href="/usuario/showLoginForm">Iniciar Sesión</a></b></p>
+    <button id="js_btn_submit" class="w-100 bg-color-violet text-white" type="submit">Registrarse</button>
   </form>
 
 </section>
@@ -96,5 +100,34 @@
       alert("Por favor, ingresa un país y/o ciudad.");
     }
   }
+
+
+  const verificarDisponibilidad = () =>{
+      const email = document.getElementById("js_email").value;
+      const botonSubmit = document.getElementById("js_btn_submit");
+      const containerResultado = document.getElementById("js_resultado_container");
+      const mensajeResultado = document.getElementById("resultado");
+              fetch(`/usuario/verificarDisponibilidad?email=${email}`)
+                  .then(response => response.json())
+                  .then(data => {
+                  console.log(data);
+                      if (data.resultado) {
+                        containerResultado.style.display= 'block';
+                        containerResultado.className = 'alert alert-danger'
+                        mensajeResultado.style.display= 'block';
+                        mensajeResultado.style.color= 'red';
+                        mensajeResultado.textContent = "El correo ingresado ya fue utilizado, ingrese otro";
+                        botonSubmit.disabled = true;
+                      } else {
+                        containerResultado.style.display= 'block';
+                        containerResultado.className = 'alert alert-success'
+                        mensajeResultado.style.display= 'block';
+                        mensajeResultado.style.color= 'green';
+                        mensajeResultado.textContent = "email disponible";
+                        botonSubmit.disabled = false;
+                      }
+                  });
+  }
+
 </script>
 <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>

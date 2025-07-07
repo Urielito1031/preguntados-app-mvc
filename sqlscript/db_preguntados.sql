@@ -135,6 +135,27 @@ CREATE TABLE `partida` (
   `creado_en` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+-- --------------------------------------------------------
+-- Estructura de tabla para la tabla 'pregunta-sugerida'
+CREATE TABLE `pregunta_sugerida` (
+                                     `id` int(11) NOT NULL,
+                                     `id_categoria` int(11) NOT NULL,
+                                     `enunciado` varchar(255) NOT NULL
+
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+INSERT INTO `pregunta_sugerida` (`id`,`id_categoria`, `enunciado`) VALUES
+       (1, 1, '¿2+2?'),
+       (2, 1, '¿3+3?');
+-- --------------------------------------------------------
+-- Estructura de tabla para la tabla 'respuesta-sugerida'
+
+CREATE TABLE `respuesta_sugerida` (
+                                      `id` int(11) NOT NULL,
+                                      `respuesta` varchar(255) NOT NULL,
+                                      `id_pregunta` int(11) NOT NULL,
+                                      `es_correcta` TINYINT(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 --
 -- Volcado de datos para la tabla `partida`
 --
@@ -184,8 +205,16 @@ INSERT INTO `partida` (`id`, `id_usuario`, `puntaje`, `estado`, `preguntas_corre
 (121, 35, 0, 'PERDIDA', 0, '2025-07-05 17:53:47'),
 (122, 35, 1, 'GANADA', 0, '2025-07-05 17:53:48');
 
+INSERT INTO `respuesta_sugerida` (`id`, `respuesta`, `id_pregunta`, `es_correcta`) VALUES
+    (1, '4', 1, 1),
+    (2, '5', 1, 0),
+    (3, '6', 1, 0),
+    (4, '7', 1, 0),
+    (5, '6', 2, 1),
+    (6, '9', 2, 0),
+    (7, '12', 2, 0),
+    (8, '3.14', 2, 0);
 -- --------------------------------------------------------
-
 --
 -- Estructura de tabla para la tabla `pregunta`
 --
@@ -252,18 +281,6 @@ INSERT INTO `pregunta` (`id`, `id_categoria`, `enunciado`, `cantidad_jugada`, `c
 (48, 7, '¿Qué principio SOLID indica que una clase debe tener una única responsabilidad?', 0, 0, 0),
 (49, 7, '¿Qué comando de Docker se usa para construir una imagen desde un Dockerfile?', 0, 0, 0),
 (50, 4, '¿Qué protocolo asegura la comunicación encriptada en la web?', 0, 0, 0);
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `pregunta_sugerida`
---
-
-CREATE TABLE `pregunta_sugerida` (
-  `id` int(11) NOT NULL,
-  `id_categoria` int(11) NOT NULL,
-  `enunciado` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -479,19 +496,6 @@ INSERT INTO `respuesta` (`id`, `respuesta`, `id_pregunta`, `es_correcta`) VALUES
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `respuesta_sugerida`
---
-
-CREATE TABLE `respuesta_sugerida` (
-  `id` int(11) NOT NULL,
-  `respuesta` varchar(255) NOT NULL,
-  `id_pregunta` int(11) NOT NULL,
-  `es_correcta` tinyint(1) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
 -- Estructura de tabla para la tabla `rol`
 --
 
@@ -565,17 +569,6 @@ CREATE TABLE `usuario_pregunta` (
   `id_usuario` int(11) NOT NULL,
   `id_pregunta` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `usuario_pregunta`
---
-
-INSERT INTO `usuario_pregunta` (`id_usuario`, `id_pregunta`) VALUES
-(35, 12),
-(35, 17),
-(35, 21),
-(35, 32),
-(35, 35);
 
 --
 -- Índices para tablas volcadas

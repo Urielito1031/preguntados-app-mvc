@@ -415,7 +415,27 @@ class UsuarioRepository
         }
     }
 
+    public function verificarDisponibilidad($email)
+    {
+        $query = "SELECT 1 FROM usuario WHERE correo = :email";
 
+        try {
+            $stmt = $this->conn->prepare($query);
+            $stmt->bindValue(':email', $email, PDO::PARAM_INT);
+            $stmt->execute();
+            $data = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if (!$data) {
+                return null;
+            }
+
+            return $data;
+
+        } catch (PDOException $e) {
+            throw new PDOException("Error al buscar usuario por ID: " . $e->getMessage());
+        }
+
+    }
 
 
 }

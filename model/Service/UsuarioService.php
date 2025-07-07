@@ -26,6 +26,12 @@ class UsuarioService
    {
       try {
          // Validaciones para cada campo
+
+
+         if (!$_SESSION['email_disponible']) {
+             return new DataResponse(false, "El email elegido no esta disponible.");
+         }
+
          if (empty(trim($usuario->getNombre()))) {
             return new DataResponse(false, "El nombre es obligatorio.");
          }
@@ -231,5 +237,9 @@ class UsuarioService
 
     public function validateAccountRequestByUserId (int $id_user) : bool {
        return $this->repository->validateAccountRequestByUserId($id_user);
+    }
+
+    public function verificarDisponibilidad($email){
+       return $this->repository->verificarDisponibilidad($email);
     }
 }
