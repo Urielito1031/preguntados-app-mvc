@@ -105,13 +105,9 @@ class UsuarioController
             $emailUsuario = $_POST['email'];
             $id_usuario = $this->usuarioService->findIdUserByEmail($emailUsuario);
             $tokenGenerado = $this->usuarioService->findTokenByUserId($id_usuario);
-            var_dump($emailUsuario);
-            var_dump($tokenGenerado);
-            var_dump($id_usuario);
-            var_dump($tokenIngresado);
+
 
             if ($tokenIngresado == $tokenGenerado) {
-                var_dump($tokenIngresado);
                 $this->usuarioService->validateAccountByUserId($id_usuario);
                 echo "<script>
                         alert('Validación exitosa, podés loguearte');

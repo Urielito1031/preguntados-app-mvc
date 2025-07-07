@@ -24,7 +24,6 @@ class HomeController
    {
       $viewData = $this->getBaseViewData();
       $this->view->render("home", $viewData);
-      var_dump($_SESSION["id_rol"]);
    }
 
 

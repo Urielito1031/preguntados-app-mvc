@@ -35,7 +35,6 @@ class PreguntaService
             // ENTRAMOS EN INSTANCIA DE CALCULAR NIVEL PARA ENTREGAR PREGUNTA
             if (count($array_id_preguntas_realizadas) >= 6) {
                 // Calculo nivel de usuario
-                var_dump($this->usuarioRepository->calcularNivel($userId));
                 $nivelDelUsuario = $this->determinarDificultad($this->usuarioRepository->calcularNivel($userId));
 
                 do {
@@ -45,7 +44,7 @@ class PreguntaService
                         return new DataResponse(false, "No se encontró una pregunta válida");
                     }
                     $nivelDePregunta = $this->determinarDificultad($this->repository->calcularNivelDePregunta($preguntaObtenida));
-                    var_dump($this->repository->calcularNivelDePregunta($preguntaObtenida));
+
 
                 } while ($nivelDePregunta !== $nivelDelUsuario); // UN DO WHILE PARA REPETIR HASTA QUE COINCIDAN LOS NIVELES
 

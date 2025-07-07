@@ -38,7 +38,7 @@ class RankingController
             'titulo_ranking' => 'Mejores Partidas'
         ]);
 
-//        var_dump();
+
 
         $this->view->render("ranking", $viewData);
     }
