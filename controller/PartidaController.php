@@ -43,26 +43,18 @@ class PartidaController
    public function endGame(): void
    {
       try {
-         if (!isset($_SESSION['partida'])) {
-            throw new \Exception("No hay partida activa");
+         if (!isset($_SESSION['partida']) || !is_string($_SESSION['partida'])) {
+            throw new \Exception("No hay partida activa o los datos son inválidos");
          }
 
-
-
-         $serializedPartida = $_SESSION['partida'];
-         //otro debuug
-         if (!is_string($serializedPartida)) {
-            throw new \Exception("Datos de partida en sesión no son una cadena válida");
-         }
-
-
-         $partida = unserialize($serializedPartida);
-         //debuuuugg
+         $partida = unserialize($_SESSION['partida']);
          if ($partida === false) {
             throw new \Exception("No se pudo deserializar la partida");
-         };
-         $partida->setEstado($this->calcularEstado($_SESSION['preguntas_correctas'] ?? []));
-         $partida->setPuntaje(count($_SESSION['preguntas_correctas'] ?? []));
+         }
+
+         $preguntasCorrectas = $_SESSION['preguntas_correctas'] ?? [];
+         $partida->setEstado($this->calcularEstado($preguntasCorrectas));
+         $partida->setPuntaje(count($preguntasCorrectas));
 
          $response = $this->service->finalizarPartida($partida);
 
@@ -77,119 +69,109 @@ class PartidaController
             unset($_SESSION['error_tiempo']);
          }
 
-
-         if (!$response->success) {
-            $viewData['error'] = $response->message;
-         } else {
-            $viewData['success'] = "Partida finalizada correctamente";
-         }
+         $viewData[$response->success ? 'success' : 'error'] = $response->success
+            ? "Partida finalizada correctamente"
+            : $response->message;
 
          $this->clearSession();
          unset($_SESSION['pregunta_reportada']);
+
          $this->view->render("finpartida", $viewData);
+
       } catch (\Exception $e) {
-         $viewData = [
+         $this->view->render("error", [
             'error' => "Error al finalizar la partida: " . $e->getMessage(),
             'usuario' => $_SESSION['user_name'] ?? '',
-            'foto_perfil' => $_SESSION['foto_perfil'],
+            'foto_perfil' => $_SESSION['foto_perfil'] ?? '',
             'puntaje' => count($_SESSION['preguntas_correctas'] ?? [])
-         ];
-         $this->view->render("error", $viewData);
+         ]);
       }
    }
-    public function pregunta(): void {
-        try {
-            //Borro flag de reportes
-            unset($_SESSION['pregunta_reportada']);
-           // Verificar si hay una pregunta activa para evitar recarga
-           if (isset($_SESSION['pregunta']) && !empty($_SESSION['pregunta']['id'])) {
-              // El usuario recargó la página con una pregunta activa, lo consideramos trampa
-               session_destroy();
-               header('Location: ../');
-              return;
-           }
+   public function pregunta(): void
+   {
+      try {
+         unset($_SESSION['pregunta_reportada']);
 
-           //en session guardamos la partida si no está creada
-            if(!isset($_SESSION['partida'])){
-               $response = $this->service->iniciarPartida($_SESSION['user_id']?? 0);
-               if(!$response->success){
-                  $viewData = [
-                      'error' => $response->message,
-                      'usuario' => $_SESSION['user_name'] ?? '',
-                      'foto_perfil' => $_SESSION['foto_perfil']
-                  ];
-                  $this->view->render("error", $viewData);
-                  return;
-               }
+         // Evitar recarga con pregunta activa
+         if (!empty($_SESSION['pregunta']['id'])) {
+            session_destroy();
+            header('Location: ../');
+            return;
+         }
 
+         // Iniciar partida si no existe
+         if (!isset($_SESSION['partida'])) {
+            $response = $this->service->iniciarPartida($_SESSION['user_id'] ?? 0);
 
-
-               //el serialize permite pasar el objeto partida en un formato string
-               // para que la session lo pueda guardar
-               $_SESSION['partida'] = serialize($response->data);
-               $_SESSION['preguntas_correctas'] = [];
-               $_SESSION['preguntas_realizadas'] = [];
+            if (!$response->success) {
+               $this->view->render("error", [
+                  'error' => $response->message,
+                  'usuario' => $_SESSION['user_name'] ?? '',
+                  'foto_perfil' => $_SESSION['foto_perfil'] ?? ''
+               ]);
+               return;
             }
 
+            $_SESSION['partida'] = serialize($response->data);
+            $_SESSION['preguntas_correctas'] = [];
+            $_SESSION['preguntas_realizadas'] = [];
+         }
 
-            $idCategoria = rand(1,6);
+         // Obtener pregunta aleatoria
+         $idCategoria = rand(1, 6);
+         $responsePregunta = $this->preguntaService->getPregunta(
+            $idCategoria,
+            $_SESSION['preguntas_realizadas'],
+            $_SESSION['user_id']
+         );
 
-
-            $responsePregunta = $this->preguntaService->getPregunta($idCategoria, $_SESSION['preguntas_realizadas'],$_SESSION['user_id']);
-            if(!$responsePregunta->success){
-                  $viewData = [
-                     'error' => $responsePregunta->message,
-                     'usuario' => $_SESSION['user_name'] ?? '',
-                     'foto_perfil' => $_SESSION['foto_perfil']
-                  ];
-                  $this->view->render("error", $viewData);
-                  return;
-            }
-            $pregunta = $responsePregunta->data;
-            $_SESSION['tiempo_de_entrega'] = time();
-            if (!$pregunta) {$this->endGame();return;}
-
-
-            $respuestas = $pregunta->getRespuestasIncorrectas();
-            $respuestas[] = $pregunta->getRespuestaCorrecta();
-            shuffle($respuestas);
-
-            $_SESSION['pregunta'] = [
-                'id' => $pregunta->getId(),
-                'enunciado' => $pregunta->getEnunciado(),
-                'respuesta_correcta' => $pregunta->getRespuestaCorrecta(),
-                'respuestas' => $respuestas,
-                'categoria' => [
-                    'id' => $idCategoria,
-                    'descripcion' => $pregunta->getCategoria()->getDescripcion(),
-                    'color' => $pregunta->getCategoria()->getColor()
-                ]
-            ];
-
-           $response = $this->usuarioPreguntaService->registrarUsuarioPregunta($_SESSION['user_id'],$pregunta->getId());
-
-
-
-           //acumula la pregunta en su tabla
-           $this->preguntaService->acumularPreguntaJugada($pregunta);
-            $_SESSION['preguntas_realizadas'][] = $pregunta->getId();
-
-            $viewData = array_merge($this->getUserSessionData(), [
-                'pregunta' => $_SESSION['pregunta'],
-                'preguntasRealizadas' => $_SESSION['preguntas_realizadas']
+         if (!$responsePregunta->success || !$responsePregunta->data) {
+            $this->view->render("error", [
+               'error' => $responsePregunta->message,
+               'usuario' => $_SESSION['user_name'] ?? '',
+               'foto_perfil' => $_SESSION['foto_perfil'] ?? ''
             ]);
+            return;
+         }
 
-            $this->view->render("pregunta", $viewData);
+         $pregunta = $responsePregunta->data;
+         $_SESSION['tiempo_de_entrega'] = time();
 
-        } catch (\Exception $e) {
-            $viewData = [
-                'error' => "Error al cargar la pregunta: " . $e->getMessage(),
-                'usuario' => $_SESSION['user_name'] ?? '',
-                'foto_perfil' => $_SESSION['foto_perfil']
-            ];
-            $this->view->render("error", $viewData);
-        }
-    }
+         $respuestas = array_merge(
+            $pregunta->getRespuestasIncorrectas(),
+            [$pregunta->getRespuestaCorrecta()]
+         );
+         shuffle($respuestas);
+
+         $_SESSION['pregunta'] = [
+            'id' => $pregunta->getId(),
+            'enunciado' => $pregunta->getEnunciado(),
+            'respuesta_correcta' => $pregunta->getRespuestaCorrecta(),
+            'respuestas' => $respuestas,
+            'categoria' => [
+               'id' => $idCategoria,
+               'descripcion' => $pregunta->getCategoria()->getDescripcion(),
+               'color' => $pregunta->getCategoria()->getColor()
+            ]
+         ];
+
+         $this->usuarioPreguntaService->registrarUsuarioPregunta($_SESSION['user_id'], $pregunta->getId());
+         $this->preguntaService->acumularPreguntaJugada($pregunta);
+         $_SESSION['preguntas_realizadas'][] = $pregunta->getId();
+
+         $this->view->render("pregunta", array_merge($this->getUserSessionData(), [
+            'pregunta' => $_SESSION['pregunta'],
+            'preguntasRealizadas' => $_SESSION['preguntas_realizadas']
+         ]));
+
+      } catch (\Exception $e) {
+         $this->view->render("error", [
+            'error' => "Error al cargar la pregunta: " . $e->getMessage(),
+            'usuario' => $_SESSION['user_name'] ?? '',
+            'foto_perfil' => $_SESSION['foto_perfil'] ?? ''
+         ]);
+      }
+   }
    public function responder(): void
    {
       try {
