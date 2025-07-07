@@ -306,6 +306,10 @@ class PreguntaRepository
         $stmnt = $this->conn->prepare($queryUsuarioPregunta);
         $stmnt->execute(['idPregunta' => $idPregunta]);
 
+        $querySugerenciaPregunta = "DELETE FROM respuesta WHERE id_pregunta = :idPregunta";
+         $stmtSugerencia = $this->conn->prepare($querySugerenciaPregunta);
+         $stmtSugerencia->execute(['idPregunta' => $idPregunta]);
+
         $query = "DELETE FROM pregunta WHERE id = :idPregunta";
         $stmt = $this->conn->prepare($query);
         $resultado = $stmt->execute(['idPregunta' => $idPregunta]);
