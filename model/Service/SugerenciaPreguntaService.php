@@ -47,7 +47,6 @@ class SugerenciaPreguntaService
             }
 
             $this->sugerenciaPreguntaRepository->save($pregunta);
-            $this->view->render("home");
             return new DataResponse(true, "Pregunta guardada con exito", $pregunta);
         } catch (\Exception $e) {
             return new DataResponse(false, "Error al guardar pregunta sugerida: " . $e->getMessage());
