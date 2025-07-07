@@ -66,7 +66,7 @@ class ProfileController
 
       $userProfile = $userResponse->data;
 
-      $historialDePartidas = $this->usuarioService->getHistorialDePartidas($userId);
+      $historialDePartidas = $this->usuarioService->getHistorialDePartidas($id_cuenta);
 
       foreach ($historialDePartidas as $posicionPartidas => &$orden) {
          $orden['numero'] = $posicionPartidas + 1;
