@@ -1,12 +1,9 @@
 <?php
 
-
 use Entity\Ciudad;
 use Entity\Ubicacion;
 use Repository\CiudadRepository;
 use Repository\PaisRepository;
-use Repository\UsuarioRepository;
-use Service\UsuarioService;
 
 class UbicacionService
 {
@@ -33,5 +30,16 @@ public function obtenerPaisYCiudadDelUsuario(int $idCiudad) : Ubicacion {
 
     return new Ubicacion($entidadPais,$entidadCiudad);
 }
+
+    public function getPaisRepository(): PaisRepository
+    {
+        return $this->paisRepository;
+    }
+
+
+    public function getCiudadRepository(): CiudadRepository
+    {
+        return $this->ciudadRepository;
+    }
 
 }

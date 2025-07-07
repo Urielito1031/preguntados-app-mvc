@@ -33,7 +33,6 @@ class ProfileController
       $idCiudad = $this->usuarioService->obtenerIdCiudadDeUsuario($_SESSION['user_id']);
       $ubicacionObtenida = $this->ubicacionService->obtenerPaisYCiudadDelUsuario($idCiudad);
       $ubicacionUrl = urlencode($ubicacionObtenida->getCiudad()->getNombre() . ', ' . $ubicacionObtenida->getPais()->getNombre());
-
       $url = "https://maps.google.com/maps?q={$ubicacionUrl}&output=embed";
 
       $viewData = [
@@ -41,9 +40,75 @@ class ProfileController
          'foto_perfil' => $_SESSION['foto_perfil'] ?? '',
          'puntaje_total' => $_SESSION['puntaje_total'] ?? '',
          'mapa_url' => $url,
-         'url_qr' => $this->qrService->generarQrCode($_SESSION['user_name'])
+         'url_qr' => $this->qrService->generarQrCode($_SESSION['user_name'], $_SESSION['user_id']),
       ];
 
       $this->view->render("profile", $viewData);
    }
+
+   public function showProfileById($userId = null, $isMyProfile = false)
+   {
+       $id_cuenta= $_SESSION['id_usuario'];
+       if(!empty($_GET['id'])){
+           $id_cuenta=$_GET['id'];
+       }
+       
+      $userResponse = $this->usuarioService->findById($id_cuenta);
+      if (!$userResponse->success) {
+         $viewData = [
+            'error' => $userResponse->message,
+            'usuario' => $_SESSION['user_name'] ?? '',
+            'foto_perfil' => $_SESSION['foto_perfil'] ?? ''
+         ];
+         $this->view->render("error", $viewData);
+         return;
+      }
+
+      $userProfile = $userResponse->data;
+
+      $historialDePartidas = $this->usuarioService->getHistorialDePartidas($id_cuenta);
+
+      foreach ($historialDePartidas as $posicionPartidas => &$orden) {
+         $orden['numero'] = $posicionPartidas + 1;
+      }
+
+      $ciudadNombre = '';
+      $paisNombre = '';
+
+      if ($userProfile->getIdCiudad()) {
+         $ciudadEntity = $this->ubicacionService->getCiudadRepository()->findById($userProfile->getIdCiudad());
+         if ($ciudadEntity) {
+            $ciudadNombre = $ciudadEntity->getNombre();
+            $paisEntity = $this->ubicacionService->getPaisRepository()->findById($ciudadEntity->getIdPais());
+            if ($paisEntity) {
+               $paisNombre = $paisEntity->getNombre();
+            }
+         }
+      }
+
+      $ubicacion = urlencode($ciudadNombre . ', ' . $paisNombre);
+      $mapUrl = "https://maps.google.com/maps?q={$ubicacion}&output=embed";
+
+      $viewData = [
+         'usuario' => $_SESSION['user_name'] ?? '',
+         'foto_perfil' => $_SESSION['foto_perfil'] ?? '',
+         'nombre_perfil' => $userProfile->getNombreUsuario(),
+         'nombre' => $userProfile->getNombre(),
+         'apellido_perfil' => $userProfile->getApellido(),
+         'correo_perfil' => $userProfile->getCorreo(),
+         'fecha_nacimiento_perfil' => $userProfile->getFechaNacimiento() ? $userProfile->getFechaNacimiento()->format('Y-m-d') : 'N/A',
+         'sexo_perfil' => $userProfile->getSexo() ?? 'N/A',
+         'ciudad_perfil' => $ciudadNombre,
+         'pais_perfil' => $paisNombre,
+         'foto_perfil_visitado' => $userProfile->getUrlFotoPerfil(),
+         'puntaje_total_visitado' => $userProfile->getPuntajeTotal(),
+         'mapa_url' => $mapUrl,
+         'historial_partidas_visitado' => $historialDePartidas,
+         'es_mi_perfil' => $isMyProfile,
+         'url_qr' => $this->qrService->generarQrCode($userProfile->getNombreUsuario() , $userProfile->getId())
+      ];
+
+      $this->view->render("profile", $viewData);
+   }
+
 }

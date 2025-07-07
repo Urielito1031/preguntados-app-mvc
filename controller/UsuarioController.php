@@ -5,6 +5,10 @@ use Entity\Ubicacion;
 use Service\ImageService;
 use Service\QrService;
 use Service\UsuarioService;
+use Repository\PaisRepository;
+use Repository\CiudadRepository;
+
+
 
 class UsuarioController
 {
@@ -13,6 +17,7 @@ class UsuarioController
     private ImageService $imageService;
     private UbicacionService $ubicacionService;
 
+    private QrService $qrService;
 
 
     public function __construct(UsuarioService $usuarioService, QrService $qrService, MustachePresenter $view)
@@ -21,6 +26,7 @@ class UsuarioController
         $this->view = $view;
         $this->imageService = new ImageService();
         $this->ubicacionService = new UbicacionService(new \Repository\PaisRepository(), new \Repository\CiudadRepository());
+        $this->qrService = $qrService;
     }
 
     public function showLoginForm()
@@ -133,6 +139,7 @@ class UsuarioController
         $_SESSION['foto_perfil'] = $usuario->getUrlFotoPerfil();
         $_SESSION['puntaje_total'] = $usuario->getPuntajeTotal();
         $_SESSION['id_rol'] = $usuario->getIdRol();
+        $_SESSION['id_usuario'] = $usuario->getId();
     }
 
     public function logout()
@@ -245,5 +252,21 @@ class UsuarioController
 
 
 
+    public function verificarDisponibilidad()
+    {
+        if (!isset($_GET['email'])) {
+            echo json_encode(["error" => "Falta el parámetro email"]);
+            exit;
+        }
+        $email = $_GET['email'];
+        $resultado = $this->usuarioService->verificarDisponibilidad($email);
+        if(empty($resultado)){
+            $_SESSION['email_disponible'] = true;
+        }else{
+            $_SESSION['email_disponible'] = false;
+        }
 
+        echo json_encode(["available" => true, "resultado" => $resultado]);
+
+    }
 }

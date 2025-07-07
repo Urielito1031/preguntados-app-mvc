@@ -158,15 +158,14 @@ class Configuration
       );
    }
 
-   public function getRankingController()
-   {
-      $usuarioRepository = new UsuarioRepository();
-      $usuarioService = new UsuarioService($usuarioRepository);
 
-      return new RankingController($usuarioService, $this->getViewer());
-   }
+   public function getRankingController(){
+       $repository = new UsuarioRepository();
+       $service = new UsuarioService($repository);
+       return new RankingController($service, $this->getViewer());
+    }
 
-   public function getEditorController()
+      public function getEditorController()
    {
       $preguntaRepository = new PreguntaRepository();
       $usuarioRepository = new UsuarioRepository();
@@ -211,5 +210,4 @@ class Configuration
          $this->getViewer()
       );
    }
-
 }

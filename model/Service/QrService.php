@@ -2,25 +2,21 @@
 
 namespace Service;
 
-
 use QRcode;
 
 require "vendor/phpqrcode/qrlib.php";
 
 class QrService
 {
-    public function __construct(){
+    public function __construct(){}
 
-    }
-    public static function generarQrCode($nombreUsuario) : String {
-        // Nombre de la carpeta
+    public static function generarQrCode($nombreUsuario, $id_usuario) : String {
         $dir = 'public/qr/';
 
         if (!file_exists($dir)){
-            mkdir($dir, 0777, true); // 0777 le da permisos de escritura y 'true' permite crear subcarpetas
+            mkdir($dir, 0777, true);
         }
 
-        // Modificar esto para que cada qr sea diferente segun el usuario
         $nombreArchivo = $dir . $nombreUsuario . '.png';
 
         $tamanio = 10;
@@ -28,7 +24,7 @@ class QrService
         $frameSize = 3;
 
         // Modificar la url para mostrar el perfil segun el usuario
-        $contenido = 'http://localhost/profile/show?usuario=' . $nombreUsuario ;
+        $contenido = 'http://localhost/profile/showProfileById?id=' . $id_usuario ;
 
         QRcode::png($contenido, $nombreArchivo, $level, $tamanio, $frameSize);
 
