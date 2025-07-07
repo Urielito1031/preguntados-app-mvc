@@ -226,11 +226,17 @@ class UsuarioService
        return $this->repository->findTokenByIdUser($userId);
     }
 
-    public function findIdUserByEmail (String $email): int {
-        $user = $this->repository->findByEmail($email);
-        return $user->getId();
-    }
-
+   public function findIdUserByEmail(string $email): DataResponse {
+      try {
+         $user = $this->repository->findByEmail($email);
+         if (!$user) {
+            return new DataResponse(false, "Usuario no encontrado con el email proporcionado.");
+         }
+         return new DataResponse(true, "Usuario encontrado", $user->getId());
+      } catch (\Exception $e) {
+         return new DataResponse(false, "Error al buscar el usuario por email: " . $e->getMessage());
+      }
+   }
     public function validateAccountByUserId (int $user_id) :void {
        $this->repository->validateAccountByUserId($user_id);
     }

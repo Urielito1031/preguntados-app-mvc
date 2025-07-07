@@ -14,7 +14,6 @@ class PreguntaSugerida
 
     public function __construct(int $idCategoria,string $enunciado, array $respuestas,  int $posicionArrayDeRespuestaCorrecta)
     {
-// $this->id = $data['id'] ?? 0; // COMO LE LLEGA EL ID? SI SE CREA AUTO EN LA BASE DE DATOS
         $this->id = $id ?? 0;
         $this->idCategoria = $idCategoria ?? '';
         $this->enunciado = $enunciado ?? '';
@@ -22,6 +21,13 @@ class PreguntaSugerida
         $this->posicionArrayDeRespuestaCorrecta = $posicionArrayDeRespuestaCorrecta ?? '';
 
     }
+      public function getId(): int
+      {
+         return $this->id;
+      }
+      public function setId(int $id):void {
+         $this->id = $id;
+      }
 
     public function getIdCategoria(): int
     {
