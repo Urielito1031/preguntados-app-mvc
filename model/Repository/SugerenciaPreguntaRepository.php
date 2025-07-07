@@ -28,25 +28,30 @@ class SugerenciaPreguntaRepository
                 VALUES (:respuesta, :id_pregunta, :es_correcta)";
 
 
-        try {
+       try {
+          $stmtPregunta = $this->conn->prepare($query);
+          $stmtPregunta->bindValue(':id_categoria', $pregunta->getIdCategoria());
+          $stmtPregunta->bindValue(':enunciado', $pregunta->getEnunciado());
+          $stmtPregunta->execute();
 
-            $stmt = $this->conn->prepare($query);
-            $stmt->bindValue(':id_categoria', $pregunta->getIdCategoria());
-            $stmt->bindValue(':enunciado', $pregunta->getEnunciado());
-            $stmt->execute();
+          // Setear el id del objeto PreguntaSugerida
+          // con el ID generado por la base de datos
+          $idPregunta = (int) $this->conn->lastInsertId();
+          $pregunta->setId($idPregunta);
 
-            // Segunda query
-            foreach ($pregunta->getRespuestas() as $index => $respuesta) {
-                $stmt = $this->conn->prepare($queryTwo);
-                $stmt->bindValue(':respuesta', $respuesta);
-                $stmt->bindValue(':id_pregunta', $this->getIdPreguntaByStatement($pregunta->getEnunciado()));
-                $stmt->bindValue(':es_correcta', $index == $pregunta->getPosicionArrayDeRespuestaCorrecta(), PDO::PARAM_BOOL);
-                $stmt->execute();
-            }
+          $stmtRespuesta = $this->conn->prepare($queryTwo);
+          $correctaIndex = $pregunta->getPosicionArrayDeRespuestaCorrecta();
 
-        } catch (PDOException $e) {
-            throw new PDOException("No se pudo guardar la nueva pregunta sugerida " . $e);
-        }
+          foreach ($pregunta->getRespuestas() as $index => $respuesta) {
+             $stmtRespuesta->bindValue(':respuesta', $respuesta);
+             $stmtRespuesta->bindValue(':id_pregunta', $idPregunta);
+             $stmtRespuesta->bindValue(':es_correcta', $index === $correctaIndex, PDO::PARAM_BOOL);
+             $stmtRespuesta->execute();
+          }
+
+       } catch (PDOException $e) {
+          throw new PDOException("No se pudo guardar la nueva pregunta sugerida: " . $e->getMessage(), (int)$e->getCode());
+       }
 
     }
 
