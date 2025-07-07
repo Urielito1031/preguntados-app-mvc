@@ -42,94 +42,99 @@ class UsuarioController
         $this->view->render("login", $viewData);
     }
 
-    public function processLogin()
-    {
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            $this->showLoginForm();
-            return;
-        }
+   public function processLogin(): void
+   {
+      if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+         $this->showLoginForm();
+         return;
+      }
 
-        $email = $_POST['correo'] ?? '';
-        $password = $_POST['contrasenia'] ?? '';
+      $email = $_POST['correo'] ?? '';
+      $password = $_POST['contrasenia'] ?? '';
 
-        // BUSCAR USUARIO POR EMAIL Y CHEQUEAR EL CAMPO "cuenta_validada"
-        $id_usuario = $this->usuarioService->findIdUserByEmail($email);
-        $validacion = $this->usuarioService->validateAccountRequestByUserId($id_usuario);
+      $viewData = [
+         'logo_url' => '/public/img/LogoQuizCode.png',
+         'foto_perfil' => 'public/img/person-fill.svg',
+         'display' => isset($_SESSION['user_name']) ? "display: block" : "display: none"
+      ];
 
-        if (!$validacion) {
-            if (isset($_SESSION['user_name'])) {
-                $viewData['display'] = "display: block";
-            } else {
-                $viewData['display'] = "display: none";
-            }
-            $this->view->render("validarCuenta", $viewData);
-            exit;
+      // Validar existencia del usuario
+      $idResponse = $this->usuarioService->findIdUserByEmail($email);
+      if (!$idResponse->success) {
+         $viewData['error'] = $idResponse->message;
+         $this->view->render("login", $viewData);
+         return;
+      }
 
-        }
+      $id_usuario = $idResponse->data;
+
+      // verifica si la cuenta esta validada
+      if (!$this->usuarioService->validateAccountRequestByUserId($id_usuario)) {
+         $this->view->render("validarCuenta", $viewData);
+         return;
+      }
+
+      // aca nos logueamos, luego de las anteriores validaciones
+      $loginResponse = $this->usuarioService->login($email, $password);
+      if (!$loginResponse->success) {
+         $viewData['error'] = $loginResponse->message;
+         $this->view->render("login", $viewData);
+         return;
+      }
 
 
-        $response = $this->usuarioService->login($email, $password);
+      $this->handleLoginSuccess($loginResponse->data);
 
-        $viewData = ['error' => $response->message, 'logo_url' => '/public/img/LogoQuizCode.png', 'foto_perfil' => 'public/img/person-fill.svg'];
+      switch ($_SESSION['id_rol']) {
+         case 1:
+            header('Location: /admin/show');
+            break;
+         case 2:
+            header('Location: /editor/show');
+            break;
+         default:
+            header('Location: /home/show');
+      }
+      exit;
+   }
 
-        if (isset($_SESSION['user_name'])) {
-            $viewData['display'] = "display: block";
-        } else {
-            $viewData['display'] = "display: none";
-        }
+   public function processValidation(): void
+   {
+      $email = $_POST['email'] ?? '';
+      $tokenIngresado = $_POST['token'] ?? '';
 
-        if ($response->success) {
-            $this->handleLoginSuccess($response->data);
-            switch ($_SESSION['id_rol']) {
-                case 1:
-                    header('Location: /admin/show');
-                    exit;
-                case 2:
-                    header('Location: /editor/show');
-                    exit;
-                default:
-                    header('Location: /home/show');
-                    exit;
-            }
+      if (empty($email) || empty($tokenIngresado)) {
+         $this->mostrarAlertaYRedirigir("Token o email inválidos. Intentá nuevamente desde el login.");
+         return;
+      }
 
-        } else {
-            $this->view->render("login", $viewData); //
-        }
-    }
+      $idResponse = $this->usuarioService->findIdUserByEmail($email);
+      if (!$idResponse->success) {
+         $this->mostrarAlertaYRedirigir($idResponse->message);
+         return;
+      }
 
-    public function processValidation()
-    {
-        // PRIMERO COLOCA SU MAIL PARA BUSCAR SU ID Y LUEGO EL TOKEN
-        if (isset($_POST['token']) && isset($_POST['email'])) {
-            $tokenIngresado = $_POST['token'];
-            $emailUsuario = $_POST['email'];
-            $id_usuario = $this->usuarioService->findIdUserByEmail($emailUsuario);
-            $tokenGenerado = $this->usuarioService->findTokenByUserId($id_usuario);
-            var_dump($emailUsuario);
-            var_dump($tokenGenerado);
-            var_dump($id_usuario);
-            var_dump($tokenIngresado);
+      $id_usuario = $idResponse->data;
+      $tokenGenerado = $this->usuarioService->findTokenByUserId($id_usuario);
 
-            if ($tokenIngresado == $tokenGenerado) {
-                var_dump($tokenIngresado);
-                $this->usuarioService->validateAccountByUserId($id_usuario);
-                echo "<script>
-                        alert('Validación exitosa, podés loguearte');
-                        setTimeout(function() {
-                            window.location.href = '/';
-                        }, 3000);
-                    </script>";
-                header('Location: /');
-            }
-        } else {
-            echo "<script>alert('Token o email invalidos, intenta nuevamente desde el login');
-                          setTimeout(function() {
-                            window.location.href = '/';
-                          }, 3000);
-                  </script>";
-            header('Location: /');
-        }
-    }
+      if ($tokenIngresado === (string)$tokenGenerado) {
+         $this->usuarioService->validateAccountByUserId($id_usuario);
+         $this->mostrarAlertaYRedirigir("Validación exitosa, podés loguearte.");
+      } else {
+         $this->mostrarAlertaYRedirigir("El token ingresado no es válido.");
+      }
+   }
+
+   private function mostrarAlertaYRedirigir(string $mensaje): void
+   {
+      echo "<script>
+            alert('$mensaje');
+            setTimeout(function() {
+                window.location.href = '/';
+            }, 3000);
+          </script>";
+      exit;
+   }
 
     private function handleLoginSuccess(Usuario $usuario)
     {
